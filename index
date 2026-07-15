@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Planta Física</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-[#0B0F19] text-white font-sans min-h-screen flex flex-col justify-between">
+
+    <header class="bg-[#00A859] py-12 px-6 text-center shadow-lg">
+        <h1 class="text-4xl font-extrabold tracking-tight md:text-5xl text-white">
+            Indicadores de Gestión: Planta Física
+        </h1>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-6 py-12 flex-grow w-full">
+        <section class="mb-12 text-center max-w-3xl mx-auto">
+            <p class="text-gray-300 text-lg leading-relaxed">
+                Bienvenido al centro de control y analítica de Planta Física. Este espacio unifica los indicadores clave de nuestra infraestructura para garantizar un campus eficiente, seguro y en constante optimización. Aquí monitoreamos el pulso de los recursos y espacios institucionales, transformando datos operativos en decisiones estratégicas que impulsan la sostenibilidad y el bienestar de nuestra comunidad.
+            </p>
+        </section>
+
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <div class="bg-[#111827] border-l-4 border-[#00A859] rounded-r-lg shadow-md overflow-hidden">
+                <button onclick="toggleMenu('servicios-submenu', 'servicios-arrow')" class="w-full text-left p-8 focus:outline-none hover:bg-[#1f2937] transition duration-200 flex justify-between items-center group">
+                    <div>
+                        <h3 class="text-xl font-bold text-white mb-2 group-hover:text-[#FF6B00] transition duration-200">SERVICIOS Y CONCESIONES</h3>
+                        <p class="text-sm text-gray-400">Monitoreo de consumos energéticos, agua y gestión de recursos eficientes.</p>
+                    </div>
+                    <svg id="servicios-arrow" class="w-6 h-6 text-gray-400 transition-transform duration-300 flex-shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+                <div id="servicios-submenu" class="hidden bg-[#0d131f] border-t border-gray-800 p-4 space-y-2">
+                    <a href="./servicios/energia.html" class="block w-full text-left p-3 rounded bg-[#111827] text-sm hover:bg-[#1f2937] hover:text-[#00A859] transition">💧 Servicios Públicos</a>
+                    <a href="./servicios/agua.html" class="block w-full text-left p-3 rounded bg-[#111827] text-sm hover:bg-[#1f2937] hover:text-[#00A859] transition">⚡ Ingresos</a>
+                    <a href="./servicios/carbono.html" class="block w-full text-left p-3 rounded bg-[#111827] text-sm hover:bg-[#1f2937] hover:text-[#00A859] transition">🍃 Ahorro/Optimización de recursos</a>
+                </div>
+            </div>
+
+            <div class="bg-[#111827] border-l-4 border-[#00A859] rounded-r-lg shadow-md overflow-hidden">
+                <button onclick="toggleMenu('obra-submenu', 'obra-arrow')" class="w-full text-left p-8 focus:outline-none hover:bg-[#1f2937] transition duration-200 flex justify-between items-center group">
+                    <div>
+                        <h3 class="text-xl font-bold text-white mb-2 group-hover:text-[#FF6B00] transition duration-200">Obra Civil</h3>
+                        <p class="text-sm text-gray-400">Seguimiento a proyectos de infraestructura, remodelaciones y adecuaciones.</p>
+                    </div>
+                    <svg id="obra-arrow" class="w-6 h-6 text-gray-400 transition-transform duration-300 flex-shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+                <div id="obra-submenu" class="hidden bg-[#0d131f] border-t border-gray-800 p-4 space-y-2">
+                    <a href="./obra/proyectos.html" class="block w-full text-left p-3 rounded bg-[#111827] text-sm hover:bg-[#1f2937] hover:text-[#00A859] transition">🏗️ Proyectos Activos</a>
+                    <a href="./obra/espacios.html" class="block w-full text-left p-3 rounded bg-[#111827] text-sm hover:bg-[#1f2937] hover:text-[#00A859] transition">📐 Adecuación de Espacios</a>
+                    <a href="./obra/plan-maestro.html" class="block w-full text-left p-3 rounded bg-[#111827] text-sm hover:bg-[#1f2937] hover:text-[#00A859] transition">🗺️ Plan Maestro de Infraestructura</a>
+                </div>
+            </div>
+
+            <div class="bg-[#111827] border-l-4 border-[#00A859] rounded-r-lg shadow-md overflow-hidden">
+                <button onclick="toggleMenu('manto-submenu', 'manto-arrow')" class="w-full text-left p-8 focus:outline-none hover:bg-[#1f2937] transition duration-200 flex justify-between items-center group">
+                    <div>
+                        <h3 class="text-xl font-bold text-white mb-2 group-hover:text-[#FF6B00] transition duration-200">Mantenimiento</h3>
+                        <p class="text-sm text-gray-400">Estado de solicitudes, mantenimientos preventivos y correctivos del campus.</p>
+                    </div>
+                    <svg id="manto-arrow" class="w-6 h-6 text-gray-400 transition-transform duration-300 flex-shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+                <div id="manto-submenu" class="hidden bg-[#0d131f] border-t border-gray-800 p-4 space-y-2">
+                    <a href="./mantenimiento/solicitudes.html" class="block w-full text-left p-3 rounded bg-[#111827] text-sm hover:bg-[#1f2937] hover:text-[#00A859] transition">🔧 Solicitudes Pendientes</a>
+                    <a href="./mantenimiento/preventivo.html" class="block w-full text-left p-3 rounded bg-[#111827] text-sm hover:bg-[#1f2937] hover:text-[#00A859] transition">📅 Calendario Preventivo</a>
+                    <a href="./mantenimiento/salud-campus.html" class="block w-full text-left p-3 rounded bg-[#111827] text-sm hover:bg-[#1f2937] hover:text-[#00A859] transition">🏥 Índice de Salud de Infraestructura</a>
+                </div>
+            </div>
+
+            <div class="bg-[#111827] border-l-4 border-[#00A859] rounded-r-lg shadow-md overflow-hidden">
+                <button onclick="toggleMenu('logistica-submenu', 'logistica-arrow')" class="w-full text-left p-8 focus:outline-none hover:bg-[#1f2937] transition duration-200 flex justify-between items-center group">
+                    <div>
+                        <h3 class="text-xl font-bold text-white mb-2 group-hover:text-[#FF6B00] transition duration-200">Logística y Audiovisuales</h3>
+                        <p class="text-sm text-gray-400">Gestión de espacios comunes, soporte técnico para eventos y asignación de recursos.</p>
+                    </div>
+                    <svg id="logistica-arrow" class="w-6 h-6 text-gray-400 transition-transform duration-300 flex-shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+                <div id="logistica-submenu" class="hidden bg-[#0d131f] border-t border-gray-800 p-4 space-y-2">
+                    <a href="./logistica/reserva-espacios.html" class="block w-full text-left p-3 rounded bg-[#111827] text-sm hover:bg-[#1f2937] hover:text-[#00A859] transition">🏢 Reservas de Aulas y Auditorios</a>
+                    <a href="./logistica/equipos.html" class="block w-full text-left p-3 rounded bg-[#111827] text-sm hover:bg-[#1f2937] hover:text-[#00A859] transition">🎤 Préstamo de Equipos AV</a>
+                    <a href="./logistica/eventos.html" class="block w-full text-left p-3 rounded bg-[#111827] text-sm hover:bg-[#1f2937] hover:text-[#00A859] transition">📅 Logística de Eventos</a>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <footer class="bg-[#0B0F19] text-center py-6 text-xs text-gray-500 border-t border-gray-800 mt-12">
+        <p>Sistema de Gestión Interna de Planta Física • Desarrollado para optimización de campus</p>
+    </footer>
+
+    <script>
+        function toggleMenu(menuId, arrowId) {
+            const menu = document.getElementById(menuId);
+            const arrow = document.getElementById(arrowId);
+
+            // Verificar si el menú seleccionado ya está abierto
+            const isHidden = menu.classList.contains('hidden');
+
+            // OPCIONAL: Cerrar otros menús abiertos para mantener el orden (Acordeón)
+            document.querySelectorAll('[id$="-submenu"]').forEach(otherMenu => {
+                if (otherMenu.id !== menuId) {
+                    otherMenu.classList.add('hidden');
+                }
+            });
+            document.querySelectorAll('[id$="-arrow"]').forEach(otherArrow => {
+                if (otherArrow.id !== arrowId) {
+                    otherArrow.classList.remove('rotate-180');
+                }
+            });
+
+            // Alternar el estado del menú seleccionado
+            if (isHidden) {
+                menu.classList.remove('hidden');
+                arrow.classList.add('rotate-180');
+            } else {
+                menu.classList.add('hidden');
+                arrow.classList.remove('rotate-180');
+            }
+        }
+    </script>
+
+</body>
+</html>
