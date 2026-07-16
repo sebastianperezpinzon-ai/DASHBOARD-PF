@@ -187,6 +187,27 @@ new Chart(ctxEnergia, {
     }
 });
 
+        <div class="mt-6 overflow-x-auto border-t border-gray-800/80 pt-4">
+    <table class="w-full text-left text-xs text-gray-300">
+        <thead class="bg-[#0B0F19] text-[#00A859] uppercase text-[10px] tracking-wider">
+            <tr>
+                <th class="p-2 rounded-l">Mes</th>
+                <th class="p-2 text-right">2025 (kWh)</th>
+                <th class="p-2 text-right">2026 (kWh)</th>
+                <th class="p-2 text-right rounded-r">Dif.</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-800/50">
+            <tr><td class="p-2 font-medium text-white">Enero</td><td class="p-2 text-right">87.451</td><td class="p-2 text-right text-[#FF6B00]">89.269</td><td class="p-2 text-right text-red-400">-1.818</td></tr>
+            <tr><td class="p-2 font-medium text-white">Febrero</td><td class="p-2 text-right">96.865</td><td class="p-2 text-right text-[#FF6B00]">93.849</td><td class="p-2 text-right text-green-400">+3.016</td></tr>
+            <tr><td class="p-2 font-medium text-white">Marzo</td><td class="p-2 text-right">124.542</td><td class="p-2 text-right text-[#FF6B00]">129.012</td><td class="p-2 text-right text-red-400">-4.470</td></tr>
+            <tr><td class="p-2 font-medium text-white">Abril</td><td class="p-2 text-right">137.470</td><td class="p-2 text-right text-[#FF6B00]">133.117</td><td class="p-2 text-right text-green-400">+4.353</td></tr>
+            <tr><td class="p-2 font-medium text-white">Mayo</td><td class="p-2 text-right">119.589</td><td class="p-2 text-right text-[#FF6B00]">129.142</td><td class="p-2 text-right text-red-400">-9.553</td></tr>
+            <tr><td class="p-2 font-medium text-white">Junio</td><td class="p-2 text-right">134.629</td><td class="p-2 text-right text-[#FF6B00]">126.044</td><td class="p-2 text-right text-green-400">+8.585</td></tr>
+        </tbody>
+    </table>
+</div>
+
         // --- 2. GRÁFICO DE AGUA ---
         const ctxAgua = document.getElementById('aguaChart').getContext('2d');
         new Chart(ctxAgua, {
