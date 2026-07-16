@@ -28,7 +28,7 @@
                 Volver al Dashboard Principal
             </a>
             <span class="text-xs bg-[#00A859]/10 text-[#00A859] px-3 py-1 rounded-full border border-[#00A859]/30 font-mono">
-                Área: Servicios Públicos
+                Área: Servicios y Conseciones
             </span>
         </div>
     </nav>
@@ -41,22 +41,6 @@
             A continuación, se presenta la comparación del consumo acumulado mensual de agua potable (m³) y energía eléctrica (kWh) en todas las sedes de la Universidad EAN, correspondiente a los años 2025 y 2026. <span class="text-[#00A859] font-semibold"></span>
         </p>
     </header>
-     <!--
-    <section class="max-w-6xl mx-auto px-6 mb-10">
-        <div class="bg-[#111827] border-l-4 border-[#FF6B00] p-5 rounded-r-lg shadow-md flex items-start gap-4">
-            <div class="bg-[#FF6B00]/10 p-3 rounded-full text-[#FF6B00]">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364.364l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                </svg>
-            </div>
-           
-            <div>
-                <h4 class="text-base font-bold text-white mb-1">Perspectiva ECO-S</h4>
-                <p class="text-sm text-gray-400 leading-relaxed">
-                    ¿Te has preguntado si el incremento del 15% de consumo de agua los jueves está ligado a la programación académica o a fugas imperceptibles? El verdadero valor de un indicador no está en el número que reporta, sino en la pregunta que nos obliga a formular.
-                </p>
-            </div>  
-                -->
         </div>
 
     </section>
@@ -136,36 +120,72 @@
 
         // --- 1. GRÁFICO DE ENERGÍA ---
         const ctxEnergia = document.getElementById('energiaChart').getContext('2d');
-        new Chart(ctxEnergia, {
-            type: 'bar',
-            data: {
-                labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
-                datasets: [{
-                    label: 'Consumo (kWh)',
-                    data: [12400, 14200, 18900, 15100, 16800, 11500],
-                    backgroundColor: '#FF6B00', // Naranja institucional para destacar
-                    borderRadius: 4,
-                    borderWidth: 0,
-                    hoverBackgroundColor: '#e05e00'
-                }]
+new Chart(ctxEnergia, {
+    type: 'bar',
+    data: {
+        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+        datasets: [
+            {
+                label: 'Consumo 2025 (kWh)',
+                data: [87451, 96865, 124542, 137470, 119589, 134629, 91650, 109260, 130811, 138081, 137981, 29125],
+                backgroundColor: 'rgba(156, 163, 175, 0.3)', // Gris elegante para el año anterior
+                borderColor: '#9ca3af',
+                borderWidth: 1,
+                borderRadius: 4
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false } // Ocultamos leyenda porque el título ya lo describe
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: { color: '#1f2937' }
-                    },
-                    x: {
-                        grid: { display: false } // Ocultamos cuadrícula vertical para diseño más limpio
+            {
+                label: 'Consumo 2026 (kWh)',
+                data: [89269, 93849, 129012, 133117, 129142, 126044, null, null, null, null, null, null],
+                backgroundColor: '#FF6B00', // Naranja vibrante para el año en curso
+                borderColor: '#FF6B00',
+                borderWidth: 1,
+                borderRadius: 4
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'top',
+                labels: {
+                    color: '#9ca3af',
+                    boxWidth: 12
+                }
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        let label = context.dataset.label || '';
+                        if (label) {
+                            label += ': ';
+                        }
+                        if (context.parsed.y !== null) {
+                            label += new Intl.NumberFormat('es-CO').format(context.parsed.y) + ' kWh';
+                        }
+                        return label;
                     }
                 }
             }
-        });
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: { color: '#1f2937' },
+                ticks: {
+                    callback: function(value) {
+                        return new Intl.NumberFormat('es-CO').format(value) + ' kWh';
+                    }
+                }
+            },
+            x: {
+                grid: { display: false }
+            }
+        }
+    }
+});
 
         // --- 2. GRÁFICO DE AGUA ---
         const ctxAgua = document.getElementById('aguaChart').getContext('2d');
