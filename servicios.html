@@ -69,50 +69,23 @@
             </div>
 
            <div class="bg-[#111827] rounded-xl border border-gray-800 shadow-xl overflow-hidden p-6 flex flex-col justify-between">
-    <div>
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                <span class="text-[#00B0FF]">💧</span> Consumo de Agua Potable
-            </h3>
-            <span class="text-xs bg-[#00B0FF]/10 text-[#00B0FF] px-2.5 py-1 rounded-full font-semibold">ODS 6</span>
-        </div>
-        
-        <!-- Contenedor del Canvas para Chart.js -->
-        <div class="relative h-64 w-full mb-4">
-            <canvas id="aguaChart"></canvas>
-        </div>
-    </div>
-
-    <!-- Pie de página del gráfico -->
-    <div class="border-t border-gray-800/80 pt-4 mt-2">
-        <p class="text-xs text-gray-400 leading-relaxed">
-            <strong class="text-white">Gráfico 2: Flujo y Comparativa de Agua Potable (m³).</strong> 
-            La gráfica lineal contrasta el comportamiento de consumo entre 2025 y 2026. Se evidencia una reducción sumamente drástica en el consumo de los meses de enero y marzo de 2026 en comparación con el periodo anterior.
-        </p>
-    </div>
-
-    <!-- Tabla de soporte integrada con datos reales -->
-    <div class="mt-6 overflow-x-auto border-t border-gray-800/80 pt-4">
-        <table class="w-full text-left text-xs text-gray-300">
-            <thead class="bg-[#0B0F19] text-[#00B0FF] uppercase text-[10px] tracking-wider">
-                <tr>
-                    <th class="p-2 rounded-l">Mes</th>
-                    <th class="p-2 text-right">2025 (m³)</th>
-                    <th class="p-2 text-right">2026 (m³)</th>
-                    <th class="p-2 text-right rounded-r">Ahorro (m³)</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-800/50">
-                <tr><td class="p-2 font-medium text-white">Enero</td><td class="p-2 text-right">2.051</td><td class="p-2 text-right text-[#00B0FF]">367</td><td class="p-2 text-right text-green-400">+1.684</td></tr>
-                <tr><td class="p-2 font-medium text-white">Febrero</td><td class="p-2 text-right">471</td><td class="p-2 text-right text-[#00B0FF]">665</td><td class="p-2 text-right text-red-400">-194</td></tr>
-                <tr><td class="p-2 font-medium text-white">Marzo</td><td class="p-2 text-right">1.684</td><td class="p-2 text-right text-[#00B0FF]">182</td><td class="p-2 text-right text-green-400">+1.502</td></tr>
-                <tr><td class="p-2 font-medium text-white">Abril</td><td class="p-2 text-right">927</td><td class="p-2 text-right text-[#00B0FF]">451</td><td class="p-2 text-right text-green-400">+476</td></tr>
-                <tr><td class="p-2 font-medium text-white">Mayo</td><td class="p-2 text-right">1.408</td><td class="p-2 text-right text-[#00B0FF]">1.322</td><td class="p-2 text-right text-green-400">+86</td></tr>
-                <tr><td class="p-2 font-medium text-white">Junio</td><td class="p-2 text-right">780</td><td class="p-2 text-right text-[#00B0FF]">808</td><td class="p-2 text-right text-red-400">-28</td></tr>
-            </tbody>
-        </table>
-    </div>
-</div>
+                <div>
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <span class="text-[#00A859]">💧</span> Consumo de Agua Potable
+                        </h3>
+                        <span class="text-xs bg-[#00A859]/10 text-[#00A859] px-2.5 py-1 rounded-full font-semibold">ODS 6</span>
+                    </div>
+                    <div class="relative h-64 w-full mb-4">
+                        <canvas id="aguaChart"></canvas>
+                    </div>
+                </div>
+                <div class="border-t border-gray-800/80 pt-4 mt-2">
+                    <p class="text-xs text-gray-400 leading-relaxed">
+                        <strong class="text-white">Gráfico 2: Consumo Mensual (m³).</strong> Representación lineal del flujo de agua potable. Se observa una reducción notable en abril que coincide con la semana de receso académico y las campañas de concientización.
+                    </p>
+                </div>
+            </div>
 
           <!--
             <div class="bg-[#111827] rounded-xl border border-gray-800 shadow-xl overflow-hidden p-6 flex flex-col justify-between lg:col-span-2">
