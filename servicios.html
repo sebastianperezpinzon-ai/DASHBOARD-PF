@@ -193,39 +193,78 @@ new Chart(ctxEnergia, {
 
         // --- 2. GRÁFICO DE AGUA ---
         const ctxAgua = document.getElementById('aguaChart').getContext('2d');
-        new Chart(ctxAgua, {
-            type: 'line',
-            data: {
-                labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
-                datasets: [{
-                    label: 'Consumo (m³)',
-                    data: [420, 510, 680, 490, 610, 390],
-                    borderColor: '#00A859', // Verde institucional
-                    backgroundColor: 'rgba(0, 168, 89, 0.1)', // Sombra verde suave debajo de la línea
-                    fill: true,
-                    tension: 0.3, // Curva suave
-                    borderWidth: 3,
-                    pointBackgroundColor: '#00A859',
-                    pointHoverRadius: 7
-                }]
+new Chart(ctxAgua, {
+    type: 'line',
+    data: {
+        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+        datasets: [
+            {
+                label: 'Consumo 2025 (m³)',
+                data: [2051, 471, 1684, 927, 1408, 780, 1156, 512, 1612, 923, 1112, 873],
+                borderColor: 'rgba(100, 116, 139, 0.6)', // Gris azulado discreto
+                borderDash: [5, 5], // Línea punteada para el año anterior
+                borderWidth: 2,
+                pointRadius: 3,
+                backgroundColor: 'transparent',
+                fill: false,
+                tension: 0.2
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: { color: '#1f2937' }
-                    },
-                    x: {
-                        grid: { display: false }
+            {
+                label: 'Consumo 2026 (m³)',
+                data: [367, 665, 182, 451, 1322, 808, null, null, null, null, null, null],
+                borderColor: '#00B0FF', // Azul brillante (Agua)
+                backgroundColor: 'rgba(0, 176, 255, 0.1)', // Relleno azul traslúcido bajo la curva
+                borderWidth: 3.5,
+                pointBackgroundColor: '#00B0FF',
+                pointHoverRadius: 7,
+                fill: true,
+                tension: 0.2
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'top',
+                labels: {
+                    color: '#9ca3af',
+                    boxWidth: 12
+                }
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        let label = context.dataset.label || '';
+                        if (label) {
+                            label += ': ';
+                        }
+                        if (context.parsed.y !== null) {
+                            label += new Intl.NumberFormat('es-CO').format(context.parsed.y) + ' m³';
+                        }
+                        return label;
                     }
                 }
             }
-        });
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: { color: '#1f2937' },
+                ticks: {
+                    callback: function(value) {
+                        return new Intl.NumberFormat('es-CO').format(value) + ' m³';
+                    }
+                }
+            },
+            x: {
+                grid: { display: false }
+            }
+        }
+    }
+});
 
         // --- 3. GRÁFICO DE CARBONO ---
        <!-- 
