@@ -3,40 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ingresos - Servicios y Concesiones</title>
-    
-    <!-- Favicon Nativo (Truco del Emoji) -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💰</text></svg>">
-
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+    <title>Ingresos - Planta Física</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+
     <style>
-        body {
-            /* Aquí debes enlazar tu imagen de fondo patrón */
-            background-image: url('assets/bg-pattern.png');
-            background-repeat: repeat;
-            background-size: 320px; 
-            background-attachment: fixed;
-            background-color: #0B0F19; 
-        }
+    body {
+        background-image: url('images/bg-pattern.png'); /* Ajusta la ruta según tu estructura de carpetas */
+        background-repeat: repeat;
+        background-size: 350px; /* Ajusta este número (en px) para hacer los dibujos más grandes o más pequeños */
+        background-attachment: fixed; /* Mantiene el fondo estático mientras haces scroll (efecto elegante) */
+        background-color: #0B0F19; /* Color de respaldo en caso de que la imagen tarde en cargar */
+    }
     </style>
 </head>
-<body class="text-white font-sans min-h-screen p-6">
+<body class="text-white font-sans min-h-screen flex flex-col justify-between">
 
-    <!-- 1. BARRA DE NAVEGACIÓN SUPERIOR -->
-    <!-- Se mantiene fija al hacer scroll (sticky), con un fondo ligeramente translúcido -->
-    <nav class="flex justify-between items-center bg-[#0B0F19]/95 backdrop-blur-sm py-4 px-6 border-b border-gray-800/80 sticky top-0 z-50">
-        <a href="index.html" class="flex items-center text-gray-400 hover:text-white transition-colors text-sm font-medium group">
-            <svg class="w-5 h-5 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-            </svg>
-            Volver al Dashboard Principal
-        </a>
-        
-        <!-- Etiqueta de Área en la esquina superior derecha -->
-        <div class="px-3 py-1.5 rounded-full border border-emerald-500/20 text-emerald-400 text-xs font-medium tracking-wide">
-            Área: Servicios y Concesiones
+    <nav class="bg-[#111827] border-b border-gray-800 px-6 py-4">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <a href="../index.html" class="flex items-center text-sm font-semibold text-gray-400 hover:text-[#00A859] transition duration-200">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Volver al Dashboard Principal
+            </a>
+            <span class="text-xs bg-[#00A859]/10 text-[#00A859] px-3 py-1 rounded-full border border-[#00A859]/30 font-mono">
+                Área: Servicios y Concesiones
+            </span>
         </div>
     </nav>
 
