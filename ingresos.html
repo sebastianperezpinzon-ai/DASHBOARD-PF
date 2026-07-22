@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>💰 Ingresos - Servicios y Concesiones</title>
+    <title>Ingresos - Servicios y Concesiones</title>
     
     <!-- Favicon Nativo (Truco del Emoji) -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💰</text></svg>">
@@ -24,9 +24,31 @@
 </head>
 <body class="text-white font-sans min-h-screen p-6">
 
-    <header class="mb-8">
-        <h1 class="text-3xl font-bold text-white mb-2 tracking-tight">Servicios y Concesiones</h1>
-        <p class="text-gray-400 text-sm">Monitoreo de retorno de recursos y sostenibilidad financiera de los espacios (ODS 8, ODS 12).</p>
+    <!-- 1. BARRA DE NAVEGACIÓN SUPERIOR -->
+    <!-- Se mantiene fija al hacer scroll (sticky), con un fondo ligeramente translúcido -->
+    <nav class="flex justify-between items-center bg-[#0B0F19]/95 backdrop-blur-sm py-4 px-6 border-b border-gray-800/80 sticky top-0 z-50">
+        <a href="index.html" class="flex items-center text-gray-400 hover:text-white transition-colors text-sm font-medium group">
+            <svg class="w-5 h-5 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Volver al Dashboard Principal
+        </a>
+        
+        <!-- Etiqueta de Área en la esquina superior derecha -->
+        <div class="px-3 py-1.5 rounded-full border border-emerald-500/20 text-emerald-400 text-xs font-medium tracking-wide">
+            Área: Servicios y Concesiones
+        </div>
+    </nav>
+
+    <!-- 2. CABECERA PRINCIPAL (HERO SECTION) -->
+    <!-- Textos centrados y espaciados para igualar la identidad de la sección de servicios públicos -->
+    <header class="text-center py-16 px-6 relative z-10">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-6 tracking-tight drop-shadow-md">
+            Ingresos
+        </h1>
+        <p class="text-gray-400 text-base md:text-lg max-w-3xl mx-auto leading-relaxed">
+            Monitoreo de retorno de recursos y sostenibilidad financiera de los espacios (ODS 8, ODS 12).
+        </p>
     </header>
 
     <!-- Contenedor Principal (Grid) -->
