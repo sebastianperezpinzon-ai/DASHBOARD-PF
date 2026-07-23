@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ Ahorro y Optimización - Servicios y Concesiones</title>
+    
+    <!-- Favicon Nativo ECO-S -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        body {
+            background-image: url('assets/bg-pattern.png');
+            background-repeat: repeat;
+            background-size: 320px; 
+            background-attachment: fixed;
+            background-color: #0B0F19; 
+        }
+    </style>
+</head>
+<body class="text-white font-sans min-h-screen flex flex-col justify-between">
+
+    <div>
+        <!-- 1. BARRA DE NAVEGACIÓN SUPERIOR (Estándar del Dashboard) -->
+        <nav class="flex justify-between items-center bg-[#0B0F19]/95 backdrop-blur-sm py-4 px-6 border-b border-gray-800/80 sticky top-0 z-50">
+            <a href="index.html" class="flex items-center text-gray-400 hover:text-white transition-colors text-sm font-medium group">
+                <svg class="w-5 h-5 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Volver al Dashboard Principal
+            </a>
+            
+            <div class="px-3 py-1.5 rounded-full border border-emerald-500/20 text-emerald-400 text-xs font-medium tracking-wide">
+                Área: Servicios y Concesiones
+            </div>
+        </nav>
+
+        <!-- 2. CABECERA PRINCIPAL (HERO SECTION) -->
+        <header class="text-center py-12 px-6 relative z-10">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight drop-shadow-md">
+                Ahorro y Optimización de Recursos
+            </h1>
+            <p class="text-gray-400 text-base md:text-lg max-w-3xl mx-auto leading-relaxed">
+                Seguimiento del desempeño presupuestal, generación fotovoltaica y eficiencia en servicios tercerizados (ODS 7, ODS 12, ODS 13).
+            </p>
+        </header>
+
+        <!-- 3. CONTENEDOR DE TARJETAS (GRID 2x2) -->
+        <main class="max-w-7xl mx-auto px-6 mb-12">
+            <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+
+                <!-- TARJETA 1: Presupuesto Agua 2026 -->
+                <div class="bg-[#111827] rounded-xl border border-gray-800 shadow-xl p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                <span class="text-[#00B0FF]">💧</span> Presupuesto vs. Gasto: Agua (2026)
+                            </h3>
+                            <span class="text-xs bg-[#00B0FF]/10 text-[#00B0FF] px-2.5 py-1 rounded-full font-semibold">ODS 6</span>
+                        </div>
+                        <div class="relative h-64 w-full mb-4">
+                            <canvas id="presupuestoAguaChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="border-t border-gray-800/80 pt-4 mt-2 min-h-[100px]">
+                        <p class="text-xs text-gray-400 leading-relaxed">
+                            <strong class="text-white">Gráfico 1: Ejecución Presupuestal de Agua Potable.</strong>
+                            Muestra la diferencia entre lo proyectado y lo ejecutado mes a mes. En el primer cuatrimestre se evidencian ahorros significativos frente a la meta proyectada.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- TARJETA 2: Presupuesto Energía 2026 -->
+                <div class="bg-[#111827] rounded-xl border border-gray-800 shadow-xl p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                <span class="text-amber-400">⚡</span> Presupuesto vs. Gasto: Energía (2026)
+                            </h3>
+                            <span class="text-xs bg-amber-500/10 text-amber-400 px-2.5 py-1 rounded-full font-semibold">ODS 7</span>
+                        </div>
+                        <div class="relative h-64 w-full mb-4">
+                            <canvas id="presupuestoEnergiaChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="border-t border-gray-800/80 pt-4 mt-2 min-h-[100px]">
+                        <p class="text-xs text-gray-400 leading-relaxed">
+                            <strong class="text-white">Gráfico 2: Ejecución Presupuestal de Energía Eléctrica.</strong>
+                            Refleja un giro operacional crucial: tras superar el presupuesto entre enero y marzo, las medidas de eficiencia lograron estabilizar el gasto por debajo de los $160M en el segundo trimestre.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- TARJETA 3: Ahorro Energía Solar -->
+                <div class="bg-[#111827] rounded-xl border border-gray-800 shadow-xl p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                <span class="text-yellow-400">☀️</span> Retorno por Autogeneración Solar
+                            </h3>
+                            <span class="text-xs bg-yellow-500/10 text-yellow-400 px-2.5 py-1 rounded-full font-semibold">ODS 13</span>
+                        </div>
+                        <div class="relative h-64 w-full mb-4">
+                            <canvas id="solarChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="border-t border-gray-800/80 pt-4 mt-2 min-h-[100px]">
+                        <p class="text-xs text-gray-400 leading-relaxed">
+                            <strong class="text-white">Gráfico 3: Ahorro Económico en Tarifa por Autogeneración ($ COP).</strong>
+                            Representa la monetización directa de la energía limpia generada por el sistema fotovoltaico de la universidad, inyectando un retorno promedio superior a los $2M mensuales.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- TARJETA 4: Ahorro Servicios Auros -->
+                <div class="bg-[#111827] rounded-xl border border-gray-800 shadow-xl p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                <span class="text-emerald-400">📄</span> Optimización de Servicios Auros (Impresión)
+                            </h3>
+                            <span class="text-xs bg-emerald-500/10 text-emerald-400 px-2.5 py-1 rounded-full font-semibold">ODS 12</span>
+                        </div>
+                        <div class="relative h-64 w-full mb-4">
+                            <canvas id="aurosChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="border-t border-gray-800/80 pt-4 mt-2 min-h-[100px]">
+                        <p class="text-xs text-gray-400 leading-relaxed">
+                            <strong class="text-white">Gráfico 4: Reducción de Consumo Auros (2025 vs. 2026).</strong>
+                            Comparativa que evidencia la caída drástica en la demanda de insumos de impresión y reprografía en el campus, impulsada por políticas de digitalización de procesos académicos.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- 4. SCRIPTS DE CHARTS.JS -->
+    <script>
+        // Formateador de moneda en Pesos Colombianos (COP)
+        const formatCOP = (val) => '$' + new Intl.NumberFormat('es-CO').format(val);
+
+        // --- 1. CHARTS PRESUPUESTO AGUA ---
+        new Chart(document.getElementById('presupuestoAguaChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+                datasets: [
+                    {
+                        label: 'Presupuesto',
+                        data: [20183811, 5180192, 16250297, 10120520, 13429270, 8890103],
+                        backgroundColor: 'rgba(100, 116, 139, 0.5)',
+                        borderColor: '#64748b',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    },
+                    {
+                        label: 'Gastado',
+                        data: [7898425, 4178180, 9131110, 5129530, 14766480, 9472640],
+                        backgroundColor: '#00B0FF',
+                        borderRadius: 4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { labels: { color: '#9ca3af', boxWidth: 12 } },
+                    tooltip: { callbacks: { label: (c) => c.dataset.label + ': ' + formatCOP(c.parsed.y) } }
+                },
+                scales: {
+                    x: { grid: { display: false }, ticks: { color: '#9ca3af' } },
+                    y: { 
+                        grid: { color: '#1f2937' }, 
+                        ticks: { color: '#9ca3af', callback: (v) => '$' + (v/1000000).toFixed(1) + 'M' } 
+                    }
+                }
+            }
+        });
+
+        // --- 2. CHARTS PRESUPUESTO ENERGÍA ---
+        new Chart(document.getElementById('presupuestoEnergiaChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+                datasets: [
+                    {
+                        label: 'Presupuesto',
+                        data: [93470504, 113468082, 152704555, 220449306, 220304405, 213495841],
+                        backgroundColor: 'rgba(100, 116, 139, 0.5)',
+                        borderColor: '#64748b',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    },
+                    {
+                        label: 'Gastado',
+                        data: [137732420, 135237930, 156028130, 158556340, 145024190, 158130680],
+                        backgroundColor: '#F59E0B',
+                        borderRadius: 4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { labels: { color: '#9ca3af', boxWidth: 12 } },
+                    tooltip: { callbacks: { label: (c) => c.dataset.label + ': ' + formatCOP(c.parsed.y) } }
+                },
+                scales: {
+                    x: { grid: { display: false }, ticks: { color: '#9ca3af' } },
+                    y: { 
+                        grid: { color: '#1f2937' }, 
+                        ticks: { color: '#9ca3af', callback: (v) => '$' + (v/1000000).toFixed(0) + 'M' } 
+                    }
+                }
+            }
+        });
+
+        // --- 3. CHARTS ENERGÍA SOLAR ---
+        new Chart(document.getElementById('solarChart'), {
+            type: 'line',
+            data: {
+                labels: ['Dic', 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Ahorro Solar ($ COP)',
+                    data: [1892830, 2712785, 1767446, 2006799, 1950026, 2272967, 1864322],
+                    borderColor: '#FACC15',
+                    backgroundColor: 'rgba(250, 204, 21, 0.12)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.3,
+                    pointBackgroundColor: '#FACC15',
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { labels: { color: '#9ca3af', boxWidth: 12 } },
+                    tooltip: { callbacks: { label: (c) => 'Ahorro: ' + formatCOP(c.parsed.y) } }
+                },
+                scales: {
+                    x: { grid: { display: false }, ticks: { color: '#9ca3af' } },
+                    y: { 
+                        grid: { color: '#1f2937' }, 
+                        ticks: { color: '#9ca3af', callback: (v) => '$' + (v/1000000).toFixed(1) + 'M' } 
+                    }
+                }
+            }
+        });
+
+        // --- 4. CHARTS AUROS (2025 vs 2026) ---
+        new Chart(document.getElementById('aurosChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                datasets: [
+                    {
+                        label: 'Servicios 2025',
+                        data: [6736, 17338, 18796, 10596, 12658, 7548, 12482, 17764, 14805, 14485, 12370, 3581],
+                        backgroundColor: 'rgba(100, 116, 139, 0.4)',
+                        borderRadius: 3
+                    },
+                    {
+                        label: 'Servicios 2026',
+                        data: [4525, 9116, 5769, 6421, 6164, 3974, null, null, null, null, null, null],
+                        backgroundColor: '#10B981',
+                        borderRadius: 3
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { labels: { color: '#9ca3af', boxWidth: 12 } },
+                    tooltip: { callbacks: { label: (c) => c.dataset.label + ': ' + new Intl.NumberFormat('es-CO').format(c.parsed.y) + ' servicios' } }
+                },
+                scales: {
+                    x: { grid: { display: false }, ticks: { color: '#9ca3af' } },
+                    y: { grid: { color: '#1f2937' }, ticks: { color: '#9ca3af' } }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
