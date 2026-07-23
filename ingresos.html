@@ -48,37 +48,16 @@
     <!-- Contenedor Principal (Grid) -->
     <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
 
-        <!-- TARJETA 1: Gráfico de Recobro de Servicios -->
-        <div class="bg-[#111827] rounded-xl border border-gray-800 shadow-xl overflow-hidden p-6 flex flex-col justify-between">
-            <div>
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                        <span class="text-emerald-400">🔄</span> Recobro de Servicios Públicos
-                    </h3>
-                  <!--  <span class="text-xs bg-emerald-500/10 text-emerald-400 px-2.5 py-1 rounded-full font-semibold">ODS 12</span> -->
-                </div>
-                
-                <div class="relative h-72 w-full mb-4">
-                    <canvas id="recobroChart"></canvas>
-                </div>
-            </div>
-
-            <div class="border-t border-gray-800/80 pt-4 mt-2">
-                <p class="text-xs text-gray-400 leading-relaxed">
-                    <strong class="text-white">Gráfico 1: Evolución de Recobros (COP).</strong> 
-                    Representación del retorno financiero por servicios consumidos por terceros. Identificar con precisión este rubro garantiza que la institución no subsidie la huella de insumos de actores externos, permitiendo reinvertir ese capital en el mantenimiento preventivo del campus.
-                </p>
-            </div>
-        </div>
+        
 
         <!-- TARJETA 2: Tabla de Concesión de Espacios -->
         <div class="bg-[#111827] rounded-xl border border-gray-800 shadow-xl overflow-hidden p-6 flex flex-col justify-between">
             <div>
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                        <span class="text-purple-400">🏢</span> Concesión de Espacios (Ene - Jun)
+                        <span class="text-purple-400">🏢</span> Ingresos por concesión de espacios
                     </h3>
-                    <span class="text-xs bg-purple-500/10 text-purple-400 px-2.5 py-1 rounded-full font-semibold">Gestión Espacial</span>
+                    <!-- <span class="text-xs bg-purple-500/10 text-purple-400 px-2.5 py-1 rounded-full font-semibold">Gestión Espacial</span> -->
                 </div>
                 
                 <div class="overflow-x-auto w-full mb-4">
@@ -120,6 +99,10 @@
                                 <td class="p-2 font-medium text-white">VOLTOP</td>
                                 <td class="p-2 text-right">$12.639.312</td><td class="p-2 text-right">$12.205.422</td><td class="p-2 text-right">$12.391.307</td><td class="p-2 text-right">$11.223.043</td><td class="p-2 text-right">$13.051.655</td><td class="p-2 text-right">$12.582.990</td>
                             </tr>
+                            <tr class="hover:bg-gray-800/20 transition-colors">
+                                <td class="p-2 font-medium text-white">TOTAL</td>
+                                <td class="p-2 text-right text-emerald-400 font-bold">$50.568.819</td><td class="p-2 text-right text-emerald-400 font-bold">$71.262.598</td><td class="p-2 text-right text-emerald-400 font-bold">$92.758.412</td><td class="p-2 text-right text-emerald-400 font-bold">$101.847.788</td><td class="p-2 text-right text-emerald-400 font-bold">$86.716.099</td><td class="p-2 text-right text-emerald-400 font-bold">$62.427.103</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -127,13 +110,38 @@
 
             <div class="border-t border-gray-800/80 pt-4 mt-2">
                 <p class="text-xs text-gray-400 leading-relaxed">
-                    <strong class="text-white">Tabla 1: Cánones de Arrendamiento y Concesiones.</strong> 
-                    Mapeo financiero de los "terceros espacios" cedidos a la operación privada. Su análisis cruzado permite evaluar si el valor recaudado justifica la carga de tráfico y densidad poblacional que estos actores atraen al ecosistema del campus.
+                    <strong class="text-white">Tabla 1: Ingresos por concesión.</strong> 
+                    Durante el primer semestre de 2026, los ingresos generados por concepto de concesión de espacios ascendieron a un total de $465.580.819. El mes con el mayor nivel de ingresos fue abril, con un recaudo de $101.847.788.
                 </p>
             </div>
         </div>
 
     </div>
+
+<br>
+
+<!-- TARJETA 1: Gráfico de Recobro de Servicios -->
+        <div class="bg-[#111827] rounded-xl border border-gray-800 shadow-xl overflow-hidden p-6 flex flex-col justify-between">
+            <div>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <span class="text-emerald-400">🔄</span> Recobro de Servicios Públicos
+                    </h3>
+                  <!--  <span class="text-xs bg-emerald-500/10 text-emerald-400 px-2.5 py-1 rounded-full font-semibold">ODS 12</span> -->
+                </div>
+                
+                <div class="relative h-72 w-full mb-4">
+                    <canvas id="recobroChart"></canvas>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800/80 pt-4 mt-2">
+                <p class="text-xs text-gray-400 leading-relaxed">
+                    <strong class="text-white">Gráfico 1: Recobro de servicios (COP).</strong> 
+                    Durante el primer semestre de 2026, se logró un recobro de $454.744.634 por concepto de servicios públicos; Voltop representa la mayor proporción del recaudo, mientras que, el recaudo asociado a eventos comenzó a implementarse a inicios de 2026, contribuyendo de manera progresiva al valor total recaudado y el recobro correspondiente a las cafeterías inició a principios del segundo semestre, ampliando las fuentes de recuperación de costos por servicios públicos.
+                </p>
+            </div>
+        </div>
 
     <!-- Script de Configuración del Gráfico -->
     <script>
