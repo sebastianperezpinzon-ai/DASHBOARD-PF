@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏷️</text></svg>">
+    <title>Clasificación de Compras - Análitica Multimoneda</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+    body {
+        background-image: url('../images/bg-pattern.png');
+        background-repeat: repeat;
+        background-size: 350px;
+        background-attachment: fixed;
+        background-color: #0B0F19;
+    }
+    .currency-btn-active {
+        background-color: #8B5CF6 !important;
+        color: #ffffff !important;
+        border-color: #A78BFA !important;
+    }
+    </style>
+</head>
+<body class="text-white font-sans min-h-screen flex flex-col justify-between">
+
+    <div>
+        <!-- 1. BARRA DE NAVEGACIÓN SUPERIOR -->
+        <nav class="bg-[#111827] border-b border-gray-800 px-6 py-4 sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto flex justify-between items-center">
+                <a href="../index.html" class="flex items-center text-sm font-semibold text-gray-400 hover:text-purple-400 transition duration-200">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Volver al Dashboard Principal
+                </a>
+                <span class="text-xs bg-purple-500/10 text-purple-400 px-3 py-1 rounded-full border border-purple-500/30 font-mono">
+                    Módulo: Clasificación y Distribución del Gasto (Marzo)
+                </span>
+            </div>
+        </nav>
+
+        <!-- 2. CABECERA PRINCIPAL (HERO SECTION) -->
+        <header class="text-center py-8 px-6 relative z-10">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-3 tracking-tight drop-shadow-md">
+                Clasificación Multimoneda de Compras
+            </h1>
+            <p class="text-gray-400 text-base md:text-lg max-w-3xl mx-auto leading-relaxed">
+                Distribución del presupuesto por Procesos Institucionales y Tipos de Compra. Análisis nominal independiente por divisa sin distorsión por tasa de cambio.
+            </p>
+        </header>
+
+        <!-- 3. RESUMEN DE INDICADORES CLAVE (KPI CARDS POR MONEDA) -->
+        <section class="w-full max-w-7xl mx-auto px-6 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="bg-[#111827] p-5 rounded-xl border border-gray-800 shadow-lg">
+                    <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold flex justify-between">
+                        <span>Gasto Ejecutado COP</span>
+                        <span class="text-purple-400 font-bold">COP</span>
+                    </p>
+                    <p class="text-2xl font-extrabold text-purple-400 mt-2">$ 1.189.864.285</p>
+                    <p class="text-[11px] text-gray-500 mt-1">Gasto total en moneda nacional</p>
+                </div>
+                <div class="bg-[#111827] p-5 rounded-xl border border-gray-800 shadow-lg">
+                    <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold flex justify-between">
+                        <span>Gasto Ejecutado USD</span>
+                        <span class="text-emerald-400 font-bold">USD</span>
+                    </p>
+                    <p class="text-2xl font-extrabold text-emerald-400 mt-2">$ 19.004</p>
+                    <p class="text-[11px] text-gray-500 mt-1">Licencias, Software y Servicios IT</p>
+                </div>
+                <div class="bg-[#111827] p-5 rounded-xl border border-gray-800 shadow-lg">
+                    <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold flex justify-between">
+                        <span>Gasto Ejecutado EUR</span>
+                        <span class="text-amber-400 font-bold">EUR</span>
+                    </p>
+                    <p class="text-2xl font-extrabold text-amber-400 mt-2">€ 1.545</p>
+                    <p class="text-[11px] text-gray-500 mt-1">Investigación y Desarrollo Integral</p>
+                </div>
+                <div class="bg-[#111827] p-5 rounded-xl border border-gray-800 shadow-lg">
+                    <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold">Proceso Mayor Gasto</p>
+                    <p class="text-lg font-bold text-gray-200 mt-2 truncate">Infraestructura y Planta</p>
+                    <p class="text-[11px] text-purple-400 mt-1">$ 241.660.782 COP (20.3%)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. CONTENEDOR PRINCIPAL: GRÁFICAS Y TABLAS -->
+        <main class="w-full max-w-7xl mx-auto px-6 mb-12 space-y-10">
+
+            <!-- SECCIÓN 1: GASTO POR PROCESO -->
+            <section class="bg-[#111827] rounded-xl border border-gray-800 shadow-xl p-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                            <span class="text-purple-400">🏢</span> 1. Gasto por Proceso o Área
+                        </h2>
+                        <p class="text-xs text-gray-400 mt-1">Selecciona la divisa para adaptar la escala del gráfico sin alterar valores reales.</p>
+                    </div>
+
+                    <!-- Botones de Selección de Moneda -->
+                    <div class="flex items-center bg-[#0B0F19] p-1 rounded-lg border border-gray-800 text-xs">
+                        <span class="text-gray-500 px-2 font-semibold">Divisa:</span>
+                        <button onclick="changeProcesoCurrency('COP')" id="btn-proc-cop" class="currency-btn-active px-3 py-1.5 rounded-md font-bold transition">COP ($)</button>
+                        <button onclick="changeProcesoCurrency('USD')" id="btn-proc-usd" class="px-3 py-1.5 rounded-md font-bold text-gray-400 hover:text-white transition">USD ($)</button>
+                        <button onclick="changeProcesoCurrency('EUR')" id="btn-proc-eur" class="px-3 py-1.5 rounded-md font-bold text-gray-400 hover:text-white transition">EUR (€)</button>
+                    </div>
+                </div>
+
+                <!-- Gráfica Proceso -->
+                <div class="relative h-80 w-full mb-8">
+                    <canvas id="procesoChart"></canvas>
+                </div>
+
+                <!-- Tabla Proceso -->
+                <div class="w-full overflow-x-auto">
+                    <table class="w-full text-left text-xs text-gray-300">
+                        <thead class="bg-[#0B0F19] text-purple-400 uppercase text-[10px] tracking-wider">
+                            <tr>
+                                <th class="p-3 rounded-l">Proceso / Área</th>
+                                <th class="p-3 text-right">Gasto COP</th>
+                                <th class="p-3 text-right">Gasto USD</th>
+                                <th class="p-3 text-right rounded-r">Gasto EUR</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaProcesosBody" class="divide-y divide-gray-800/50">
+                            <!-- Inyectado dinámicamente con JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- SECCIÓN 2: GASTO SEGÚN TIPO DE COMPRA -->
+            <section class="bg-[#111827] rounded-xl border border-gray-800 shadow-xl p-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                            <span class="text-emerald-400">📦</span> 2. Gasto según Tipo de Compra
+                        </h2>
+                        <p class="text-xs text-gray-400 mt-1">Clasificación temática de adquisiciones y distribución por categoría de rubro.</p>
+                    </div>
+
+                    <!-- Botones de Selección de Moneda -->
+                    <div class="flex items-center bg-[#0B0F19] p-1 rounded-lg border border-gray-800 text-xs">
+                        <span class="text-gray-500 px-2 font-semibold">Divisa:</span>
+                        <button onclick="changeTipoCurrency('COP')" id="btn-tipo-cop" class="currency-btn-active px-3 py-1.5 rounded-md font-bold transition">COP ($)</button>
+                        <button onclick="changeTipoCurrency('USD')" id="btn-tipo-usd" class="px-3 py-1.5 rounded-md font-bold text-gray-400 hover:text-white transition">USD ($)</button>
+                        <button onclick="changeTipoCurrency('EUR')" id="btn-tipo-eur" class="px-3 py-1.5 rounded-md font-bold text-gray-400 hover:text-white transition">EUR (€)</button>
+                    </div>
+                </div>
+
+                <!-- Gráfica Tipo de Compra -->
+                <div class="relative h-80 w-full mb-8">
+                    <canvas id="tipoChart"></canvas>
+                </div>
+
+                <!-- Tabla Tipo de Compra -->
+                <div class="w-full overflow-x-auto">
+                    <table class="w-full text-left text-xs text-gray-300">
+                        <thead class="bg-[#0B0F19] text-emerald-400 uppercase text-[10px] tracking-wider">
+                            <tr>
+                                <th class="p-3 rounded-l">Tipo de Compra / Categoria</th>
+                                <th class="p-3 text-right">Gasto COP</th>
+                                <th class="p-3 text-right">Gasto USD</th>
+                                <th class="p-3 text-right rounded-r">Gasto EUR</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaTiposBody" class="divide-y divide-gray-800/50">
+                            <!-- Inyectado dinámicamente con JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- 5. PIE DE PÁGINA -->
+    <footer class="bg-[#0B0F19] text-center py-6 text-xs text-gray-500 border-t border-gray-800">
+        <p>Dirección de Gestión Administrativa • Control Presupuestal y Analítica de Compras</p>
+    </footer>
+
+    <!-- 6. SCRIPTS DE LÓGICA Y RENDERIZADO DE DATOS -->
+    <script>
+        // DATA ESTRUCTURADA - PROCESOS
+        const rawProcesos = [
+            { nombre: "GESTIÓN DE INFRAESTRUCTURA Y PLANTA FÍSICA", cop: 241660782, usd: 0, eur: 0 },
+            { nombre: "GERENCIA DE INTERNACIONALIZACIÓN Y RELACIONES INSTITUCIONALES", cop: 96249709, usd: 3010, eur: 0 },
+            { nombre: "SALA GENERAL", cop: 77806456, usd: 0, eur: 0 },
+            { nombre: "SELECCIÓN DEL TALENTO Y CALIDAD DE VIDA", cop: 71284399, usd: 1040, eur: 0 },
+            { nombre: "GESTIÓN DE COMUNICACIONES Y PUBLICIDAD", cop: 70145838, usd: 0, eur: 0 },
+            { nombre: "POSGRADO", cop: 62516947, usd: 0, eur: 0 },
+            { nombre: "CONSULTORIA PRIVADA", cop: 54496326, usd: 0, eur: 0 },
+            { nombre: "PROTOCOLO Y GESTIÓN DE EVENTOS INTERNOS", cop: 33759699, usd: 0, eur: 0 },
+            { nombre: "FACULTAD DE ADMINISTRACION", cop: 33651716, usd: 100, eur: 0 },
+            { nombre: "BIBLIOTECA", cop: 32454275, usd: 114, eur: 0 },
+            { nombre: "GESTIÓN COMERCIAL EVENTOS EXTERNOS", cop: 29875710, usd: 0, eur: 0 },
+            { nombre: "PREGRADO", cop: 28479239, usd: 0, eur: 0 },
+            { nombre: "EDUCACIÓN CONTINUADA PROYECTOS", cop: 28232210, usd: 0, eur: 0 },
+            { nombre: "RECTORÍA", cop: 27885108, usd: 0, eur: 0 },
+            { nombre: "BIENESTAR UNIVERSITARIO", cop: 24321899, usd: 0, eur: 0 },
+            { nombre: "SEGURIDAD INFORMÁTICA", cop: 22979723, usd: 0, eur: 0 },
+            { nombre: "PUBLICACIONES CIENTIFICAS Y DOCENTES", cop: 21770480, usd: 199, eur: 0 },
+            { nombre: "GERENCIA IES", cop: 20736070, usd: 0, eur: 0 },
+            { nombre: "GERENCIA DE PROYECCIÓN Y CRECIMIENTO", cop: 17457039, usd: 0, eur: 0 },
+            { nombre: "EXPERIENCIA DE USUARIO", cop: 15935268, usd: 1635, eur: 0 },
+            { nombre: "EAN X PROYECTOS", cop: 14453777, usd: 4013, eur: 0 },
+            { nombre: "SISTEMA DE GESTIÓN DE LA SEGURIDAD Y SALUD EN EL TRABAJO", cop: 13936436, usd: 0, eur: 0 },
+            { nombre: "PRÁCTICAS PROFESIONALES Y TRABAJOS DE GRADO", cop: 12096421, usd: 0, eur: 0 },
+            { nombre: "FACULTAD DE HUMANIDADES Y CIENCIAS SOCIALES", cop: 11835176, usd: 0, eur: 0 },
+            { nombre: "TIENDA EAN", cop: 10963820, usd: 0, eur: 0 },
+            { nombre: "NUEVOS MERCADOS", cop: 9196636, usd: 0, eur: 0 },
+            { nombre: "UNIDAD DE INNOVACIÓN Y TRANSFERENCIA", cop: 8679667, usd: 0, eur: 0 },
+            { nombre: "CONSULTORÍA ESPECIALIZADA", cop: 8429539, usd: 0, eur: 0 },
+            { nombre: "UNIDAD DE DESARROLLO", cop: 8231789, usd: 0, eur: 0 },
+            { nombre: "FORMACIÓN A LA MEDIDA", cop: 7788000, usd: 0, eur: 0 },
+            { nombre: "DIRECCIÓN DE INVESTIGACIONES", cop: 7108612, usd: 442, eur: 360 },
+            { nombre: "DIRECCIÓN DE EXTENSIÓN COMERCIAL", cop: 6806438, usd: 0, eur: 0 },
+            { nombre: "CONTRATACIÓN PÚBLICA", cop: 6690000, usd: 0, eur: 0 },
+            { nombre: "PROYECTOS TECNOLÓGICOS", cop: 6545000, usd: 0, eur: 0 },
+            { nombre: "REGIONES", cop: 5832534, usd: 0, eur: 0 },
+            { nombre: "GERENCIA GENERAL", cop: 5570386, usd: 0, eur: 0 },
+            { nombre: "DISEÑO ORGANIZACIONAL Y GESTIÓN DEL CAMBIO", cop: 5565126, usd: 0, eur: 0 },
+            { nombre: "FACULTAD DE INGENIERÍA", cop: 5050000, usd: 0, eur: 0 },
+            { nombre: "LABORATORIOS DE INGENIERÍA", cop: 4646810, usd: 0, eur: 0 },
+            { nombre: "EVALUACIÓN Y DESARROLLO INTEGRAL", cop: 3585754, usd: 0, eur: 900 },
+            { nombre: "EAN ORINOQUIA", cop: 3046329, usd: 0, eur: 0 },
+            { nombre: "VICERRECTORÍA DE INNOVACIÓN ACADÉMICA", cop: 3039599, usd: 0, eur: 0 },
+            { nombre: "VICERRECTORÍA ADMINISTRATIVA Y FINANCIERA", cop: 1741867, usd: 0, eur: 0 },
+            { nombre: "DIRECCIÓN DE RECURSOS FINANCIEROS", cop: 1715652, usd: 0, eur: 0 },
+            { nombre: "REGISTROS CALIFICADOS Y ACREDITACIÓN", cop: 1700000, usd: 0, eur: 0 },
+            { nombre: "GESTIÓN JURÍDICA, LEGAL Y PROTECCIÓN DE DATOS PERSONALES", cop: 1500000, usd: 267, eur: 0 },
+            { nombre: "MEDIACIONES DIDÁCTICAS", cop: 1495776, usd: 950, eur: 0 },
+            { nombre: "EAN IMPACTA", cop: 1448332, usd: 0, eur: 0 },
+            { nombre: "OFICINA DE PROYECTOS PMO", cop: 1340745, usd: 4690, eur: 0 },
+            { nombre: "EDUCACIÓN CONTINUADA COMERCIAL", cop: 1153130, usd: 0, eur: 0 },
+            { nombre: "GESTIÓN DOCUMENTAL", cop: 1050388, usd: 0, eur: 0 },
+            { nombre: "GESTIÓN DE CALIDAD Y DE LOS PROCESOS", cop: 754941, usd: 0, eur: 0 },
+            { nombre: "EMPRENDIMIENTO", cop: 523481, usd: 0, eur: 0 },
+            { nombre: "REGISTRO ACADÉMICO", cop: 214438, usd: 0, eur: 0 },
+            { nombre: "PUBLICIDAD", cop: 0, usd: 1656, eur: 0 },
+            { nombre: "SISTEMAS DE INFORMACIÓN", cop: 0, usd: 888, eur: 0 },
+            { nombre: "UNIDAD ACADÉMICA ADMINISTRATIVA", cop: 0, usd: 0, eur: 285 }
+        ];
+
+        // DATA ESTRUCTURADA - TIPO DE COMPRA
+        const rawTipos = [
+            { nombre: "SERVICIOS PROFESIONALES", cop: 210562866, usd: 5730, eur: 900 },
+            { nombre: "LICENCIAS Y SUBSCRIPCIONES", cop: 196394343, usd: 10610, eur: 360 },
+            { nombre: "VIAJES", cop: 178506903, usd: 0, eur: 0 },
+            { nombre: "INSTITUCIONALES", cop: 122546860, usd: 1308, eur: 0 },
+            { nombre: "SERVICIOS MANTENIMIENTO INFRAESTRUCTURA", cop: 89082504, usd: 0, eur: 0 },
+            { nombre: "ALIMENTACION Y REFRIGERIOS", cop: 55548166, usd: 0, eur: 0 },
+            { nombre: "PUBLICIDAD Y MATERIAL POP", cop: 48015792, usd: 0, eur: 0 },
+            { nombre: "SEGUROS", cop: 39338010, usd: 0, eur: 0 },
+            { nombre: "TRANSPORTE", cop: 38692029, usd: 0, eur: 0 },
+            { nombre: "GRADOS Y EVENTOS", cop: 32140299, usd: 0, eur: 0 },
+            { nombre: "ELEMENTOS DE FERRETERIA", cop: 29526936, usd: 0, eur: 0 },
+            { nombre: "DOTACIÓN Y ELEMENTOS DE PROTECCIÓN", cop: 26134866, usd: 0, eur: 0 },
+            { nombre: "ACTIVOS Y/O EQUIPO", cop: 17566184, usd: 0, eur: 0 },
+            { nombre: "BONOS", cop: 16746981, usd: 0, eur: 0 },
+            { nombre: "MUEBLES Y ENSERES", cop: 14354414, usd: 0, eur: 0 },
+            { nombre: "ARRENDAMIENTO Y ALQUILER", cop: 14028196, usd: 0, eur: 0 },
+            { nombre: "HARDWARE", cop: 11940234, usd: 0, eur: 0 },
+            { nombre: "SOFTWARE", cop: 11934605, usd: 601, eur: 0 },
+            { nombre: "TIENDA EAN", cop: 8687000, usd: 0, eur: 0 },
+            { nombre: "IMPRESOS", cop: 7463661, usd: 0, eur: 0 },
+            { nombre: "ELEMENTOS DE LABORATORIO", cop: 4646810, usd: 442, eur: 0 },
+            { nombre: "ASEO Y CAFETERIA", cop: 4142525, usd: 0, eur: 0 },
+            { nombre: "SERVICIOS IT", cop: 3995034, usd: 0, eur: 0 },
+            { nombre: "LIBROS", cop: 3949475, usd: 114, eur: 285 },
+            { nombre: "MATERIALES Y REPUESTOS", cop: 3382720, usd: 0, eur: 0 },
+            { nombre: "EVENTOS", cop: 2995776, usd: 0, eur: 0 },
+            { nombre: "OUTSOURCING", cop: 1715652, usd: 0, eur: 0 },
+            { nombre: "PAPELERÍA", cop: 1354651, usd: 0, eur: 0 },
+            { nombre: "INTERNACIONALES", cop: 42000, usd: 199, eur: 0 }
+        ];
+
+        // VARIABLES GLOBALES DE INSTANCIAS DE CHART
+        let chartProceso = null;
+        let chartTipo = null;
+
+        // FORMATO MONEDA
+        const formatMoney = (val, currency) => {
+            if (!val || val === 0) return '-';
+            const formatted = new Intl.NumberFormat('es-CO').format(val);
+            if (currency === 'COP') return `$ ${formatted}`;
+            if (currency === 'USD') return `$ ${formatted} USD`;
+            if (currency === 'EUR') return `€ ${formatted} EUR`;
+            return formatted;
+        };
+
+        // RENDERIZAR TABLA DE PROCESOS
+        function renderTablaProcesos() {
+            const tbody = document.getElementById('tablaProcesosBody');
+            tbody.innerHTML = rawProcesos.map(item => `
+                <tr class="hover:bg-gray-800/30 transition-colors">
+                    <td class="p-3 font-medium text-white">${item.nombre}</td>
+                    <td class="p-3 text-right font-mono ${item.cop > 0 ? 'text-purple-300 font-bold' : 'text-gray-600'}">${formatMoney(item.cop, 'COP')}</td>
+                    <td class="p-3 text-right font-mono ${item.usd > 0 ? 'text-emerald-400 font-bold' : 'text-gray-600'}">${formatMoney(item.usd, 'USD')}</td>
+                    <td class="p-3 text-right font-mono ${item.eur > 0 ? 'text-amber-400 font-bold' : 'text-gray-600'}">${formatMoney(item.eur, 'EUR')}</td>
+                </tr>
+            `).join('');
+        }
+
+        // RENDERIZAR TABLA DE TIPOS DE COMPRA
+        function renderTablaTipos() {
+            const tbody = document.getElementById('tablaTiposBody');
+            tbody.innerHTML = rawTipos.map(item => `
+                <tr class="hover:bg-gray-800/30 transition-colors">
+                    <td class="p-3 font-medium text-white">${item.nombre}</td>
+                    <td class="p-3 text-right font-mono ${item.cop > 0 ? 'text-purple-300 font-bold' : 'text-gray-600'}">${formatMoney(item.cop, 'COP')}</td>
+                    <td class="p-3 text-right font-mono ${item.usd > 0 ? 'text-emerald-400 font-bold' : 'text-gray-600'}">${formatMoney(item.usd, 'USD')}</td>
+                    <td class="p-3 text-right font-mono ${item.eur > 0 ? 'text-amber-400 font-bold' : 'text-gray-600'}">${formatMoney(item.eur, 'EUR')}</td>
+                </tr>
+            `).join('');
+        }
+
+        // LÓGICA GRÁFICA PROCESOS POR MONEDA
+        function renderChartProceso(currency = 'COP') {
+            const key = currency.toLowerCase();
+            const filtered = rawProcesos
+                .filter(item => item[key] > 0)
+                .sort((a, b) => b[key] - a[key])
+                .slice(0, 10); // Top 10 para mantenibilidad visual
+
+            const labels = filtered.map(item => item.nombre.length > 28 ? item.nombre.substring(0, 26) + '...' : item.nombre);
+            const values = filtered.map(item => item[key]);
+
+            let barColor = 'rgba(139, 92, 246, 0.85)';
+            let borderColor = '#8B5CF6';
+            if (currency === 'USD') { barColor = 'rgba(16, 185, 129, 0.85)'; borderColor = '#10B981'; }
+            if (currency === 'EUR') { barColor = 'rgba(245, 158, 11, 0.85)'; borderColor = '#F59E0B'; }
+
+            const ctx = document.getElementById('procesoChart').getContext('2d');
+            if (chartProceso) chartProceso.destroy();
+
+            chartProceso = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: `Monto (${currency})`,
+                        data: values,
+                        backgroundColor: barColor,
+                        borderColor: borderColor,
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => ` Gasto: ${formatMoney(ctx.parsed.y, currency)}`
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#9ca3af', font: { size: 10 } } },
+                        y: { grid: { color: '#1f2937' }, ticks: { color: '#9ca3af' } }
+                    }
+                }
+            });
+        }
+
+        // LÓGICA GRÁFICA TIPO DE COMPRA POR MONEDA
+        function renderChartTipo(currency = 'COP') {
+            const key = currency.toLowerCase();
+            const filtered = rawTipos
+                .filter(item => item[key] > 0)
+                .sort((a, b) => b[key] - a[key])
+                .slice(0, 10); // Top 10 para mantenibilidad visual
+
+            const labels = filtered.map(item => item.nombre.length > 28 ? item.nombre.substring(0, 26) + '...' : item.nombre);
+            const values = filtered.map(item => item[key]);
+
+            let barColor = 'rgba(139, 92, 246, 0.85)';
+            let borderColor = '#8B5CF6';
+            if (currency === 'USD') { barColor = 'rgba(16, 185, 129, 0.85)'; borderColor = '#10B981'; }
+            if (currency === 'EUR') { barColor = 'rgba(245, 158, 11, 0.85)'; borderColor = '#F59E0B'; }
+
+            const ctx = document.getElementById('tipoChart').getContext('2d');
+            if (chartTipo) chartTipo.destroy();
+
+            chartTipo = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: `Monto (${currency})`,
+                        data: values,
+                        backgroundColor: barColor,
+                        borderColor: borderColor,
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => ` Gasto: ${formatMoney(ctx.parsed.y, currency)}`
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#9ca3af', font: { size: 10 } } },
+                        y: { grid: { color: '#1f2937' }, ticks: { color: '#9ca3af' } }
+                    }
+                }
+            });
+        }
+
+        // HANDLERS DE CAMBIO DE MONEDA (BOTONES)
+        function changeProcesoCurrency(curr) {
+            ['cop', 'usd', 'eur'].forEach(c => {
+                document.getElementById(`btn-proc-${c}`).classList.remove('currency-btn-active', 'text-white');
+                document.getElementById(`btn-proc-${c}`).classList.add('text-gray-400');
+            });
+            document.getElementById(`btn-proc-${curr.toLowerCase()}`).classList.add('currency-btn-active', 'text-white');
+            renderChartProceso(curr);
+        }
+
+        function changeTipoCurrency(curr) {
+            ['cop', 'usd', 'eur'].forEach(c => {
+                document.getElementById(`btn-tipo-${c}`).classList.remove('currency-btn-active', 'text-white');
+                document.getElementById(`btn-tipo-${c}`).classList.add('text-gray-400');
+            });
+            document.getElementById(`btn-tipo-${curr.toLowerCase()}`).classList.add('currency-btn-active', 'text-white');
+            renderChartTipo(curr);
+        }
+
+        // INICIALIZACIÓN AL CARGAR LA PÁGINA
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTablaProcesos();
+            renderTablaTipos();
+            renderChartProceso('COP');
+            renderChartTipo('COP');
+        });
+    </script>
+</body>
+</html>
