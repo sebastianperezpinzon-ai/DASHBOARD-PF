@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+    <title>Servicios Públicos - Planta Física</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+    body {
+        background-image: url('images/bg-pattern.png'); /* Ajusta la ruta según tu estructura de carpetas */
+        background-repeat: repeat;
+        background-size: 350px; /* Ajusta este número (en px) para hacer los dibujos más grandes o más pequeños */
+        background-attachment: fixed; /* Mantiene el fondo estático mientras haces scroll (efecto elegante) */
+        background-color: #0B0F19; /* Color de respaldo en caso de que la imagen tarde en cargar */
+    }
+    </style>
+</head>
+<body class="text-white font-sans min-h-screen flex flex-col justify-between">
+
+    <nav class="bg-[#111827] border-b border-gray-800 px-6 py-4">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <a href="../index.html" class="flex items-center text-sm font-semibold text-gray-400 hover:text-[#00A859] transition duration-200">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Volver al Dashboard Principal
+            </a>
+            <span class="text-xs bg-[#00A859]/10 text-[#00A859] px-3 py-1 rounded-full border border-[#00A859]/30 font-mono">
+                Área: Servicios y Concesiones
+            </span>
+        </div>
+    </nav>
+
+    <header class="py-12 px-6 text-center max-w-4xl mx-auto">
+        <h1 class="text-3xl font-extrabold tracking-tight md:text-5xl text-white mb-4">
+            Servicios Públicos
+        </h1>
+        <p class="text-gray-400 text-lg leading-relaxed">
+           A continuación, se presenta la comparación del consumo acumulado mensual de agua potable (m³) y energía eléctrica (kWh) en todas las sedes de la Universidad EAN, correspondiente a los años 2025 y 2026. <span class="text-[#00A859] font-semibold"></span>
+        </p>
+    </header>
+        </div>
+
+    </section>
+
+    <main class="max-w-6xl mx-auto px-6 mb-16 flex-grow w-full">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <div class="bg-[#111827] rounded-xl border border-gray-800 shadow-xl overflow-hidden p-6 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <span class="text-yellow-400">⚡</span> Consumo de Energía Eléctrica
+                        </h3>
+                            <span class="text-xs bg-yellow-400/10 text-yellow-400 px-2.5 py-1 rounded-full font-semibold">ODS 7</span>
+                    </div>
+                    <div class="relative h-64 w-full mb-4">
+                        <canvas id="energiaChart"></canvas>
+                    </div>
+                </div>
+                <div class="border-t border-gray-800/80 pt-4 mt-2 min-h-[160px]">
+                    <p class="text-xs text-gray-400 leading-relaxed">
+                    <strong class="text-white">Gráfico 1: Comparativo de Consumo eléctrico mensual (kWh).</strong>Durante el primer semestre de 2026, el consumo energético no presentó incrementos significativos, gracias a la implementación de diversas acciones de mitigación, entre las que se destacan el ajuste de la programación de los sistemas de ventilación y extracción, el seguimiento continuo mediante el sistema BMS para la toma de decisiones operativas, la optimización de la programación del sistema de iluminación y el aprovechamiento del sistema solar fotovoltaico.
+                </p>
+                </div>
+            </div>
+
+           <div class="bg-[#111827] rounded-xl border border-gray-800 shadow-xl overflow-hidden p-6 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <span class="text-[#00A859]">💧</span> Consumo de Agua Potable
+                        </h3>
+                        <span class="text-xs bg-[#00A859]/10 text-[#00A859] px-2.5 py-1 rounded-full font-semibold">ODS 11</span>
+                    </div>
+                    <div class="relative h-64 w-full mb-4">
+                        <canvas id="aguaChart"></canvas>
+                    </div>
+                </div>
+                <div class="border-t border-gray-800/80 pt-4 mt-2 min-h-[160px]">
+                    <p class="text-xs text-gray-400 leading-relaxed">
+                    <strong class="text-white">Gráfico 2: Consumo Mensual (m³).</strong>
+                     La reducción del consumo de agua en el año 2026 fue producto de la calibración de los fluxómetros semestral, configuración del caudal de agua en los lavamanos y aprovechamiento de aguas lluvias, se tienen ahorros de 3,526 m3 en el primer semestre del año.
+                    </p>
+                </div>
+            </div>
+
+          <!--
+            <div class="bg-[#111827] rounded-xl border border-gray-800 shadow-xl overflow-hidden p-6 flex flex-col justify-between lg:col-span-2">
+                <div>
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <span class="text-emerald-400">🍃</span> Huella de Carbono Institucional
+                        </h3>
+                        <span class="text-xs bg-emerald-400/10 text-emerald-400 px-2.5 py-1 rounded-full font-semibold">ODS 13</span>
+                    </div>
+                    <div class="relative h-72 w-full mb-4">
+                        <canvas id="carbonoChart"></canvas>
+                    </div>
+                </div>
+                <div class="border-t border-gray-800/80 pt-4 mt-2">
+                    <p class="text-xs text-gray-400 leading-relaxed">
+                        <strong class="text-white">Gráfico 3: Emisiones de CO₂ Equivalente por Alcance (tCO₂e).</strong> Desglose mensual de emisiones divididas en Emisiones Directas (combustibles de plantas de emergencia), Emisiones Indirectas (energía eléctrica adquirida) y Otras Indirectas (residuos y logística de campus).
+                    </p>
+                </div>
+            </div>
+
+        </div>
+            -->
+    </main>
+
+    <footer class="bg-[#0B0F19] text-center py-6 text-xs text-gray-500 border-t border-gray-800">
+       <p>Sistema de Gestión Interna de Planta Física</p>
+    </footer>
+
+    <script>
+        // Configuración Global para que Chart.js luzca excelente en modo oscuro
+        Chart.defaults.color = '#9ca3af'; // Gris claro para los textos de ejes (gray-400)
+        Chart.defaults.borderColor = '#1f2937'; // Gris oscuro para las líneas de cuadrícula (gray-800)
+        Chart.defaults.font.family = 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+
+        // --- 1. GRÁFICO DE ENERGÍA ---
+        const ctxEnergia = document.getElementById('energiaChart').getContext('2d');
+new Chart(ctxEnergia, {
+    type: 'bar',
+    data: {
+        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+        datasets: [
+            {
+                label: 'Consumo 2025 (kWh)',
+                data: [87451, 96865, 124542, 137470, 119589, 134629, 91650, 109260, 130811, 138081, 137981, 29125],
+                backgroundColor: 'rgba(156, 163, 175, 0.3)', // Gris elegante para el año anterior
+                borderColor: '#9ca3af',
+                borderWidth: 1,
+                borderRadius: 4
+            },
+            {
+                label: 'Consumo 2026 (kWh)',
+                data: [89269, 93849, 129012, 133117, 129142, 126044, null, null, null, null, null, null],
+                backgroundColor: '#FF6B00', // Naranja vibrante para el año en curso
+                borderColor: '#FF6B00',
+                borderWidth: 1,
+                borderRadius: 4
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'top',
+                labels: {
+                    color: '#9ca3af',
+                    boxWidth: 12
+                }
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        let label = context.dataset.label || '';
+                        if (label) {
+                            label += ': ';
+                        }
+                        if (context.parsed.y !== null) {
+                            label += new Intl.NumberFormat('es-CO').format(context.parsed.y) + ' kWh';
+                        }
+                        return label;
+                    }
+                }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: { color: '#1f2937' },
+                ticks: {
+                    callback: function(value) {
+                        return new Intl.NumberFormat('es-CO').format(value) + ' kWh';
+                    }
+                }
+            },
+            x: {
+                grid: { display: false }
+            }
+        }
+    }
+});
+    
+
+        // --- 2. GRÁFICO DE AGUA ---
+        const ctxAgua = document.getElementById('aguaChart').getContext('2d');
+new Chart(ctxAgua, {
+    type: 'line',
+    data: {
+        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+        datasets: [
+            {
+                label: 'Consumo 2025 (m³)',
+                data: [2051, 471, 1684, 927, 1408, 780, 1156, 512, 1612, 923, 1112, 873],
+                borderColor: 'rgba(100, 116, 139, 0.6)', // Gris azulado discreto
+                borderDash: [5, 5], // Línea punteada para el año anterior
+                borderWidth: 2,
+                pointRadius: 3,
+                backgroundColor: 'transparent',
+                fill: false,
+                tension: 0.2
+            },
+            {
+                label: 'Consumo 2026 (m³)',
+                data: [367, 665, 182, 451, 1322, 808, null, null, null, null, null, null],
+                borderColor: '#00B0FF', // Azul brillante (Agua)
+                backgroundColor: 'rgba(0, 176, 255, 0.1)', // Relleno azul traslúcido bajo la curva
+                borderWidth: 3.5,
+                pointBackgroundColor: '#00B0FF',
+                pointHoverRadius: 7,
+                fill: true,
+                tension: 0.2
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'top',
+                labels: {
+                    color: '#9ca3af',
+                    boxWidth: 12
+                }
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        let label = context.dataset.label || '';
+                        if (label) {
+                            label += ': ';
+                        }
+                        if (context.parsed.y !== null) {
+                            label += new Intl.NumberFormat('es-CO').format(context.parsed.y) + ' m³';
+                        }
+                        return label;
+                    }
+                }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: { color: '#1f2937' },
+                ticks: {
+                    callback: function(value) {
+                        return new Intl.NumberFormat('es-CO').format(value) + ' m³';
+                    }
+                }
+            },
+            x: {
+                grid: { display: false }
+            }
+        }
+    }
+});
+
+        // --- 3. GRÁFICO DE CARBONO ---
+       <!-- 
+        const ctxCarbono = document.getElementById('carbonoChart').getContext('2d');
+        new Chart(ctxCarbono, {
+            type: 'bar',
+            data: {
+                labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+                datasets: [
+                    {
+                        label: 'Alcance 1 (Directas)',
+                        data: [1.2, 1.5, 1.8, 1.4, 1.6, 1.1],
+                        backgroundColor: '#34d399', // Emerald 400
+                    },
+                    {
+                        label: 'Alcance 2 (Indirectas)',
+                        data: [4.8, 5.5, 7.3, 5.8, 6.5, 4.4],
+                        backgroundColor: '#059669', // Emerald 600
+                    },
+                    {
+                        label: 'Alcance 3 (Otras Indirectas)',
+                        data: [2.1, 2.8, 3.2, 2.5, 2.9, 1.8],
+                        backgroundColor: '#064e3b', // Emerald 900
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            color: '#9ca3af',
+                            boxWidth: 12
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        stacked: true, // Apilamos para ver el total acumulado fácilmente
+                        grid: { color: '#1f2937' },
+                        title: {
+                            display: true,
+                            text: 'tCO₂eq'
+                        }
+                    },
+                    x: {
+                        stacked: true,
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+         --> 
+    </script>
+</body>
+</html>
