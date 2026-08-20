@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💵</text></svg>">
+    <title>Resumen de Valores - Comité de Compras</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+    body {
+        background-image: url('/..../images/bg-pattern.png');
+        background-repeat: repeat;
+        background-size: 350px;
+        background-attachment: fixed;
+        background-color: #0B0F19;
+    }
+    </style>
+</head>
+<body class="text-white font-sans min-h-screen flex flex-col justify-between">
+
+    <div>
+        <!-- 1. BARRA DE NAVEGACIÓN SUPERIOR -->
+        <nav class="bg-[#111827] border-b border-gray-800 px-6 py-4 sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto flex justify-between items-center">
+                <a href="../../index.html" class="flex items-center text-sm font-semibold text-gray-400 hover:text-purple-400 transition duration-200">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Volver al Dashboard Principal
+                </a>
+                <span class="text-xs bg-purple-500/10 text-purple-400 px-3 py-1 rounded-full border border-purple-500/30 font-mono">
+                    Módulo: Comité de Compras • Resumen de Valores
+                </span>
+            </div>
+        </nav>
+
+        <!-- 2. CABECERA PRINCIPAL (HERO SECTION) -->
+        <header class="text-center py-8 px-6 relative z-10">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-3 tracking-tight drop-shadow-md">
+                Resumen de Valores Aprobados
+            </h1>
+            <p class="text-gray-400 text-base md:text-lg max-w-3xl mx-auto leading-relaxed">
+                Consolidado financiero de compromisos por punto presentado ante el Comité de Compras, discriminado por divisa (COP / USD) y proyección de vigencias futuras.
+            </p>
+        </header>
+
+        <!-- 3. CARDS DE INDICADORES CLAVE (KPIS) -->
+        <section class="w-full max-w-7xl mx-auto px-6 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="bg-[#111827] p-5 rounded-xl border border-gray-800 shadow-lg">
+                    <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold">Total Compromisos COP</p>
+                    <p class="text-2xl font-extrabold text-purple-400 mt-2 font-mono">$16.694 Millones</p>
+                    <p class="text-[11px] text-gray-500 mt-1">Acumulado $16.694.041.564 COP</p>
+                </div>
+                <div class="bg-[#111827] p-5 rounded-xl border border-gray-800 shadow-lg">
+                    <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold">Total Compromisos USD</p>
+                    <p class="text-2xl font-extrabold text-emerald-400 mt-2 font-mono">$658.942 USD</p>
+                    <p class="text-[11px] text-gray-500 mt-1">Licenciamiento e innovación</p>
+                </div>
+                <div class="bg-[#111827] p-5 rounded-xl border border-gray-800 shadow-lg">
+                    <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold">Mes de Mayor Inversión</p>
+                    <p class="text-2xl font-extrabold text-blue-400 mt-2">Junio</p>
+                    <p class="text-[11px] text-gray-500 mt-1">$6.929M COP + $321K USD</p>
+                </div>
+                <div class="bg-[#111827] p-5 rounded-xl border border-gray-800 shadow-lg">
+                    <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold">Vigencias Futuras</p>
+                    <p class="text-2xl font-extrabold text-amber-400 mt-2">2026 - 2028</p>
+                    <p class="text-[11px] text-gray-500 mt-1">Proyección multianual</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. GRÁFICO PRINCIPAL DE VALORES POR MES (DOBLE EJE DE DIVISAS) -->
+        <section class="w-full max-w-7xl mx-auto px-6 mb-10">
+            <div class="bg-[#111827] p-6 rounded-xl border border-gray-800 shadow-xl">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-2">
+                    <div>
+                        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                            <span class="text-purple-400">📊</span> Distribución Mensual por Divisa (COP vs. USD)
+                        </h2>
+                        <p class="text-xs text-gray-400">Comparativa bimoneda con escalas independientes (Eje Izquierdo: COP | Eje Derecho: USD)</p>
+                    </div>
+                    <div class="flex items-center gap-4 text-xs font-semibold">
+                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-purple-500 inline-block"></span> Valor COP ($)</span>
+                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-emerald-400 inline-block"></span> Valor USD ($)</span>
+                    </div>
+                </div>
+                <div class="relative h-80 w-full">
+                    <canvas id="chartValoresMensuales"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. TABLA DETALLADA DE PUNTOS Y VALORES -->
+        <main class="w-full max-w-7xl mx-auto px-6 mb-12">
+            <div class="bg-[#111827] rounded-xl border border-gray-800 shadow-xl p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                            <span class="text-emerald-400">📋</span> Registro Detallado de Puntos y Compromisos Presupuestales
+                        </h2>
+                        <p class="text-xs text-gray-400 mt-1">Listado completo de puntos aprobados, montos iniciales y proyección en vigencias futuras.</p>
+                    </div>
+                </div>
+
+                <div class="w-full overflow-x-auto">
+                    <table class="w-full text-left text-xs text-gray-300">
+                        <thead class="bg-[#0B0F19] text-purple-400 uppercase text-[11px] tracking-wider border-b border-gray-800">
+                            <tr>
+                                <th class="p-3.5 rounded-l">Punto Presentado / Asunto</th>
+                                <th class="p-3.5 text-center">Mes</th>
+                                <th class="p-3.5 text-right">Dólares (USD)</th>
+                                <th class="p-3.5 text-right">Pesos (COP)</th>
+                                <th class="p-3.5 text-right">Valores 2026</th>
+                                <th class="p-3.5 text-right">Valores 2027</th>
+                                <th class="p-3.5 text-right rounded-r">Valores 2028</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-800/60 font-mono">
+
+                            <!-- ENERO -->
+                            <tr class="hover:bg-gray-800/40 transition-colors">
+                                <td class="p-3 font-sans text-gray-200 font-medium">SOLICITUD ACLARACIÓN ADICIÓN A OTROSÍ # 2 LCSOLARTE</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Enero</td>
+                                <td class="p-3 text-right text-emerald-400 font-bold">$30.000</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-emerald-300">$30.000 (USD)</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors">
+                                <td class="p-3 font-sans text-gray-200 font-medium">LOGAN - BOLSA DE HORAS ACLARACIÓN CONTRATACIÓN NUEVA</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Enero</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$96.390.000</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors">
+                                <td class="p-3 font-sans text-gray-200 font-medium">OTROSÍ # 2 MANTENIMIENTO PREVENTIVO Y CORRECTIVO ASCENSORES</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Enero</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$89.408.979</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors">
+                                <td class="p-3 font-sans text-gray-200 font-medium">CONTRATO - ALQUILER ESCENARIOS DEPORTIVOS (FÚTBOL Y TENIS)</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Enero</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$48.315.648</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors">
+                                <td class="p-3 font-sans text-gray-200 font-medium">SERVICIO DE AGENCIA INTEGRAL DE MERCADEO DIGITAL</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Enero</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$89.250.000</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+
+                            <!-- FEBRERO -->
+                            <tr class="hover:bg-gray-800/40 transition-colors bg-gray-900/30">
+                                <td class="p-3 font-sans text-gray-200 font-medium">PARTICIPACIÓN EN EVENTO BIZ FEST MEDELLÍN - CALI - BOGOTÁ</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Febrero</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$75.000.000</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors bg-gray-900/30">
+                                <td class="p-3 font-sans text-gray-200 font-medium">PROYECTO EDITORIAL “LIBRO CECILIA CRISSIEN DE PERICO”</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Febrero</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$46.335.000</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors bg-gray-900/30">
+                                <td class="p-3 font-sans text-gray-200 font-medium">SOFTWARE ANTI PLAGIO TURNITIN 2026</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Febrero</td>
+                                <td class="p-3 text-right text-emerald-400 font-bold">$29.478</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-emerald-300">$29.478 (USD)</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors bg-gray-900/30">
+                                <td class="p-3 font-sans text-gray-200 font-medium">RENOVACIÓN MELITURNO 2026 - OTROSÍ # 3</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Febrero</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$195.250.587</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors bg-gray-900/30">
+                                <td class="p-3 font-sans text-gray-200 font-medium">INFORMATIVO - UNIFICACIÓN OFERTA LCSOLARTE</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Febrero</td>
+                                <td class="p-3 text-right text-emerald-400 font-bold">$60.000</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-emerald-300">$60.000 (USD)</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors bg-gray-900/30">
+                                <td class="p-3 font-sans text-gray-200 font-medium">ADQUISICIÓN ROBOT HUMANOIDE</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Febrero</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$329.387.042</td>
+                                <td class="p-3 text-right text-gray-300">$329.387.042</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors bg-gray-900/30">
+                                <td class="p-3 font-sans text-gray-200 font-medium">OTROSÍ NO. 2 SERVICIO SEGURIDAD Y VIGILANCIA COLVISEG (12 MESES)</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Febrero</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$2.177.530.670</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors bg-gray-900/30">
+                                <td class="p-3 font-sans text-gray-200 font-medium">CONTRATO MANTENIMIENTO PREVENTIVO AIRES ACONDICIONADOS LEGACY</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Febrero</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$76.438.629</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors bg-gray-900/30">
+                                <td class="p-3 font-sans text-gray-200 font-medium">CONTRATO CHECK POINT - FIREWALL PERIMETRAL</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Febrero</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$2.729.974.000</td>
+                                <td class="p-3 text-right text-gray-300">$1.031.814.000</td>
+                                <td class="p-3 text-right text-amber-400">$849.080.000</td>
+                                <td class="p-3 text-right text-amber-400">$849.080.000</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors bg-gray-900/30">
+                                <td class="p-3 font-sans text-gray-200 font-medium">CONTRATO PLAN ESTRATÉGICO POSGRADOS 2026 - AGENCIA PUBLICIDAD</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Febrero</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$118.582.310</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors bg-gray-900/30">
+                                <td class="p-3 font-sans text-gray-200 font-medium">ACLARACIÓN SERVICIO AGENCIA INTEGRAL MERCADEO DIGITAL</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Febrero</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$254.250.000</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+
+                            <!-- MARZO -->
+                            <tr class="hover:bg-gray-800/40 transition-colors">
+                                <td class="p-3 font-sans text-gray-200 font-medium">OTROSÍ NO. 5 IMPRESIÓN LIBRO EAN LEGACY</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Marzo</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$168.328.000</td>
+                                <td class="p-3 text-right text-gray-300">$168.328.000</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors">
+                                <td class="p-3 font-sans text-gray-200 font-medium">CONTRATO LICENCIAS CURSO EXCEL</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Marzo</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$293.824.000</td>
+                                <td class="p-3 text-right text-gray-300">$293.824.000</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors">
+                                <td class="p-3 font-sans text-gray-200 font-medium">CONTRATO LEADS LQQA - EDUPLUS SAS</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Marzo</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$162.000.000</td>
+                                <td class="p-3 text-right text-gray-300">$162.000.000</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors">
+                                <td class="p-3 font-sans text-gray-200 font-medium">CONTRATO GESTIÓN DE COMUNICACIONES ESTRATÉGICAS</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Marzo</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$285.600.000</td>
+                                <td class="p-3 text-right text-gray-300">$285.600.000</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors">
+                                <td class="p-3 font-sans text-gray-200 font-medium">CONTRATO SUMINISTRO INSUMOS DE ASEO Y CAFETERÍA 2026</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Marzo</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$105.754.611</td>
+                                <td class="p-3 text-right text-gray-300">$105.754.611</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors">
+                                <td class="p-3 font-sans text-gray-200 font-medium">STAND FERIA DEL LIBRO</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Marzo</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$45.390.000</td>
+                                <td class="p-3 text-right text-gray-300">$45.390.000</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors">
+                                <td class="p-3 font-sans text-gray-200 font-medium">PLATAFORMA DE RECLUTAMIENTO LINKEDIN HYPERCUBUS SAS</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Marzo</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$60.708.560</td>
+                                <td class="p-3 text-right text-gray-300">$60.708.560</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors">
+                                <td class="p-3 font-sans text-gray-200 font-medium">ÁREA PROTEGIDA</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Marzo</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$30.027.230</td>
+                                <td class="p-3 text-right text-gray-300">$30.027.230</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+
+                            <!-- ABRIL -->
+                            <tr class="hover:bg-gray-800/40 transition-colors bg-gray-900/30">
+                                <td class="p-3 font-sans text-gray-200 font-medium">RENOVACIÓN SERVICIO DOTACIÓN BIG PASS S.A.S - EDENRED</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Abril</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$211.050.000</td>
+                                <td class="p-3 text-right text-gray-300">$211.050.000</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors bg-gray-900/30">
+                                <td class="p-3 font-sans text-gray-200 font-medium">ACLARACIÓN RENOVACIÓN LICENCIA LINKEDIN HYPERCUBUS</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Abril</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$182.125.680</td>
+                                <td class="p-3 text-right text-gray-300">$60.708.560</td>
+                                <td class="p-3 text-right text-amber-400">$20.236.187</td>
+                                <td class="p-3 text-right text-amber-400">$6.745.396</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors bg-gray-900/30">
+                                <td class="p-3 font-sans text-gray-200 font-medium">CONTRATO EVENTO DÍA DEL PROFESOR 2026 - COLSUBSIDIO</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Abril</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$52.719.729</td>
+                                <td class="p-3 text-right text-gray-300">$52.719.729</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors bg-gray-900/30">
+                                <td class="p-3 font-sans text-gray-200 font-medium">PROGRAMA INMERSIÓN EJECUTIVA 30X LLC</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Abril</td>
+                                <td class="p-3 text-right text-emerald-400 font-bold">$11.400</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-emerald-300">$11.400 (USD)</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors bg-gray-900/30">
+                                <td class="p-3 font-sans text-gray-200 font-medium">AMPLIACIÓN CONTRATO CONSULTORÍA ORGANIZACIONAL MINSAIT</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Abril</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$337.922.277</td>
+                                <td class="p-3 text-right text-gray-300">$337.922.277</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors bg-gray-900/30">
+                                <td class="p-3 font-sans text-gray-200 font-medium">PRODUCCIÓN AUDIOVISUAL Y FOTOGRÁFICA GEMAUDIOVISUAL</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Abril</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$110.503.000</td>
+                                <td class="p-3 text-right text-gray-300">$110.503.000</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors bg-gray-900/30">
+                                <td class="p-3 font-sans text-gray-200 font-medium">EVENTO LANZAMIENTO PLATAFORMA EAN VIRTUAL KOWAL</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Abril</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$123.733.344</td>
+                                <td class="p-3 text-right text-gray-300">$123.733.344</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors bg-gray-900/30">
+                                <td class="p-3 font-sans text-gray-200 font-medium">COMPRA EQUIPO DE ALMACENAMIENTO DE DATOS NAS</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Abril</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$58.376.392</td>
+                                <td class="p-3 text-right text-gray-300">$58.376.392</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+
+                            <!-- MAYO -->
+                            <tr class="hover:bg-gray-800/40 transition-colors">
+                                <td class="p-3 font-sans text-gray-200 font-medium">BASE DE DATOS ACADÉMICA EBOOK CENTRAL - PROQUEST</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Mayo</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$45.509.200</td>
+                                <td class="p-3 text-right text-gray-300">$45.509.200</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors">
+                                <td class="p-3 font-sans text-gray-200 font-medium">RENOVACIÓN LICENCIAS MATLAB 2026 - CES S.A.S.</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Mayo</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$57.334.618</td>
+                                <td class="p-3 text-right text-gray-300">$57.334.618</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors">
+                                <td class="p-3 font-sans text-gray-200 font-medium">COMPRA BONOS FONDO DE VÍCTIMAS DEL CONFLICTO</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Mayo</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$72.293.000</td>
+                                <td class="p-3 text-right text-gray-300">$72.293.000</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors">
+                                <td class="p-3 font-sans text-gray-200 font-medium">COMPRA Y ALQUILER DE 1.131 BECAS, TOGAS Y BIRRETES</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Mayo</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$82.905.478</td>
+                                <td class="p-3 text-right text-gray-300">$82.905.478</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors">
+                                <td class="p-3 font-sans text-gray-200 font-medium">RENOVACIÓN SISTEMA DE INFORMACIÓN ALMA / PRIMOVE</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Mayo</td>
+                                <td class="p-3 text-right text-emerald-400 font-bold">$98.287</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-emerald-300">$31.642 (USD)</td>
+                                <td class="p-3 text-right text-emerald-300">$32.749 (USD)</td>
+                                <td class="p-3 text-right text-emerald-300">$33.896 (USD)</td>
+                            </tr>
+
+                            <!-- JUNIO -->
+                            <tr class="hover:bg-gray-800/40 transition-colors bg-gray-900/30">
+                                <td class="p-3 font-sans text-gray-200 font-medium">RENOVACIÓN DATASPHERE Y LICENCIAS SAC</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Junio</td>
+                                <td class="p-3 text-right text-emerald-400 font-bold">$281.030</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-emerald-300">$90.652 (USD)</td>
+                                <td class="p-3 text-right text-emerald-300">$93.644 (USD)</td>
+                                <td class="p-3 text-right text-emerald-300">$96.734 (USD)</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors bg-gray-900/30">
+                                <td class="p-3 font-sans text-gray-200 font-medium">CONVOCATORIA PORTAL WEB UNIVERSIDAD EAN - ESINERGIA</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Junio</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$1.364.670.417</td>
+                                <td class="p-3 text-right text-gray-300">$655.620.000</td>
+                                <td class="p-3 text-right text-amber-400">$301.595.000</td>
+                                <td class="p-3 text-right text-amber-400">$301.595.000</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors bg-gray-900/30">
+                                <td class="p-3 font-sans text-gray-200 font-medium">OTROSÍ # 6 ADICIÓN PRESUPUESTAL ZOOM CEM S.A.S.</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Junio</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$456.964.760</td>
+                                <td class="p-3 text-right text-gray-300">$456.964.760</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors bg-gray-900/30">
+                                <td class="p-3 font-sans text-gray-200 font-medium">OBRA CIVIL ADECUACIÓN CENTRO DE ATENCIÓN PSICOLÓGICA</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Junio</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$99.810.096</td>
+                                <td class="p-3 text-right text-gray-300">$99.810.096</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors bg-gray-900/30">
+                                <td class="p-3 font-sans text-gray-200 font-medium">OTROSÍ NO. 2 PLAN DE MITIGACIÓN SOC SOFTWEB B-SECURE</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Junio</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$274.534.056</td>
+                                <td class="p-3 text-right text-gray-300">$128.282.029</td>
+                                <td class="p-3 text-right text-amber-400">$146.252.027</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors bg-gray-900/30">
+                                <td class="p-3 font-sans text-gray-200 font-medium">OTROSÍ NO. 1 RENOVACIÓN LICENCIAMIENTO CESIM - PUBLICIENCIA</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Junio</td>
+                                <td class="p-3 text-right text-emerald-400 font-bold">$40.000</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-emerald-300">$40.000 (USD)</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors bg-gray-900/30">
+                                <td class="p-3 font-sans text-gray-200 font-medium">LEASING ADQUISICIÓN 474 EQUIPOS DE CÓMPUTO (RENOVACIÓN TECNOLÓGICA)</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Junio</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300 font-bold">$4.733.453.718</td>
+                                <td class="p-3 text-right text-gray-300">$4.733.453.718</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+
+                            <!-- JULIO -->
+                            <tr class="hover:bg-gray-800/40 transition-colors">
+                                <td class="p-3 font-sans text-gray-200 font-medium">RENOVACIÓN BASE DE DATOS ISI WEB OF SCIENCE + INCITES</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Julio</td>
+                                <td class="p-3 text-right text-emerald-400 font-bold">$27.122</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-emerald-300">$27.122 (USD)</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors">
+                                <td class="p-3 font-sans text-gray-200 font-medium">SUSCRIPCIÓN BASE DE DATOS PASSPORT EUROMONITOR</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Julio</td>
+                                <td class="p-3 text-right text-emerald-400 font-bold">$16.625</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-emerald-300">$16.625 (USD)</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors">
+                                <td class="p-3 font-sans text-gray-200 font-medium">MVP MONITOR ACADÉMICO VIRTUAL BASADO EN INTELIGENCIA ARTIFICIAL</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Julio</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$129.948.000</td>
+                                <td class="p-3 text-right text-gray-300">$129.948.000</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors">
+                                <td class="p-3 font-sans text-gray-200 font-medium">OTROSÍ NO. 3 LCSOLARTE - CONSULTORÍA DIGiTAL</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Julio</td>
+                                <td class="p-3 text-right text-emerald-400 font-bold">$65.000</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-emerald-300">$55.000 (USD)</td>
+                                <td class="p-3 text-right text-emerald-300">$10.000 (USD)</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors">
+                                <td class="p-3 font-sans text-gray-200 font-medium">COMITÉ EVENTO DE FIN DE AÑO 2026</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Julio</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$127.760.440</td>
+                                <td class="p-3 text-right text-gray-300">$127.760.440</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors">
+                                <td class="p-3 font-sans text-gray-200 font-medium">ALQUILER DE ESCENARIOS DEPORTIVOS</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Julio</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$48.315.648</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors">
+                                <td class="p-3 font-sans text-gray-200 font-medium">FORMACIÓN ESPECIALIZADA EN IA (CHAMPIONS IA - GEMINI & WORKSPACE)</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Julio</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$51.408.000</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors">
+                                <td class="p-3 font-sans text-gray-200 font-medium">ADECUACIÓN DE 50 SILLAS DEL AUDITORIO ORÍGENES</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Julio</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$44.863.000</td>
+                                <td class="p-3 text-right text-gray-300">$44.863.000</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors">
+                                <td class="p-3 font-sans text-gray-200 font-medium">COMPRA DE KIT AUTOMATIZACIÓN EQUIPO DE LABORATORIO</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Julio</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$58.298.100</td>
+                                <td class="p-3 text-right text-gray-300">$58.298.100</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/40 transition-colors">
+                                <td class="p-3 font-sans text-gray-200 font-medium">OTROSÍ 10 OPS MEJORAS Y EVOLUTIVOS SAP</td>
+                                <td class="p-3 text-center uppercase text-gray-400">Julio</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-purple-300">$491.797.345</td>
+                                <td class="p-3 text-right text-gray-300">$491.797.345</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                                <td class="p-3 text-right text-gray-600">-</td>
+                            </tr>
+
+                        </tbody>
+                        <tfoot class="bg-[#0B0F19] text-white font-bold border-t-2 border-gray-700">
+                            <tr>
+                                <td colspan="2" class="p-4 text-sm uppercase tracking-wider text-purple-400">Totales Acumulados</td>
+                                <td class="p-4 text-right text-emerald-400 text-sm">$658.942 USD</td>
+                                <td class="p-4 text-right text-purple-300 text-sm">$16.694.041.564 COP</td>
+                                <td colspan="3" class="p-4 text-right text-gray-400 text-xs">Compromisos con proyección multianual</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 6. PIE DE PÁGINA -->
+    <footer class="bg-[#0B0F19] text-center py-6 text-xs text-gray-500 border-t border-gray-800">
+        <p>Dirección de Gestión Administrativa • Comité de Compras Institucional</p>
+    </footer>
+
+    <!-- 7. SCRIPT DE CONFIGURACIÓN DEL GRÁFICO DUO-EJE -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const ctx = document.getElementById('chartValoresMensuales').getContext('2d');
+            
+            // Datos Consolidados
+            const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio'];
+            const valoresCOP = [323.36, 6002.75, 1151.63, 1076.43, 258.04, 6929.43, 952.39]; // En Millones de COP
+            const valoresUSD = [30000, 89478, 0, 11400, 98287, 321030, 108747]; // En USD
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: meses,
+                    datasets: [
+                        {
+                            label: 'Valor en Pesos (Millones COP)',
+                            data: valoresCOP,
+                            backgroundColor: 'rgba(139, 92, 246, 0.75)', // Morado Tailwind
+                            borderColor: '#8B5CF6',
+                            borderWidth: 1.5,
+                            borderRadius: 6,
+                            yAxisID: 'yCOP'
+                        },
+                        {
+                            label: 'Valor en Dólares (USD)',
+                            data: valoresUSD,
+                            type: 'line',
+                            backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                            borderColor: '#10B981', // Verde Esmeralda
+                            borderWidth: 3,
+                            pointRadius: 5,
+                            pointBackgroundColor: '#10B981',
+                            tension: 0.3,
+                            yAxisID: 'yUSD'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if (context.dataset.yAxisID === 'yCOP') {
+                                        return ` COP: $${context.parsed.y.toLocaleString('es-CO')} Millones`;
+                                    } else {
+                                        return ` USD: $${context.parsed.y.toLocaleString('en-US')} USD`;
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#9ca3af' } },
+                        yCOP: {
+                            type: 'linear',
+                            position: 'left',
+                            title: { display: true, text: 'Millones COP ($)', color: '#8B5CF6' },
+                            grid: { color: '#1f2937' },
+                            ticks: { color: '#8B5CF6' }
+                        },
+                        yUSD: {
+                            type: 'linear',
+                            position: 'right',
+                            title: { display: true, text: 'Dólares USD ($)', color: '#10B981' },
+                            grid: { drawOnChartArea: false }, // Evita líneas cruzadas
+                            ticks: { color: '#10B981' }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
