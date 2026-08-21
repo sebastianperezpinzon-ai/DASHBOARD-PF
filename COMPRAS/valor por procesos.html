@@ -109,26 +109,40 @@
                 </div>
 
                 <!-- Gráfica Proceso -->
-                <div class="relative h-80 w-full mb-8">
+                <div class="relative h-80 w-full mb-6">
                     <canvas id="procesoChart"></canvas>
                 </div>
 
-                <!-- Tabla Proceso -->
-                <div class="w-full overflow-x-auto">
-                    <table class="w-full text-left text-xs text-gray-300">
-                        <thead class="bg-[#0B0F19] text-purple-400 uppercase text-[10px] tracking-wider">
-                            <tr>
-                                <th class="p-3 rounded-l">Proceso / Área</th>
-                                <th class="p-3 text-right">Gasto COP</th>
-                                <th class="p-3 text-right">Gasto USD</th>
-                                <th class="p-3 text-right rounded-r">Gasto EUR</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tablaProcesosBody" class="divide-y divide-gray-800/50">
-                            <!-- Inyectado dinámicamente con JS -->
-                        </tbody>
-                    </table>
-                </div>
+                <!-- Tabla Proceso (Desplegable) -->
+                <details class="group border-t border-gray-800/80 pt-4">
+                    <summary class="flex justify-between items-center cursor-pointer bg-[#0B0F19] hover:bg-gray-800/50 p-3.5 rounded-lg border border-gray-800 text-xs font-semibold text-gray-300 hover:text-purple-400 transition select-none">
+                        <span class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18M3 18h18M3 6h18"/>
+                            </svg>
+                            Ver / Ocultar Tabla Detallada por Proceso
+                        </span>
+                        <svg class="w-4 h-4 text-gray-400 transform group-open:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </summary>
+
+                    <div class="w-full overflow-x-auto mt-4">
+                        <table class="w-full text-left text-xs text-gray-300">
+                            <thead class="bg-[#0B0F19] text-purple-400 uppercase text-[10px] tracking-wider">
+                                <tr>
+                                    <th class="p-3 rounded-l">Proceso / Área</th>
+                                    <th class="p-3 text-right">Gasto COP</th>
+                                    <th class="p-3 text-right">Gasto USD</th>
+                                    <th class="p-3 text-right rounded-r">Gasto EUR</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaProcesosBody" class="divide-y divide-gray-800/50">
+                                <!-- Inyectado dinámicamente con JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </details>
             </section>
 
             <!-- SECCIÓN 2: GASTO SEGÚN TIPO DE COMPRA -->
@@ -151,26 +165,40 @@
                 </div>
 
                 <!-- Gráfica Tipo de Compra -->
-                <div class="relative h-80 w-full mb-8">
+                <div class="relative h-80 w-full mb-6">
                     <canvas id="tipoChart"></canvas>
                 </div>
 
-                <!-- Tabla Tipo de Compra -->
-                <div class="w-full overflow-x-auto">
-                    <table class="w-full text-left text-xs text-gray-300">
-                        <thead class="bg-[#0B0F19] text-emerald-400 uppercase text-[10px] tracking-wider">
-                            <tr>
-                                <th class="p-3 rounded-l">Tipo de Compra / Categoria</th>
-                                <th class="p-3 text-right">Gasto COP</th>
-                                <th class="p-3 text-right">Gasto USD</th>
-                                <th class="p-3 text-right rounded-r">Gasto EUR</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tablaTiposBody" class="divide-y divide-gray-800/50">
-                            <!-- Inyectado dinámicamente con JS -->
-                        </tbody>
-                    </table>
-                </div>
+                <!-- Tabla Tipo de Compra (Desplegable) -->
+                <details class="group border-t border-gray-800/80 pt-4">
+                    <summary class="flex justify-between items-center cursor-pointer bg-[#0B0F19] hover:bg-gray-800/50 p-3.5 rounded-lg border border-gray-800 text-xs font-semibold text-gray-300 hover:text-emerald-400 transition select-none">
+                        <span class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18M3 18h18M3 6h18"/>
+                            </svg>
+                            Ver / Ocultar Tabla Detallada por Tipo de Compra
+                        </span>
+                        <svg class="w-4 h-4 text-gray-400 transform group-open:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </summary>
+
+                    <div class="w-full overflow-x-auto mt-4">
+                        <table class="w-full text-left text-xs text-gray-300">
+                            <thead class="bg-[#0B0F19] text-emerald-400 uppercase text-[10px] tracking-wider">
+                                <tr>
+                                    <th class="p-3 rounded-l">Tipo de Compra / Categoria</th>
+                                    <th class="p-3 text-right">Gasto COP</th>
+                                    <th class="p-3 text-right">Gasto USD</th>
+                                    <th class="p-3 text-right rounded-r">Gasto EUR</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaTiposBody" class="divide-y divide-gray-800/50">
+                                <!-- Inyectado dinámicamente con JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </details>
             </section>
 
         </main>
