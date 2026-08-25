@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏗️</text></svg>">
+    <title>Proyectos de Infraestructura - Gestión de Planta Física</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-image: url('../images/bg-pattern.png');
+            background-repeat: repeat;
+            background-size: 350px;
+            background-attachment: fixed;
+            background-color: #0B0F19;
+        }
+        .filter-btn-active {
+            background-color: #8B5CF6 !important;
+            color: #ffffff !important;
+            border-color: #A78BFA !important;
+        }
+    </style>
+</head>
+<body class="text-white font-sans min-h-screen flex flex-col justify-between">
+
+    <div>
+        <!-- 1. BARRA DE NAVEGACIÓN -->
+        <nav class="bg-[#111827] border-b border-gray-800 px-6 py-4 sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto flex justify-between items-center">
+                <a href="mantenimiento.html" class="flex items-center text-sm font-semibold text-gray-400 hover:text-purple-400 transition duration-200">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Volver al Módulo de Mantenimiento
+                </a>
+                <span class="text-xs bg-purple-500/10 text-purple-400 px-3 py-1 rounded-full border border-purple-500/30 font-mono">
+                    ECO-S • Gestión Espacial e Infraestructura
+                </span>
+            </div>
+        </nav>
+
+        <!-- 2. CABECERA PRINCIPAL -->
+        <header class="text-center py-8 px-6">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-3 tracking-tight">
+                Proyectos de Infraestructura
+            </h1>
+            <p class="text-gray-400 text-base md:text-lg max-w-2xl mx-auto">
+                Seguimiento del avance físico, intervenciones espaciales y adecuaciones para la optimización del campus universitario.
+            </p>
+
+            <!-- FILTROS DE ESTADO -->
+            <div class="flex flex-wrap justify-center gap-2 mt-6">
+                <button onclick="filterProjects('all')" id="btn-all" class="filter-btn-active px-4 py-2 rounded-lg border border-gray-700 text-xs font-semibold transition">Todos (10)</button>
+                <button onclick="filterProjects('100')" id="btn-100" class="bg-[#111827] text-gray-400 hover:text-white px-4 py-2 rounded-lg border border-gray-800 text-xs font-semibold transition">Completados (100%)</button>
+                <button onclick="filterProjects('80')" id="btn-80" class="bg-[#111827] text-gray-400 hover:text-white px-4 py-2 rounded-lg border border-gray-800 text-xs font-semibold transition">En Ejecución (80%)</button>
+                <button onclick="filterProjects('10')" id="btn-10" class="bg-[#111827] text-gray-400 hover:text-white px-4 py-2 rounded-lg border border-gray-800 text-xs font-semibold transition">En Diseño / Inicio (10%)</button>
+            </div>
+        </header>
+
+        <!-- 3. GRID DE PROYECTOS -->
+        <main class="max-w-7xl mx-auto px-6 mb-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="projectsContainer">
+
+                <!-- PROYECTO 1 -->
+                <div class="project-card bg-[#111827] border border-gray-800 rounded-xl p-5 flex flex-col justify-between shadow-lg hover:border-gray-700 transition" data-progress="100">
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-full">Finalizado</span>
+                            <span class="text-xs font-mono font-bold text-emerald-400">100%</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Cicloparqueadero Solar Sede Laboratorios Calle 74</h3>
+                        <p class="text-xs text-gray-400 mb-4 leading-relaxed">
+                            Diseño e instalación de un cicloparquedero solar para carga de bicicletas y patinetas eléctricas en la sede laboratorios Calle 74, contribuyendo a la política de movilidad sostenible.
+                        </p>
+                    </div>
+                    <div>
+                        <div class="w-full bg-gray-800 rounded-full h-1.5 mb-4">
+                            <div class="bg-emerald-500 h-1.5 rounded-full" style="width: 100%"></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <img src="../images/proyectos/cicloparqueadero-1.jpg" alt="Cicloparqueadero Solar" class="w-full h-24 object-cover rounded-lg border border-gray-800 hover:opacity-90 transition cursor-pointer">
+                            <img src="../images/proyectos/cicloparqueadero-2.jpg" alt="Plano Cicloparqueadero" class="w-full h-24 object-cover rounded-lg border border-gray-800 hover:opacity-90 transition cursor-pointer">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PROYECTO 2 -->
+                <div class="project-card bg-[#111827] border border-gray-800 rounded-xl p-5 flex flex-col justify-between shadow-lg hover:border-gray-700 transition" data-progress="100">
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-full">Finalizado</span>
+                            <span class="text-xs font-mono font-bold text-emerald-400">100%</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Sistema Acústico e Iluminación Auditorio Fundadores</h3>
+                        <p class="text-xs text-gray-500 italic mb-4 leading-relaxed">
+                            [Información en proceso de actualización por la Dirección de Planta Física]
+                        </p>
+                    </div>
+                    <div>
+                        <div class="w-full bg-gray-800 rounded-full h-1.5 mb-4">
+                            <div class="bg-emerald-500 h-1.5 rounded-full" style="width: 100%"></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <img src="../images/proyectos/auditorio-1.jpg" alt="Auditorio Fundadores Acústica" class="w-full h-24 object-cover rounded-lg border border-gray-800 hover:opacity-90 transition cursor-pointer">
+                            <img src="../images/proyectos/auditorio-2.jpg" alt="Auditorio Fundadores Iluminación" class="w-full h-24 object-cover rounded-lg border border-gray-800 hover:opacity-90 transition cursor-pointer">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PROYECTO 3 -->
+                <div class="project-card bg-[#111827] border border-gray-800 rounded-xl p-5 flex flex-col justify-between shadow-lg hover:border-gray-700 transition" data-progress="100">
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-full">Finalizado</span>
+                            <span class="text-xs font-mono font-bold text-emerald-400">100%</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Centro de Movilidad Sostenible Edificio Legacy</h3>
+                        <p class="text-xs text-gray-400 mb-4 leading-relaxed">
+                            Adecuación del centro de movilidad para el parqueo y recarga de micromovilidad eléctrica, optimizando la experiencia de usuario en el Edificio Legacy.
+                        </p>
+                    </div>
+                    <div>
+                        <div class="w-full bg-gray-800 rounded-full h-1.5 mb-4">
+                            <div class="bg-emerald-500 h-1.5 rounded-full" style="width: 100%"></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <img src="../images/proyectos/legacy-movilidad-1.jpg" alt="Zona Micro-movilidad" class="w-full h-24 object-cover rounded-lg border border-gray-800 hover:opacity-90 transition cursor-pointer">
+                            <img src="../images/proyectos/legacy-movilidad-2.jpg" alt="Puntos de carga micro-movilidad" class="w-full h-24 object-cover rounded-lg border border-gray-800 hover:opacity-90 transition cursor-pointer">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PROYECTO 4 -->
+                <div class="project-card bg-[#111827] border border-gray-800 rounded-xl p-5 flex flex-col justify-between shadow-lg hover:border-gray-700 transition" data-progress="100">
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-full">Finalizado</span>
+                            <span class="text-xs font-mono font-bold text-emerald-400">100%</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Adecuación Consultorios de Psicología</h3>
+                        <p class="text-xs text-gray-500 italic mb-4 leading-relaxed">
+                            [Información en proceso de actualización por la Dirección de Planta Física]
+                        </p>
+                    </div>
+                    <div>
+                        <div class="w-full bg-gray-800 rounded-full h-1.5 mb-4">
+                            <div class="bg-emerald-500 h-1.5 rounded-full" style="width: 100%"></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <img src="../images/proyectos/psicologia-1.jpg" alt="Consultorio Infantil" class="w-full h-24 object-cover rounded-lg border border-gray-800 hover:opacity-90 transition cursor-pointer">
+                            <img src="../images/proyectos/psicologia-2.jpg" alt="Salas de Trabajo" class="w-full h-24 object-cover rounded-lg border border-gray-800 hover:opacity-90 transition cursor-pointer">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PROYECTO 5 -->
+                <div class="project-card bg-[#111827] border border-gray-800 rounded-xl p-5 flex flex-col justify-between shadow-lg hover:border-gray-700 transition" data-progress="80">
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-[10px] font-bold uppercase tracking-wider bg-blue-500/10 text-blue-400 border border-blue-500/30 px-2.5 py-1 rounded-full">En Ejecución</span>
+                            <span class="text-xs font-mono font-bold text-blue-400">80%</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Sistema de Detección Edificio Fundadores</h3>
+                        <p class="text-xs text-gray-400 mb-4 leading-relaxed">
+                            Ejecución de la modernización y recambio del sistema centralizado de detección de incendios del Edificio Fundadores para integrarse con la red del campus.
+                        </p>
+                    </div>
+                    <div>
+                        <div class="w-full bg-gray-800 rounded-full h-1.5 mb-4">
+                            <div class="bg-blue-500 h-1.5 rounded-full" style="width: 80%"></div>
+                        </div>
+                        <div class="grid grid-cols-1 gap-2">
+                            <img src="../images/proyectos/deteccion-fundadores.jpg" alt="Esquema Edificio Fundadores" class="w-full h-24 object-cover rounded-lg border border-gray-800 hover:opacity-90 transition cursor-pointer">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PROYECTO 6 -->
+                <div class="project-card bg-[#111827] border border-gray-800 rounded-xl p-5 flex flex-col justify-between shadow-lg hover:border-gray-700 transition" data-progress="80">
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-[10px] font-bold uppercase tracking-wider bg-blue-500/10 text-blue-400 border border-blue-500/30 px-2.5 py-1 rounded-full">En Ejecución</span>
+                            <span class="text-xs font-mono font-bold text-blue-400">80%</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Adecuación Colombo-Chino y Neurolab</h3>
+                        <p class="text-xs text-gray-500 italic mb-4 leading-relaxed">
+                            [Información en proceso de actualización por la Dirección de Planta Física]
+                        </p>
+                    </div>
+                    <div>
+                        <div class="w-full bg-gray-800 rounded-full h-1.5 mb-4">
+                            <div class="bg-blue-500 h-1.5 rounded-full" style="width: 80%"></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <img src="../images/proyectos/colombo-chino-plano.jpg" alt="Plano Distribución" class="w-full h-24 object-cover rounded-lg border border-gray-800 hover:opacity-90 transition cursor-pointer">
+                            <img src="../images/proyectos/colombo-chino-foto.jpg" alt="Espacio Colombo Chino" class="w-full h-24 object-cover rounded-lg border border-gray-800 hover:opacity-90 transition cursor-pointer">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PROYECTO 7 -->
+                <div class="project-card bg-[#111827] border border-gray-800 rounded-xl p-5 flex flex-col justify-between shadow-lg hover:border-gray-700 transition" data-progress="10">
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-[10px] font-bold uppercase tracking-wider bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded-full">En Diseño</span>
+                            <span class="text-xs font-mono font-bold text-amber-400">10%</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Escuela de Artes Canopy</h3>
+                        <p class="text-xs text-gray-500 italic mb-4 leading-relaxed">
+                            [Información en proceso de actualización por la Dirección de Planta Física]
+                        </p>
+                    </div>
+                    <div>
+                        <div class="w-full bg-gray-800 rounded-full h-1.5 mb-4">
+                            <div class="bg-amber-500 h-1.5 rounded-full" style="width: 10%"></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <img src="../images/proyectos/artes-canopy-1.jpg" alt="Render Taller Dibujo" class="w-full h-24 object-cover rounded-lg border border-gray-800 hover:opacity-90 transition cursor-pointer">
+                            <img src="../images/proyectos/artes-canopy-2.jpg" alt="Render Vista Exterior" class="w-full h-24 object-cover rounded-lg border border-gray-800 hover:opacity-90 transition cursor-pointer">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PROYECTO 8 -->
+                <div class="project-card bg-[#111827] border border-gray-800 rounded-xl p-5 flex flex-col justify-between shadow-lg hover:border-gray-700 transition" data-progress="10">
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-[10px] font-bold uppercase tracking-wider bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded-full">En Diseño</span>
+                            <span class="text-xs font-mono font-bold text-amber-400">10%</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Adecuación Aula EAN Global</h3>
+                        <p class="text-xs text-gray-500 italic mb-4 leading-relaxed">
+                            [Información en proceso de actualización por la Dirección de Planta Física]
+                        </p>
+                    </div>
+                    <div>
+                        <div class="w-full bg-gray-800 rounded-full h-1.5 mb-4">
+                            <div class="bg-amber-500 h-1.5 rounded-full" style="width: 10%"></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <img src="../images/proyectos/aula-global-1.jpg" alt="Render Vista Ventana" class="w-full h-24 object-cover rounded-lg border border-gray-800 hover:opacity-90 transition cursor-pointer">
+                            <img src="../images/proyectos/aula-global-2.jpg" alt="Render Disposición Asientos" class="w-full h-24 object-cover rounded-lg border border-gray-800 hover:opacity-90 transition cursor-pointer">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PROYECTO 9 -->
+                <div class="project-card bg-[#111827] border border-gray-800 rounded-xl p-5 flex flex-col justify-between shadow-lg hover:border-gray-700 transition" data-progress="10">
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-[10px] font-bold uppercase tracking-wider bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded-full">En Diseño</span>
+                            <span class="text-xs font-mono font-bold text-amber-400">10%</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Adecuación Zona Terraza Piso 6 Legacy</h3>
+                        <p class="text-xs text-gray-500 italic mb-4 leading-relaxed">
+                            [Información en proceso de actualización por la Dirección de Planta Física]
+                        </p>
+                    </div>
+                    <div>
+                        <div class="w-full bg-gray-800 rounded-full h-1.5 mb-4">
+                            <div class="bg-amber-500 h-1.5 rounded-full" style="width: 10%"></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <img src="../images/proyectos/terraza-legacy-1.jpg" alt="Render Mobiliario Bio" class="w-full h-24 object-cover rounded-lg border border-gray-800 hover:opacity-90 transition cursor-pointer">
+                            <img src="../images/proyectos/terraza-legacy-2.jpg" alt="Render Vista Perfil Terraza" class="w-full h-24 object-cover rounded-lg border border-gray-800 hover:opacity-90 transition cursor-pointer">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PROYECTO 10 -->
+                <div class="project-card bg-[#111827] border border-gray-800 rounded-xl p-5 flex flex-col justify-between shadow-lg hover:border-gray-700 transition" data-progress="10">
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-[10px] font-bold uppercase tracking-wider bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded-full">En Diseño</span>
+                            <span class="text-xs font-mono font-bold text-amber-400">10%</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Adecuación Mobiliario Biblioteca</h3>
+                        <p class="text-xs text-gray-500 italic mb-4 leading-relaxed">
+                            [Información en proceso de actualización por la Dirección de Planta Física]
+                        </p>
+                    </div>
+                    <div>
+                        <div class="w-full bg-gray-800 rounded-full h-1.5 mb-4">
+                            <div class="bg-amber-500 h-1.5 rounded-full" style="width: 10%"></div>
+                        </div>
+                        <div class="grid grid-cols-1 gap-2">
+                            <img src="../images/proyectos/mobiliario-biblioteca.jpg" alt="Mobiliario Ergonomico Biblioteca" class="w-full h-24 object-cover rounded-lg border border-gray-800 hover:opacity-90 transition cursor-pointer">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- 4. PIE DE PÁGINA -->
+    <footer class="bg-[#0B0F19] text-center py-6 text-xs text-gray-500 border-t border-gray-800">
+        <p>Dirección de Planta Física • Sistema de Gestión de Infraestructura Sostenible</p>
+    </footer>
+
+    <!-- 5. LÓGICA DE FILTRADO -->
+    <script>
+        function filterProjects(progress) {
+            const cards = document.querySelectorAll('.project-card');
+            const buttons = ['all', '100', '80', '10'];
+
+            buttons.forEach(btn => {
+                const element = document.getElementById(`btn-${btn}`);
+                element.classList.remove('filter-btn-active', 'text-white');
+                element.classList.add('text-gray-400');
+            });
+
+            document.getElementById(`btn-${progress}`).classList.add('filter-btn-active', 'text-white');
+
+            cards.forEach(card => {
+                if (progress === 'all' || card.getAttribute('data-progress') === progress) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
