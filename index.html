@@ -280,6 +280,39 @@
             }
         }
     </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+  // 1. Capturar el parámetro "tab" de la URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const activeTabParam = urlParams.get('tab');
 
+  // 2. Definir lógica de selección
+  if (activeTabParam === 'compras') {
+    activarPestanaCompras();
+  } else {
+    activarPestanaPlantaFisica(); // Estado por defecto
+  }
+});
+
+function activarPestanaCompras() {
+  // Aquí activas visualmente la pestaña de Compras y muestras su contenido
+  document.getElementById('tab-compras')?.classList.add('active');
+  document.getElementById('content-compras')?.classList.remove('hidden');
+
+  // Desactivas la de Planta Física
+  document.getElementById('tab-planta')?.classList.remove('active');
+  document.getElementById('content-planta')?.classList.add('hidden');
+}
+
+function activarPestanaPlantaFisica() {
+  // Estado original / por defecto
+  document.getElementById('tab-planta')?.classList.add('active');
+  document.getElementById('content-planta')?.classList.remove('hidden');
+
+  document.getElementById('tab-compras')?.classList.remove('active');
+  document.getElementById('content-compras')?.classList.add('hidden');
+}
+</script>
+        
 </body>
 </html>
