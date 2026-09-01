@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ahorro y Optimización - Servicios y Concesiones</title>
+    <title>Ahorro y Optimización - Servicios y Concesiones | ECO-S</title>
     
     <!-- Favicon Nativo ECO-S -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
@@ -12,19 +12,19 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
-         body {
-        background-image: url('../images/bg-pattern.png'); /* Ajusta la ruta según tu estructura de carpetas */
+    body {
+        background-image: url('../images/bg-pattern.png');
         background-repeat: repeat;
-        background-size: 350px; /* Ajusta este número (en px) para hacer los dibujos más grandes o más pequeños */
-        background-attachment: fixed; /* Mantiene el fondo estático mientras haces scroll (efecto elegante) */
-        background-color: #0B0F19; /* Color de respaldo en caso de que la imagen tarde en cargar */
+        background-size: 350px;
+        background-attachment: fixed;
+        background-color: #0B0F19;
     }
     </style>
 </head>
 <body class="text-white font-sans min-h-screen flex flex-col justify-between">
 
     <div>
-        <!-- 1. BARRA DE NAVEGACIÓN SUPERIOR (Estándar del Dashboard) -->
+        <!-- 1. BARRA DE NAVEGACIÓN SUPERIOR -->
         <nav class="flex justify-between items-center bg-[#0B0F19]/95 backdrop-blur-sm py-4 px-6 border-b border-gray-800/80 sticky top-0 z-50">
             <a href="../index.html" class="flex items-center text-gray-400 hover:text-white transition-colors text-sm font-medium group">
                 <svg class="w-5 h-5 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -33,7 +33,7 @@
                 Volver al Dashboard Principal
             </a>
             
-            <div class="px-3 py-1.5 rounded-full border border-emerald-500/20 text-emerald-400 text-xs font-medium tracking-wide">
+            <div class="px-3 py-1.5 rounded-full border border-emerald-500/20 text-emerald-400 text-xs font-medium tracking-wide font-mono">
                 Área: Servicios y Concesiones
             </div>
         </nav>
@@ -44,12 +44,61 @@
                 Ahorro y Optimización de Recursos
             </h1>
             <p class="text-gray-400 text-base md:text-lg max-w-3xl mx-auto leading-relaxed">
-                Seguimiento del desempeño presupuestal, generación de energía solar fotovoltaica y eficiencia en servicios tercerizados.
+                Seguimiento del desempeño presupuestal, generación de energía solar fotovoltaica y eficiencia en servicios tercerizados bajo los principios de sostenibilidad ECO-S.
             </p>
         </header>
 
-        <!-- 3. CONTENEDOR DE TARJETAS (GRID 2x2) -->
-        <main class="max-w-7xl mx-auto px-6 mb-12">
+        <!-- 3. CONTENEDOR PRINCIPAL -->
+        <main class="max-w-7xl mx-auto px-6 mb-12 space-y-8">
+
+            <!-- SECCIÓN: TARJETAS KPI SUPERIORES (RESUMEN DE AHORRO) -->
+            <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <!-- KPI 1: Ahorro Presupuestal Agua -->
+                <div class="bg-[#111827] border border-gray-800 rounded-xl p-5 shadow-xl relative overflow-hidden flex flex-col justify-between">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Ahorro Presupuestal Agua</span>
+                        <span class="p-2 bg-[#00B0FF]/10 text-[#00B0FF] rounded-lg text-lg">💧</span>
+                    </div>
+                    <div>
+                        <div class="text-2xl md:text-3xl font-extrabold text-[#00B0FF] tracking-tight">
+                            $27.044.064
+                        </div>
+                        <p class="text-[11px] text-gray-400 mt-1">Acumulado Ene – Ago 2026 (ODS 6)</p>
+                    </div>
+                </div>
+
+                <!-- KPI 2: Ahorro Presupuestal Energía -->
+                <div class="bg-[#111827] border border-gray-800 rounded-xl p-5 shadow-xl relative overflow-hidden flex flex-col justify-between">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Ahorro Presupuestal Energía</span>
+                        <span class="p-2 bg-amber-500/10 text-amber-400 rounded-lg text-lg">⚡</span>
+                    </div>
+                    <div>
+                        <div class="text-2xl md:text-3xl font-extrabold text-amber-400 tracking-tight">
+                            $152.413.620
+                        </div>
+                        <p class="text-[11px] text-gray-400 mt-1">Acumulado Ene – Ago 2026 (ODS 7)</p>
+                    </div>
+                </div>
+
+                <!-- KPI 3: Ahorro Generación Solar -->
+                <div class="bg-[#111827] border border-gray-800 rounded-xl p-5 shadow-xl relative overflow-hidden flex flex-col justify-between">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Generación Solar Fotovoltaica</span>
+                        <span class="p-2 bg-yellow-500/10 text-yellow-400 rounded-lg text-lg">☀️</span>
+                    </div>
+                    <div>
+                        <div class="text-2xl md:text-3xl font-extrabold text-yellow-400 tracking-tight">
+                            $15.031.338
+                        </div>
+                        <p class="text-[11px] text-gray-400 mt-1">Retorno acumulado Ene – Jul 2026 (ODS 7)</p>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- SECCIÓN: GRID DE GRÁFICOS (2x2) -->
             <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
 
                 <!-- TARJETA 1: Presupuesto Agua 2026 -->
@@ -68,7 +117,7 @@
                     <div class="border-t border-gray-800/80 pt-4 mt-2 min-h-[100px]">
                         <p class="text-xs text-gray-400 leading-relaxed">
                             <strong class="text-white">Gráfico 1: Ejecución Presupuestal de Agua Potable.</strong>
-                            durante el primer semestre de 2026, la ejecución del gasto de agua se mantuvo por debajo del presupuesto en la mayoría de los meses, evidenciando una gestión eficiente de los recursos. Gracias a las acciones implementadas por el área de Infraestructura y Planta Física, especialmente la calibración y optimización de sistemas como fluxómetros y grifos, se logró un ahorro presupuestal de $23.477.829.
+                            Entre enero y agosto de 2026, la ejecución presupuestal del recurso hídrico se mantuvo significativamente por debajo del presupuesto en casi la totalidad del período. La recalibración de hidromecánicos y la contención de fugas permitieron consolidar un ahorro neto de $27.044.064 COP en los primeros 8 meses.
                         </p>
                     </div>
                 </div>
@@ -89,7 +138,7 @@
                     <div class="border-t border-gray-800/80 pt-4 mt-2 min-h-[100px]">
                         <p class="text-xs text-gray-400 leading-relaxed">
                             <strong class="text-white">Gráfico 2: Ejecución Presupuestal de Energía Eléctrica.</strong>
-                            durante el primer semestre de 2026, el consumo de energía presentó un comportamiento variable, con un gasto que superó el presupuesto proyectado entre enero y marzo, a partir de abril, la ejecución se mantuvo por debajo de los valores presupuestados, evidenciando una mejora en el control del consumo gracias a los planes de acción implementados por el área de Infraestructura y Planta Física. Estas medidas permitieron generar un ahorro presupuestal de $123.183.003.
+                            Tras un primer trimestre caracterizado por variaciones de consumo superiores al proyectado, las estrategias de gestión pasiva de cargas e iluminación eficiente implementadas a partir de abril lograron reducir drásticamente el gasto real, acumulando un ahorro presupuestal sostenido de $152.413.620 COP a agosto de 2026.
                         </p>
                     </div>
                 </div>
@@ -99,7 +148,7 @@
                     <div>
                         <div class="flex justify-between items-center mb-4">
                             <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                                <span class="text-yellow-400">☀️</span> Ahorro presupuestal por generación de energía solar
+                                <span class="text-yellow-400">☀️</span> Generación de Energía Solar Fotovoltaica
                             </h3>
                             <span class="text-xs bg-yellow-500/10 text-yellow-400 px-2.5 py-1 rounded-full font-semibold">ODS 7</span>
                         </div>
@@ -109,8 +158,8 @@
                     </div>
                     <div class="border-t border-gray-800/80 pt-4 mt-2 min-h-[100px]">
                         <p class="text-xs text-gray-400 leading-relaxed">
-                            <strong class="text-white">Gráfico 3: Ahorro por Generación de Energía Solar ($ COP).</strong>
-                            durante el primer semestre de 2026, la generación de energía solar mantuvo niveles estables, evidenciando una contribución constante de la estrategia de energía renovable a la reducción de los costos energéticos y al fortalecimiento de las acciones de sostenibilidad institucional. Gracias a esta generación, se obtuvo un ahorro acumulado de $14.467.174, aportando a la eficiencia energética y a la optimización de los recursos de la institución.
+                            <strong class="text-white">Gráfico 3: Retorno Económico por Generación Solar ($ COP).</strong>
+                            La matriz fotovoltaica mantuvo un aporte constante a la demanda eléctrica del campus entre diciembre de 2025 y julio de 2026. En 2026, la generación limpia se tradujo en un ahorro acumulado directo de $15.031.338 COP en la factura de la red pública comercial.
                         </p>
                     </div>
                 </div>
@@ -120,7 +169,8 @@
                     <div>
                         <div class="flex justify-between items-center mb-4">
                             <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                                <span class="text-emerald-400">📄</span> Optimización de Servicios Auros</h3>
+                                <span class="text-emerald-400">📄</span> Optimización de Servicios Auros (2025 vs. 2026)
+                            </h3>
                             <span class="text-xs bg-emerald-500/10 text-emerald-400 px-2.5 py-1 rounded-full font-semibold">ODS 12</span>
                         </div>
                         <div class="relative h-64 w-full mb-4">
@@ -129,8 +179,8 @@
                     </div>
                     <div class="border-t border-gray-800/80 pt-4 mt-2 min-h-[100px]">
                         <p class="text-xs text-gray-400 leading-relaxed">
-                            <strong class="text-white">Gráfico 4: Reducción de Consumo Auros (2025 vs. 2026).</strong>
-                            Durante el primer semestre de 2026, los servicios registrados en AUROS disminuyeron frente al mismo período de 2025, el valor más alto en 2025 se presentó en marzo con 18.796 servicios, mientras que en 2026 el mayor registro fue en febrero con 9.116 servicios, evidenciando una reducción general en todos los meses analizados. Este comportamiento se atribuye a las acciones implementadas para optimizar el uso de los recursos, entre ellas la habilitación de topes de servicios por usuario, la disminución del número de impresoras y el seguimiento permanente a la ejecución del presupuesto mensual.
+                            <strong class="text-white">Gráfico 4: Reducción de Consumo Auros (Impresión/Digitalización).</strong>
+                            A julio de 2026, la política de cuotas de consumo e incentivo a repositorios digitales mantiene una caída superior al 54% en el volumen total de impresiones (39.122 servicios en 2026 vs. 85.952 en el mismo período de 2025), mitigando la huella de insumos de celulosa.
                         </p>
                     </div>
                 </div>
@@ -139,26 +189,25 @@
         </main>
     </div>
 
-    <br>
-
- <footer class="bg-[#0B0F19] text-center py-6 text-xs text-gray-500 border-t border-gray-800">
-        <p>Sistema de Gestión Interna de Planta Física</p>
+    <!-- 4. PIE DE PÁGINA (FOOTER) -->
+    <footer class="bg-[#0B0F19] text-center py-6 text-xs text-gray-500 border-t border-gray-800">
+        <p>Sistema de Gestión Interna de Planta Física | ECO-S</p>
     </footer>
 
-    <!-- 4. SCRIPTS DE CHARTS.JS -->
+    <!-- 5. SCRIPTS DE CHARTS.JS -->
     <script>
-        // Formateador de moneda en Pesos Colombianos (COP)
-        const formatCOP = (val) => '$' + new Intl.NumberFormat('es-CO').format(val);
+        // Formateador dinámico de moneda en Pesos Colombianos (COP)
+        const formatCOP = (val) => val !== null ? '$' + new Intl.NumberFormat('es-CO').format(val) : '-';
 
-        // --- 1. CHARTS PRESUPUESTO AGUA ---
+        // --- 1. PRESUPUESTO VS GASTO: AGUA ---
         new Chart(document.getElementById('presupuestoAguaChart'), {
             type: 'bar',
             data: {
-                labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+                labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
                 datasets: [
                     {
                         label: 'Presupuesto',
-                        data: [20183811, 5180192, 16250297, 10120520, 13429270, 8890103],
+                        data: [20183811, 5180192, 16250297, 10120520, 13429270, 8890103, 10734821, 5814205, null, null, null, null],
                         backgroundColor: 'rgba(100, 116, 139, 0.5)',
                         borderColor: '#64748b',
                         borderWidth: 1,
@@ -166,7 +215,7 @@
                     },
                     {
                         label: 'Gastado',
-                        data: [7898425, 4178180, 9131110, 5129530, 14766480, 9472640],
+                        data: [7898425, 4178180, 9131110, 5129530, 14766480, 9472640, 8689020, 4293770, null, null, null, null],
                         backgroundColor: '#00B0FF',
                         borderRadius: 4
                     }
@@ -189,15 +238,15 @@
             }
         });
 
-        // --- 2. CHARTS PRESUPUESTO ENERGÍA ---
+        // --- 2. PRESUPUESTO VS GASTO: ENERGÍA ---
         new Chart(document.getElementById('presupuestoEnergiaChart'), {
             type: 'bar',
             data: {
-                labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+                labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
                 datasets: [
                     {
                         label: 'Presupuesto',
-                        data: [93470504, 113468082, 152704555, 220449306, 220304405, 213495841],
+                        data: [93470504, 113468082, 152704555, 220449306, 220304405, 213495841, 168812847, 176207090, null, null, null, null],
                         backgroundColor: 'rgba(100, 116, 139, 0.5)',
                         borderColor: '#64748b',
                         borderWidth: 1,
@@ -205,7 +254,7 @@
                     },
                     {
                         label: 'Gastado',
-                        data: [137732420, 135237930, 156028130, 158556340, 145024190, 158130680],
+                        data: [137732420, 135237930, 156028130, 158556340, 145024190, 158130680, 140018900, 175770420, null, null, null, null],
                         backgroundColor: '#F59E0B',
                         borderRadius: 4
                     }
@@ -228,14 +277,14 @@
             }
         });
 
-        // --- 3. CHARTS ENERGÍA SOLAR ---
+        // --- 3. AHORRO ENERGÍA SOLAR FOTOVOLTAICA ---
         new Chart(document.getElementById('solarChart'), {
             type: 'line',
             data: {
-                labels: ['Dic', 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+                labels: ['Dic (25)', 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
                 datasets: [{
                     label: 'Ahorro Solar ($ COP)',
-                    data: [1892830, 2712785, 1767446, 2006799, 1950026, 2272967, 1864322],
+                    data: [1892830, 2712785, 1767446, 2006799, 1950026, 2272967, 1864322, 2456993, null, null, null, null, null],
                     borderColor: '#FACC15',
                     backgroundColor: 'rgba(250, 204, 21, 0.12)',
                     borderWidth: 3,
@@ -262,7 +311,7 @@
             }
         });
 
-        // --- 4. CHARTS AUROS (2025 vs 2026) ---
+        // --- 4. OPTIMIZACIÓN AUROS (2025 VS 2026) ---
         new Chart(document.getElementById('aurosChart'), {
             type: 'bar',
             data: {
@@ -276,7 +325,7 @@
                     },
                     {
                         label: 'Servicios 2026',
-                        data: [4525, 9116, 5769, 6421, 6164, 3974, null, null, null, null, null, null],
+                        data: [4525, 9116, 5769, 6421, 6164, 3974, 3153, null, null, null, null, null],
                         backgroundColor: '#10B981',
                         borderRadius: 3
                     }
@@ -287,7 +336,11 @@
                 maintainAspectRatio: false,
                 plugins: {
                     legend: { labels: { color: '#9ca3af', boxWidth: 12 } },
-                    tooltip: { callbacks: { label: (c) => c.dataset.label + ': ' + new Intl.NumberFormat('es-CO').format(c.parsed.y) + ' servicios' } }
+                    tooltip: { 
+                        callbacks: { 
+                            label: (c) => c.dataset.label + ': ' + (c.parsed.y !== null ? new Intl.NumberFormat('es-CO').format(c.parsed.y) + ' servicios' : '-') 
+                        } 
+                    }
                 },
                 scales: {
                     x: { grid: { display: false }, ticks: { color: '#9ca3af' } },
