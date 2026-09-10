@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📦</text></svg>">
-    <title>Gestión de Pedidos e Insumos - Planta Física</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+    <title>Gestión de Pedidos - ECO-S Planta Física</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Librería SheetJS para lectura de Excel -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
     <style>
     body {
@@ -19,7 +21,7 @@
 </head>
 <body class="text-white font-sans min-h-screen flex flex-col justify-between">
 
-    <!-- Navegación -->
+    <!-- Navegación Principal -->
     <nav class="bg-[#111827] border-b border-gray-800 px-6 py-4">
         <div class="max-w-6xl mx-auto flex justify-between items-center">
             <a href="../index.html" class="flex items-center text-sm font-semibold text-gray-400 hover:text-[#00A859] transition duration-200">
@@ -29,7 +31,7 @@
                 Volver al Dashboard Principal
             </a>
             <span class="text-xs bg-[#00A859]/10 text-[#00A859] px-3 py-1 rounded-full border border-[#00A859]/30 font-mono">
-                Área: Logística e Insumos
+                Área: Logística e Insumos | ECO-S
             </span>
         </div>
     </nav>
@@ -37,28 +39,28 @@
     <!-- Encabezado -->
     <header class="py-10 px-6 text-center max-w-4xl mx-auto">
         <h1 class="text-3xl font-extrabold tracking-tight md:text-5xl text-white mb-4">
-            Control de Pedidos y Solicitudes
+            Consolidado de Pedidos
         </h1>
         <p class="text-gray-400 text-lg leading-relaxed">
-            Monitoreo y optimización de adquisición de insumos operativos en sedes. Los totales se recalculan automáticamente al filtrar categorías o búsquedas específicas.
+            Mapeo operativo conectado al repositorio central (<code class="text-xs font-mono bg-gray-800 px-2 py-1 rounded text-emerald-400">github.xlsx</code>). El valor total se recalcula dinámicamente al aplicar los filtros.
         </p>
     </header>
 
     <!-- Contenido Principal -->
     <main class="max-w-6xl mx-auto px-6 mb-16 flex-grow w-full">
 
-        <!-- TARJETAS DE KPI Y FILTROS -->
+        <!-- FILTROS Y KPI TOTAL -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
             
-            <!-- Controles de Filtro -->
+            <!-- Panel de Búsqueda y Selección -->
             <div class="lg:col-span-2 bg-[#111827] rounded-xl border border-gray-800 p-6 shadow-xl flex flex-col justify-center gap-4">
-                <h3 class="text-sm font-semibold text-gray-300 font-mono flex items-center gap-2">
-                    🔍 FILTRAR REGISTROS
-                </h3>
+                <h2 class="text-xs font-semibold text-gray-400 font-mono flex items-center gap-2 uppercase tracking-wider">
+                    🔍 Filtrar Datos del Repositorio
+                </h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs text-gray-400 mb-1">Buscar por Descripción</label>
-                        <input type="text" id="searchInput" oninput="filtrarTabla()" placeholder="Ej. Jabón, Sensores, Luminaria..." 
+                        <label class="block text-xs text-gray-400 mb-1">Búsqueda General</label>
+                        <input type="text" id="searchInput" oninput="filtrarTabla()" placeholder="Ej. Código, insumo, área..." 
                                class="w-full bg-[#0B0F19] border border-gray-700 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#00A859] transition">
                     </div>
                     <div>
@@ -66,23 +68,20 @@
                         <select id="categorySelect" onchange="filtrarTabla()" 
                                 class="w-full bg-[#0B0F19] border border-gray-700 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#00A859] transition">
                             <option value="TODAS">Todas las categorías</option>
-                            <option value="Aseo y Limpieza">Aseo y Limpieza</option>
-                            <option value="Mantenimiento">Mantenimiento</option>
-                            <option value="Tecnología e IoT">Tecnología e IoT</option>
                         </select>
                     </div>
                 </div>
             </div>
 
-            <!-- KPI Valor Total Filtrado -->
+            <!-- KPI Dinámico del Filtro -->
             <div class="bg-[#111827] rounded-xl border border-gray-800 p-6 shadow-xl flex items-center justify-between border-l-4 border-l-[#00A859]">
                 <div>
                     <span class="text-xs font-semibold text-[#00A859] bg-[#00A859]/10 px-2.5 py-1 rounded-full border border-[#00A859]/20 font-mono">
-                        💰 Valor Total Pedido (Filtrado)
+                        💰 Valor Total Filtrado
                     </span>
-                    <h2 id="kpiTotal" class="text-3xl font-extrabold text-white mt-3 tracking-tight">
+                    <h3 id="kpiTotal" class="text-3xl font-extrabold text-white mt-3 tracking-tight">
                         $ 0
-                    </h2>
+                    </h3>
                     <p class="text-xs text-gray-400 mt-2">
                         Registros visibles: <span id="kpiCount" class="text-emerald-400 font-bold">0</span>
                     </p>
@@ -94,59 +93,24 @@
 
         </div>
 
-        <!-- TABLA DE DETALLE DE PEDIDOS -->
+        <!-- TABLA CONTENEDORA DE DATOS DE EXCEL -->
         <div class="bg-[#111827] rounded-xl border border-gray-800 shadow-xl overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm text-gray-300">
-                    <thead class="bg-[#0B0F19] text-xs font-mono text-gray-400 uppercase border-b border-gray-800">
-                        <tr>
-                            <th scope="col" class="py-4 px-6">Código / ID</th>
-                            <th scope="col" class="py-4 px-6">Descripción del Insumo / Servicio</th>
-                            <th scope="col" class="py-4 px-6">Categoría</th>
-                            <th scope="col" class="py-4 px-6 text-center">Cantidad</th>
-                            <th scope="col" class="py-4 px-6 text-right">Valor Unitario</th>
-                            <th scope="col" class="py-4 px-6 text-right">Valor Total Pedido</th>
-                        </tr>
+                    <thead id="tableHeader" class="bg-[#0B0F19] text-xs font-mono text-gray-400 uppercase border-b border-gray-800">
+                        <!-- Las columnas se generan automáticamente según las cabeceras del Excel -->
                     </thead>
                     <tbody id="pedidosTableBody" class="divide-y divide-gray-800/60">
-                        <tr class="pedido-row hover:bg-gray-800/40 transition" data-categoria="Aseo y Limpieza" data-valor="1250000">
-                            <td class="py-4 px-6 font-mono text-xs text-gray-400">PED-2026-001</td>
-                            <td class="py-4 px-6 font-semibold text-white">Detergente Biodegradable Multiusos (20L)</td>
-                            <td class="py-4 px-6"><span class="bg-blue-500/10 text-blue-400 text-xs px-2.5 py-0.5 rounded-full border border-blue-500/20">Aseo y Limpieza</span></td>
-                            <td class="py-4 px-6 text-center">10</td>
-                            <td class="py-4 px-6 text-right text-gray-400">$ 125.000</td>
-                            <td class="py-4 px-6 text-right font-bold text-emerald-400">$ 1.250.000</td>
-                        </tr>
-                        <tr class="pedido-row hover:bg-gray-800/40 transition" data-categoria="Tecnología e IoT" data-valor="3400000">
-                            <td class="py-4 px-6 font-mono text-xs text-gray-400">PED-2026-002</td>
-                            <td class="py-4 px-6 font-semibold text-white">Sensores IoT de Ocupación para Aulas</td>
-                            <td class="py-4 px-6"><span class="bg-purple-500/10 text-purple-400 text-xs px-2.5 py-0.5 rounded-full border border-purple-500/20">Tecnología e IoT</span></td>
-                            <td class="py-4 px-6 text-center">8</td>
-                            <td class="py-4 px-6 text-right text-gray-400">$ 425.000</td>
-                            <td class="py-4 px-6 text-right font-bold text-emerald-400">$ 3.400.000</td>
-                        </tr>
-                        <tr class="pedido-row hover:bg-gray-800/40 transition" data-categoria="Aseo y Limpieza" data-valor="890000">
-                            <td class="py-4 px-6 font-mono text-xs text-gray-400">PED-2026-003</td>
-                            <td class="py-4 px-6 font-semibold text-white">Toallas de Papel Reciclado (Caja x 12)</td>
-                            <td class="py-4 px-6"><span class="bg-blue-500/10 text-blue-400 text-xs px-2.5 py-0.5 rounded-full border border-blue-500/20">Aseo y Limpieza</span></td>
-                            <td class="py-4 px-6 text-center">15</td>
-                            <td class="py-4 px-6 text-right text-gray-400">$ 59.333</td>
-                            <td class="py-4 px-6 text-right font-bold text-emerald-400">$ 890.000</td>
-                        </tr>
-                        <tr class="pedido-row hover:bg-gray-800/40 transition" data-categoria="Mantenimiento" data-valor="2150000">
-                            <td class="py-4 px-6 font-mono text-xs text-gray-400">PED-2026-004</td>
-                            <td class="py-4 px-6 font-semibold text-white">Kits de Empaques y Válvulas para Fluxómetros</td>
-                            <td class="py-4 px-6"><span class="bg-yellow-500/10 text-yellow-400 text-xs px-2.5 py-0.5 rounded-full border border-yellow-500/20">Mantenimiento</span></td>
-                            <td class="py-4 px-6 text-center">25</td>
-                            <td class="py-4 px-6 text-right text-gray-400">$ 86.000</td>
-                            <td class="py-4 px-6 text-right font-bold text-emerald-400">$ 2.150.000</td>
+                        <tr>
+                            <td colspan="6" class="py-8 text-center text-gray-500 font-mono">
+                                Cargando datos desde github.xlsx...
+                            </td>
                         </tr>
                     </tbody>
-                    <!-- FILA DE TOTALES GENERALES (SUMA DINÁMICA DE FILTROS) -->
                     <tfoot class="bg-[#0B0F19] border-t-2 border-gray-800 text-white font-bold">
                         <tr>
-                            <td colspan="5" class="py-4 px-6 text-right uppercase tracking-wider text-xs font-mono text-gray-400">
-                                Total Pedido (Suma según Filtro Aplicado):
+                            <td id="footerLabel" colspan="5" class="py-4 px-6 text-right uppercase tracking-wider text-xs font-mono text-gray-400">
+                                Valor Total Pedido (Filtrado):
                             </td>
                             <td id="tableFooterTotal" class="py-4 px-6 text-right text-lg text-[#00A859] font-mono font-extrabold">
                                 $ 0
@@ -164,17 +128,118 @@
         <p>Sistema de Gestión Interna de Planta Física | ECO-S</p>
     </footer>
 
-    <!-- Lógica de Filtrado y Recálculo Dinámico -->
+    <!-- Lógica JavaScript para Carga Remota y Filtros Dinámicos -->
     <script>
+        let excelData = [];
+        let totalColumnName = "";
+
         const currencyFormatter = new Intl.NumberFormat('es-CO', {
             style: 'currency',
             currency: 'COP',
             maximumFractionDigits: 0
         });
 
+        // 1. Cargar archivo github.xlsx desde la raíz del proyecto/repositorio
+        async function cargarExcel() {
+            try {
+                const response = await fetch('./github.xlsx');
+                if (!response.ok) throw new Error('No se pudo encontrar el archivo github.xlsx');
+                
+                const arrayBuffer = await response.arrayBuffer();
+                const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+                const firstSheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[firstSheetName];
+                
+                excelData = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
+
+                if (excelData.length > 0) {
+                    identificarColumnas();
+                    poblarCategorias();
+                    renderizarTabla(excelData);
+                } else {
+                    document.getElementById('pedidosTableBody').innerHTML = `
+                        <tr><td colspan="6" class="py-6 text-center text-yellow-500">El archivo github.xlsx está vacío.</td></tr>`;
+                }
+            } catch (error) {
+                console.error("Error al cargar Excel:", error);
+                document.getElementById('pedidosTableBody').innerHTML = `
+                    <tr><td colspan="6" class="py-6 text-center text-red-400 font-mono text-xs">
+                        ⚠️ Error al cargar github.xlsx. Asegúrate de que el archivo existe en la ruta de despliegue.
+                    </td></tr>`;
+            }
+        }
+
+        // 2. Identificar dinámicamente la columna que corresponde al Valor Total
+        function identificarColumnas() {
+            if (excelData.length === 0) return;
+            const keys = Object.keys(excelData[0]);
+            
+            // Buscar nombre de columna referente a valor total o total
+            totalColumnName = keys.find(k => 
+                k.toLowerCase().includes('total') || 
+                k.toLowerCase().includes('valor') || 
+                k.toLowerCase().includes('precio')
+            ) || keys[keys.length - 1];
+
+            // Renderizar encabezados de tabla
+            const headerRow = document.getElementById('tableHeader');
+            headerRow.innerHTML = `<tr>${keys.map(key => `<th class="py-4 px-6">${key}</th>`).join('')}</tr>`;
+            
+            document.getElementById('footerLabel').colSpan = Math.max(1, keys.length - 1);
+        }
+
+        // 3. Poblar el desplegable de categorías según los datos reales
+        function poblarCategorias() {
+            const select = document.getElementById('categorySelect');
+            const keys = Object.keys(excelData[0]);
+            const catKey = keys.find(k => k.toLowerCase().includes('categor')) || keys[2];
+
+            if (catKey) {
+                const categorias = [...new Set(excelData.map(item => item[catKey]))].filter(Boolean);
+                categorias.forEach(cat => {
+                    const opt = document.createElement('option');
+                    opt.value = cat;
+                    opt.textContent = cat;
+                    select.appendChild(opt);
+                });
+            }
+        }
+
+        // 4. Renderizar filas y aplicar cálculo
+        function renderizarTabla(data) {
+            const tbody = document.getElementById('pedidosTableBody');
+            tbody.innerHTML = '';
+
+            data.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.className = 'pedido-row hover:bg-gray-800/40 transition';
+                
+                const valNum = parseFloat(row[totalColumnName]) || 0;
+                tr.setAttribute('data-valor', valNum);
+
+                let cellsHtml = '';
+                Object.keys(row).forEach(key => {
+                    let val = row[key];
+                    let isTotalCol = (key === totalColumnName);
+
+                    if (isTotalCol && !isNaN(valNum)) {
+                        val = currencyFormatter.format(valNum);
+                    }
+
+                    cellsHtml += `<td class="py-4 px-6 ${isTotalCol ? 'text-right font-bold text-emerald-400' : ''}">${val}</td>`;
+                });
+
+                tr.innerHTML = cellsHtml;
+                tbody.appendChild(tr);
+            });
+
+            filtrarTabla();
+        }
+
+        // 5. Filtrar registros y recalcular la suma total
         function filtrarTabla() {
             const searchVal = document.getElementById('searchInput').value.toLowerCase();
-            const categoryVal = document.getElementById('categorySelect').value;
+            const categoryVal = document.getElementById('categorySelect').value.toLowerCase();
             const rows = document.querySelectorAll('.pedido-row');
 
             let totalSuma = 0;
@@ -182,30 +247,25 @@
 
             rows.forEach(row => {
                 const text = row.innerText.toLowerCase();
-                const category = row.getAttribute('data-categoria');
-                const valor = parseFloat(row.getAttribute('data-valor')) || 0;
-
                 const matchSearch = text.includes(searchVal);
-                const matchCategory = (categoryVal === 'TODAS' || category === categoryVal);
+                const matchCategory = (categoryVal === 'todas' || text.includes(categoryVal));
 
                 if (matchSearch && matchCategory) {
                     row.style.display = '';
-                    totalSuma += valor;
+                    totalSuma += parseFloat(row.getAttribute('data-valor')) || 0;
                     visiblesCount++;
                 } else {
                     row.style.display = 'none';
                 }
             });
 
-            // Actualización de KPIs y Footer
             const formattedTotal = currencyFormatter.format(totalSuma);
             document.getElementById('kpiTotal').innerText = formattedTotal;
             document.getElementById('tableFooterTotal').innerText = formattedTotal;
             document.getElementById('kpiCount').innerText = visiblesCount;
         }
 
-        // Ejecución inicial al cargar la página
-        document.addEventListener('DOMContentLoaded', filtrarTabla);
+        document.addEventListener('DOMContentLoaded', cargarExcel);
     </script>
 </body>
 </html>
