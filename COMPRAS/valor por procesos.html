@@ -348,67 +348,75 @@ function fetchAutoCSV() {
             recalculateAndRender();
         }
 
-        // RECALCULAR Y RENDERIZAR TODO
-        function recalculateAndRender() {
-            const selectedMonth = document.getElementById('monthSelect').value.toLowerCase();
+       // RECALCULAR Y RENDERIZAR TODO
+function recalculateAndRender() {
+    const selectedMonth = document.getElementById('monthSelect').value.toLowerCase();
 
-            // Filtrar dataset por mes
-            const filtered = rawDataset.filter(item => {
-                if (selectedMonth === 'all') return true;
-                return item.mes.includes(selectedMonth);
-            });
+    // Filtrar dataset por mes
+    const filtered = rawDataset.filter(item => {
+        if (selectedMonth === 'all') return true;
+        return item.mes.includes(selectedMonth);
+    });
 
-            // Agrupación por Procesos y por Tipos
-            const procesosMap = {};
-            const tiposMap = {};
-            let totalCOP = 0, totalUSD = 0, totalEUR = 0;
+    const procesosMap = {};
+    const tiposMap = {};
+    let totalCOP = 0, totalUSD = 0, totalEUR = 0;
 
-            filtered.forEach(item => {
-                // KPIs Moneda
-                if (item.moneda === 'COP') totalCOP += item.valor;
-                else if (item.moneda === 'USD') totalUSD += item.valor;
-                else if (item.moneda === 'EUR') totalEUR += item.valor;
+    filtered.forEach(item => {
+        // KPIs Moneda
+        if (item.moneda === 'COP') totalCOP += item.valor;
+        else if (item.moneda === 'USD') totalUSD += item.valor;
+        else if (item.moneda === 'EUR') totalEUR += item.valor;
 
-                // Agrupar Proceso
-                if (!procesosMap[item.area]) procesosMap[item.area] = { nombre: item.area, cop: 0, usd: 0, eur: 0 };
-                if (['COP', 'USD', 'EUR'].includes(item.moneda)) {
-                    procesosMap[item.area][item.moneda.toLowerCase()] += item.valor;
-                }
-
-                // Agrupar Tipo
-                if (!tiposMap[item.tipo]) tiposMap[item.tipo] = { nombre: item.tipo, cop: 0, usd: 0, eur: 0 };
-                if (['COP', 'USD', 'EUR'].includes(item.moneda)) {
-                    tiposMap[item.tipo][item.moneda.toLowerCase()] += item.valor;
-                }
-            });
-
-            const procesosArray = Object.values(procesosMap);
-            const tiposArray = Object.values(tiposMap);
-
-            // 1. Renderizar KPIs
-            document.getElementById('kpi-cop').innerText = formatMoney(totalCOP, 'COP');
-            document.getElementById('kpi-usd').innerText = formatMoney(totalUSD, 'USD');
-            document.getElementById('kpi-eur').innerText = formatMoney(totalEUR, 'EUR');
-
-            // Top Proceso (COP)
-            let topProceso = { nombre: '-', cop: 0 };
-            procesosArray.forEach(p => { if (p.cop > topProceso.cop) topProceso = p; });
-            document.getElementById('kpi-top-proceso').innerText = topProceso.nombre;
-            if (totalCOP > 0 && topProceso.cop > 0) {
-                const pct = ((topProceso.cop / totalCOP) * 100).toFixed(1);
-                document.getElementById('kpi-top-val').innerText = `${formatMoney(topProceso.cop, 'COP')} (${pct}%)`;
-            } else {
-                document.getElementById('kpi-top-val').innerText = '$ 0 (0%)';
-            }
-
-            // 2. Renderizar Tablas
-            renderTabla(procesosArray, 'tablaProcesosBody');
-            renderTabla(tiposArray, 'tablaTiposBody');
-
-            // 3. Renderizar Gráficas
-            renderChartProceso(procesosArray);
-            renderChartTipo(tiposArray);
+        // Agrupar Proceso (Tabla 1)
+        if (!procesosMap[item.area]) procesosMap[item.area] = { nombre: item.area, cop: 0, usd: 0, eur: 0 };
+        if (['COP', 'USD', 'EUR'].includes(item.moneda)) {
+            procesosMap[item.area][item.moneda.toLowerCase()] += item.valor;
         }
+
+        // Agrupar Tipo de Compra + Desglose de Áreas (Tabla 2 multinivel)
+        if (!tiposMap[item.tipo]) {
+            tiposMap[item.tipo] = { nombre: item.tipo, cop: 0, usd: 0, eur: 0, procesos: {} };
+        }
+        if (['COP', 'USD', 'EUR'].includes(item.moneda)) {
+            const monKey = item.moneda.toLowerCase();
+            tiposMap[item.tipo][monKey] += item.valor;
+
+            // Rastrear el área específica dentro de este tipo de compra
+            if (!tiposMap[item.tipo].procesos[item.area]) {
+                tiposMap[item.tipo].procesos[item.area] = { nombre: item.area, cop: 0, usd: 0, eur: 0 };
+            }
+            tiposMap[item.tipo].procesos[item.area][monKey] += item.valor;
+        }
+    });
+
+    const procesosArray = Object.values(procesosMap);
+    const tiposArray = Object.values(tiposMap);
+
+    // 1. Renderizar KPIs
+    document.getElementById('kpi-cop').innerText = formatMoney(totalCOP, 'COP');
+    document.getElementById('kpi-usd').innerText = formatMoney(totalUSD, 'USD');
+    document.getElementById('kpi-eur').innerText = formatMoney(totalEUR, 'EUR');
+
+    // Top Proceso
+    let topProceso = { nombre: '-', cop: 0 };
+    procesosArray.forEach(p => { if (p.cop > topProceso.cop) topProceso = p; });
+    document.getElementById('kpi-top-proceso').innerText = topProceso.nombre;
+    if (totalCOP > 0 && topProceso.cop > 0) {
+        const pct = ((topProceso.cop / totalCOP) * 100).toFixed(1);
+        document.getElementById('kpi-top-val').innerText = `${formatMoney(topProceso.cop, 'COP')} (${pct}%)`;
+    } else {
+        document.getElementById('kpi-top-val').innerText = '$ 0 (0%)';
+    }
+
+    // 2. Renderizar Tabla 1 (Sencilla) y Tabla 2 (Multinivel desplegable)
+    renderTabla(procesosArray, 'tablaProcesosBody');
+    renderTablaTiposMultinivel(tiposArray);
+
+    // 3. Renderizar Gráficas
+    renderChartProceso(procesosArray);
+    renderChartTipo(tiposArray);
+}
 
         // RENDERIZAR TABLAS
         function renderTabla(datosArray, tbodyId) {
@@ -429,6 +437,90 @@ function fetchAutoCSV() {
                 </tr>
             `).join('');
         }
+
+        // RENDERIZAR TABLA 2 CON DESPLEGABLE POR ÁREA/PROCESO
+function renderTablaTiposMultinivel(tiposArray) {
+    tiposArray.sort((a, b) => b.cop - a.cop);
+    const tbody = document.getElementById('tablaTiposBody');
+
+    if (tiposArray.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500">No hay registros para el periodo seleccionado.</td></tr>`;
+        return;
+    }
+
+    let html = '';
+    tiposArray.forEach((item, index) => {
+        const rowId = `tipo-subrow-${index}`;
+        const iconId = `tipo-icon-${index}`;
+        
+        // Ordenar las áreas dentro de este tipo de compra de mayor a menor gasto COP
+        const procesosList = Object.values(item.procesos).sort((a, b) => b.cop - a.cop);
+
+        // Fila Principal del Tipo de Compra
+        html += `
+        <tr class="hover:bg-gray-800/40 cursor-pointer transition-colors border-b border-gray-800/40" onclick="toggleSubRow('${rowId}', '${iconId}')">
+            <td class="p-3 font-medium text-white flex items-center justify-between">
+                <span class="flex items-center gap-2">
+                    <span id="${iconId}" class="text-emerald-400 font-bold transition-transform duration-200 inline-block text-xs">▶</span>
+                    <span>${item.nombre}</span>
+                </span>
+                <span class="text-[10px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20 font-mono">
+                    ${procesosList.length} área(s)
+                </span>
+            </td>
+            <td class="p-3 text-right font-mono ${item.cop > 0 ? 'text-purple-300 font-bold' : 'text-gray-600'}">${formatMoney(item.cop, 'COP')}</td>
+            <td class="p-3 text-right font-mono ${item.usd > 0 ? 'text-emerald-400 font-bold' : 'text-gray-600'}">${formatMoney(item.usd, 'USD')}</td>
+            <td class="p-3 text-right font-mono ${item.eur > 0 ? 'text-amber-400 font-bold' : 'text-gray-600'}">${formatMoney(item.eur, 'EUR')}</td>
+        </tr>
+
+        <!-- Subfila Desplegable (Detalle por Áreas) -->
+        <tr id="${rowId}" class="hidden bg-[#080C14] border-b border-gray-800">
+            <td colspan="4" class="p-4 pl-8">
+                <div class="bg-[#0D1322] p-4 rounded-lg border border-gray-800 shadow-inner">
+                    <p class="text-[11px] font-bold text-emerald-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                        <span>🏢 Áreas/Procesos solicitantes en "${item.nombre}":</span>
+                    </p>
+                    <table class="w-full text-left text-xs">
+                        <thead class="text-gray-400 text-[10px] uppercase border-b border-gray-800/80">
+                            <tr>
+                                <th class="py-2">Área o Proceso</th>
+                                <th class="py-2 text-right">Gasto COP</th>
+                                <th class="py-2 text-right">Gasto USD</th>
+                                <th class="py-2 text-right">Gasto EUR</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-800/30">
+                            ${procesosList.map(p => `
+                                <tr class="hover:bg-gray-800/20">
+                                    <td class="py-2 text-gray-300 font-medium">${p.nombre}</td>
+                                    <td class="py-2 text-right font-mono ${p.cop > 0 ? 'text-purple-300 font-semibold' : 'text-gray-600'}">${formatMoney(p.cop, 'COP')}</td>
+                                    <td class="py-2 text-right font-mono ${p.usd > 0 ? 'text-emerald-400 font-semibold' : 'text-gray-600'}">${formatMoney(p.usd, 'USD')}</td>
+                                    <td class="py-2 text-right font-mono ${p.eur > 0 ? 'text-amber-400 font-semibold' : 'text-gray-600'}">${formatMoney(p.eur, 'EUR')}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            </td>
+        </tr>
+        `;
+    });
+
+    tbody.innerHTML = html;
+}
+
+// FUNCIÓN PARA EXPANDIR / COLAPSAR FILAS ANIDADAS
+function toggleSubRow(rowId, iconId) {
+    const row = document.getElementById(rowId);
+    const icon = document.getElementById(iconId);
+    if (row.classList.contains('hidden')) {
+        row.classList.remove('hidden');
+        icon.style.transform = 'rotate(90deg)';
+    } else {
+        row.classList.add('hidden');
+        icon.style.transform = 'rotate(0deg)';
+    }
+}
 
         // RENDERIZAR GRÁFICA PROCESOS
         function renderChartProceso(dataArray) {
