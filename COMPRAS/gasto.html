@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
-    <title>Gestión de Pedidos - ECO-S Planta Física</title>
+    <title>Servicios y Pedidos - Planta Física | ECO-S</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Librería SheetJS para lectura de Excel -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
     <style>
@@ -21,7 +20,7 @@
 </head>
 <body class="text-white font-sans min-h-screen flex flex-col justify-between">
 
-    <!-- Navegación Principal -->
+    <!-- Navegación -->
     <nav class="bg-[#111827] border-b border-gray-800 px-6 py-4">
         <div class="max-w-6xl mx-auto flex justify-between items-center">
             <a href="../index.html" class="flex items-center text-sm font-semibold text-gray-400 hover:text-[#00A859] transition duration-200">
@@ -31,7 +30,7 @@
                 Volver al Dashboard Principal
             </a>
             <span class="text-xs bg-[#00A859]/10 text-[#00A859] px-3 py-1 rounded-full border border-[#00A859]/30 font-mono">
-                Área: Logística e Insumos | ECO-S
+                Área: Servicios y Concesiones | ECO-S
             </span>
         </div>
     </nav>
@@ -39,45 +38,55 @@
     <!-- Encabezado -->
     <header class="py-10 px-6 text-center max-w-4xl mx-auto">
         <h1 class="text-3xl font-extrabold tracking-tight md:text-5xl text-white mb-4">
-            Consolidado de Pedidos
+            Gestión e Insumos Operativos
         </h1>
         <p class="text-gray-400 text-lg leading-relaxed">
-            Mapeo operativo conectado al repositorio central (<code class="text-xs font-mono bg-gray-800 px-2 py-1 rounded text-emerald-400">github.xlsx</code>). El valor total se recalcula dinámicamente al aplicar los filtros.
+            Mapeo analítico conectado a <code class="text-xs font-mono bg-gray-800 px-2 py-1 rounded text-emerald-400">github.xlsx</code>. Los filtros aplican directamente sobre las columnas estructuradas actualizando el valor total acumulado.
         </p>
     </header>
 
     <!-- Contenido Principal -->
     <main class="max-w-6xl mx-auto px-6 mb-16 flex-grow w-full">
 
-        <!-- FILTROS Y KPI TOTAL -->
+        <!-- FILTROS POR CABECERAS Y KPI TOTAL -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
             
-            <!-- Panel de Búsqueda y Selección -->
+            <!-- Panel de Controles -->
             <div class="lg:col-span-2 bg-[#111827] rounded-xl border border-gray-800 p-6 shadow-xl flex flex-col justify-center gap-4">
                 <h2 class="text-xs font-semibold text-gray-400 font-mono flex items-center gap-2 uppercase tracking-wider">
-                    🔍 Filtrar Datos del Repositorio
+                    🔍 Filtrado Estructurado por Cabeceras
                 </h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <!-- Búsqueda General -->
                     <div>
                         <label class="block text-xs text-gray-400 mb-1">Búsqueda General</label>
-                        <input type="text" id="searchInput" oninput="filtrarTabla()" placeholder="Ej. Código, insumo, área..." 
+                        <input type="text" id="searchInput" oninput="ejecutarFiltros()" placeholder="Buscar término..." 
                                class="w-full bg-[#0B0F19] border border-gray-700 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#00A859] transition">
                     </div>
+                    <!-- Filtro por Columna Específica 1 -->
                     <div>
-                        <label class="block text-xs text-gray-400 mb-1">Categoría</label>
-                        <select id="categorySelect" onchange="filtrarTabla()" 
+                        <label id="lblFiltroCol1" class="block text-xs text-gray-400 mb-1">Columna 1</label>
+                        <select id="selectCol1" onchange="ejecutarFiltros()" 
                                 class="w-full bg-[#0B0F19] border border-gray-700 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#00A859] transition">
-                            <option value="TODAS">Todas las categorías</option>
+                            <option value="TODOS">Todos</option>
+                        </select>
+                    </div>
+                    <!-- Filtro por Columna Específica 2 -->
+                    <div>
+                        <label id="lblFiltroCol2" class="block text-xs text-gray-400 mb-1">Columna 2</label>
+                        <select id="selectCol2" onchange="ejecutarFiltros()" 
+                                class="w-full bg-[#0B0F19] border border-gray-700 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#00A859] transition">
+                            <option value="TODOS">Todos</option>
                         </select>
                     </div>
                 </div>
             </div>
 
-            <!-- KPI Dinámico del Filtro -->
+            <!-- KPI Valor Total Filtrado -->
             <div class="bg-[#111827] rounded-xl border border-gray-800 p-6 shadow-xl flex items-center justify-between border-l-4 border-l-[#00A859]">
                 <div>
                     <span class="text-xs font-semibold text-[#00A859] bg-[#00A859]/10 px-2.5 py-1 rounded-full border border-[#00A859]/20 font-mono">
-                        💰 Valor Total Filtrado
+                        💰 Valor Total Pedido (Filtrado)
                     </span>
                     <h3 id="kpiTotal" class="text-3xl font-extrabold text-white mt-3 tracking-tight">
                         $ 0
@@ -93,24 +102,24 @@
 
         </div>
 
-        <!-- TABLA CONTENEDORA DE DATOS DE EXCEL -->
+        <!-- TABLA DINÁMICA -->
         <div class="bg-[#111827] rounded-xl border border-gray-800 shadow-xl overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm text-gray-300">
                     <thead id="tableHeader" class="bg-[#0B0F19] text-xs font-mono text-gray-400 uppercase border-b border-gray-800">
-                        <!-- Las columnas se generan automáticamente según las cabeceras del Excel -->
+                        <!-- Generado automáticamente según las cabeceras de github.xlsx -->
                     </thead>
                     <tbody id="pedidosTableBody" class="divide-y divide-gray-800/60">
                         <tr>
-                            <td colspan="6" class="py-8 text-center text-gray-500 font-mono">
-                                Cargando datos desde github.xlsx...
+                            <td colspan="10" class="py-8 text-center text-gray-500 font-mono">
+                                Procesando archivo github.xlsx...
                             </td>
                         </tr>
                     </tbody>
                     <tfoot class="bg-[#0B0F19] border-t-2 border-gray-800 text-white font-bold">
                         <tr>
-                            <td id="footerLabel" colspan="5" class="py-4 px-6 text-right uppercase tracking-wider text-xs font-mono text-gray-400">
-                                Valor Total Pedido (Filtrado):
+                            <td id="footerLabel" colspan="1" class="py-4 px-6 text-right uppercase tracking-wider text-xs font-mono text-gray-400">
+                                Valor Total Pedido:
                             </td>
                             <td id="tableFooterTotal" class="py-4 px-6 text-right text-lg text-[#00A859] font-mono font-extrabold">
                                 $ 0
@@ -123,15 +132,21 @@
 
     </main>
 
-    <!-- Pie de página -->
     <footer class="bg-[#0B0F19] text-center py-6 text-xs text-gray-500 border-t border-gray-800">
         <p>Sistema de Gestión Interna de Planta Física | ECO-S</p>
     </footer>
 
-    <!-- Lógica JavaScript para Carga Remota y Filtros Dinámicos -->
     <script>
-        let excelData = [];
-        let totalColumnName = "";
+        // CONFIGURACIÓN DE CABECERAS
+        // Define aquí los nombres exactos de las columnas en github.xlsx que deseas usar para filtrar y calcular
+        const CONFIG = {
+            columnaTotal: "Valor Total Pedido", // O el nombre exacto de la columna con el precio final
+            columnaFiltro1: "Categoría",        // Primera cabecera clave para desplegable
+            columnaFiltro2: "Sede"             // Segunda cabecera clave para desplegable
+        };
+
+        let rawExcelData = [];
+        let colKeys = [];
 
         const currencyFormatter = new Intl.NumberFormat('es-CO', {
             style: 'currency',
@@ -139,133 +154,140 @@
             maximumFractionDigits: 0
         });
 
-        // 1. Cargar archivo github.xlsx desde la raíz del proyecto/repositorio
-        async function cargarExcel() {
+        async function CargarYProcesarExcel() {
             try {
                 const response = await fetch('./github.xlsx');
-                if (!response.ok) throw new Error('No se pudo encontrar el archivo github.xlsx');
-                
-                const arrayBuffer = await response.arrayBuffer();
-                const workbook = XLSX.read(arrayBuffer, { type: 'array' });
-                const firstSheetName = workbook.SheetNames[0];
-                const worksheet = workbook.Sheets[firstSheetName];
-                
-                excelData = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
+                if (!response.ok) throw new Error('No se encontró el archivo github.xlsx');
 
-                if (excelData.length > 0) {
-                    identificarColumnas();
-                    poblarCategorias();
-                    renderizarTabla(excelData);
-                } else {
-                    document.getElementById('pedidosTableBody').innerHTML = `
-                        <tr><td colspan="6" class="py-6 text-center text-yellow-500">El archivo github.xlsx está vacío.</td></tr>`;
+                const dataBuffer = await response.arrayBuffer();
+                const workbook = XLSX.read(dataBuffer, { type: 'array' });
+                const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+                
+                rawExcelData = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
+
+                if (rawExcelData.length > 0) {
+                    colKeys = Object.keys(rawExcelData[0]);
+                    
+                    // Ajuste automático si el nombre exacto de la columna difiere
+                    if (!colKeys.includes(CONFIG.columnaTotal)) {
+                        CONFIG.columnaTotal = colKeys.find(k => k.toLowerCase().includes('total') || k.toLowerCase().includes('valor')) || colKeys[colKeys.length - 1];
+                    }
+
+                    construirEncabezadosTabla();
+                    configurarDesplegablesFiltros();
+                    poblarTabla(rawExcelData);
                 }
-            } catch (error) {
-                console.error("Error al cargar Excel:", error);
+            } catch (err) {
+                console.error("Error al cargar datos:", err);
                 document.getElementById('pedidosTableBody').innerHTML = `
-                    <tr><td colspan="6" class="py-6 text-center text-red-400 font-mono text-xs">
-                        ⚠️ Error al cargar github.xlsx. Asegúrate de que el archivo existe en la ruta de despliegue.
+                    <tr><td colspan="10" class="py-6 text-center text-red-400 font-mono text-xs">
+                        ⚠️ Error al conectar con github.xlsx. Revisa que el archivo esté guardado en la raíz del proyecto.
                     </td></tr>`;
             }
         }
 
-        // 2. Identificar dinámicamente la columna que corresponde al Valor Total
-        function identificarColumnas() {
-            if (excelData.length === 0) return;
-            const keys = Object.keys(excelData[0]);
+        function construirEncabezadosTabla() {
+            const thead = document.getElementById('tableHeader');
+            thead.innerHTML = `<tr>${colKeys.map(k => `<th class="py-4 px-6">${k}</th>`).join('')}</tr>`;
             
-            // Buscar nombre de columna referente a valor total o total
-            totalColumnName = keys.find(k => 
-                k.toLowerCase().includes('total') || 
-                k.toLowerCase().includes('valor') || 
-                k.toLowerCase().includes('precio')
-            ) || keys[keys.length - 1];
-
-            // Renderizar encabezados de tabla
-            const headerRow = document.getElementById('tableHeader');
-            headerRow.innerHTML = `<tr>${keys.map(key => `<th class="py-4 px-6">${key}</th>`).join('')}</tr>`;
-            
-            document.getElementById('footerLabel').colSpan = Math.max(1, keys.length - 1);
+            // Ajustar colspan del totalizador inferior
+            document.getElementById('footerLabel').colSpan = Math.max(1, colKeys.length - 1);
         }
 
-        // 3. Poblar el desplegable de categorías según los datos reales
-        function poblarCategorias() {
-            const select = document.getElementById('categorySelect');
-            const keys = Object.keys(excelData[0]);
-            const catKey = keys.find(k => k.toLowerCase().includes('categor')) || keys[2];
+        function configurarDesplegablesFiltros() {
+            // Asignar etiquetas
+            const f1Key = colKeys.includes(CONFIG.columnaFiltro1) ? CONFIG.columnaFiltro1 : colKeys[2] || colKeys[0];
+            const f2Key = colKeys.includes(CONFIG.columnaFiltro2) ? CONFIG.columnaFiltro2 : colKeys[3] || colKeys[1];
 
-            if (catKey) {
-                const categorias = [...new Set(excelData.map(item => item[catKey]))].filter(Boolean);
-                categorias.forEach(cat => {
-                    const opt = document.createElement('option');
-                    opt.value = cat;
-                    opt.textContent = cat;
-                    select.appendChild(opt);
-                });
-            }
+            document.getElementById('lblFiltroCol1').textContent = f1Key;
+            document.getElementById('lblFiltroCol2').textContent = f2Key;
+
+            // Llenar opciones únicas
+            llenarSelect('selectCol1', f1Key);
+            llenarSelect('selectCol2', f2Key);
         }
 
-        // 4. Renderizar filas y aplicar cálculo
-        function renderizarTabla(data) {
+        function llenarSelect(selectId, keyName) {
+            const select = document.getElementById(selectId);
+            const valoresUnicos = [...new Set(rawExcelData.map(item => item[keyName]))].filter(Boolean);
+            
+            valoresUnicos.forEach(val => {
+                const opt = document.createElement('option');
+                opt.value = val;
+                opt.textContent = val;
+                select.appendChild(opt);
+            });
+        }
+
+        function poblarTabla(data) {
             const tbody = document.getElementById('pedidosTableBody');
             tbody.innerHTML = '';
 
-            data.forEach(row => {
+            data.forEach((row, idx) => {
                 const tr = document.createElement('tr');
                 tr.className = 'pedido-row hover:bg-gray-800/40 transition';
-                
-                const valNum = parseFloat(row[totalColumnName]) || 0;
-                tr.setAttribute('data-valor', valNum);
+                tr.setAttribute('data-index', idx);
 
-                let cellsHtml = '';
-                Object.keys(row).forEach(key => {
-                    let val = row[key];
-                    let isTotalCol = (key === totalColumnName);
+                const valorNumerico = parseFloat(row[CONFIG.columnaTotal]) || 0;
+                tr.setAttribute('data-valor-total', valorNumerico);
 
-                    if (isTotalCol && !isNaN(valNum)) {
-                        val = currencyFormatter.format(valNum);
+                let rowContent = '';
+                colKeys.forEach(key => {
+                    let cellVal = row[key];
+                    const isTotal = (key === CONFIG.columnaTotal);
+
+                    if (isTotal && !isNaN(valorNumerico)) {
+                        cellVal = currencyFormatter.format(valorNumerico);
                     }
 
-                    cellsHtml += `<td class="py-4 px-6 ${isTotalCol ? 'text-right font-bold text-emerald-400' : ''}">${val}</td>`;
+                    rowContent += `<td class="py-4 px-6 ${isTotal ? 'text-right font-bold text-emerald-400' : ''}">${cellVal}</td>`;
                 });
 
-                tr.innerHTML = cellsHtml;
+                tr.innerHTML = rowContent;
                 tbody.appendChild(tr);
             });
 
-            filtrarTabla();
+            ejecutarFiltros();
         }
 
-        // 5. Filtrar registros y recalcular la suma total
-        function filtrarTabla() {
+        function ejecutarFiltros() {
             const searchVal = document.getElementById('searchInput').value.toLowerCase();
-            const categoryVal = document.getElementById('categorySelect').value.toLowerCase();
-            const rows = document.querySelectorAll('.pedido-row');
+            const filter1Val = document.getElementById('selectCol1').value;
+            const filter2Val = document.getElementById('selectCol2').value;
 
-            let totalSuma = 0;
-            let visiblesCount = 0;
+            const f1Key = document.getElementById('lblFiltroCol1').textContent;
+            const f2Key = document.getElementById('lblFiltroCol2').textContent;
+
+            const rows = document.querySelectorAll('.pedido-row');
+            let sumaAcumulada = 0;
+            let visibles = 0;
 
             rows.forEach(row => {
-                const text = row.innerText.toLowerCase();
-                const matchSearch = text.includes(searchVal);
-                const matchCategory = (categoryVal === 'todas' || text.includes(categoryVal));
+                const idx = row.getAttribute('data-index');
+                const rowData = rawExcelData[idx];
 
-                if (matchSearch && matchCategory) {
+                const textoCompleto = Object.values(rowData).join(' ').toLowerCase();
+                const matchSearch = textoCompleto.includes(searchVal);
+
+                const matchF1 = (filter1Val === 'TODOS' || String(rowData[f1Key]) === filter1Val);
+                const matchF2 = (filter2Val === 'TODOS' || String(rowData[f2Key]) === filter2Val);
+
+                if (matchSearch && matchF1 && matchF2) {
                     row.style.display = '';
-                    totalSuma += parseFloat(row.getAttribute('data-valor')) || 0;
-                    visiblesCount++;
+                    sumaAcumulada += parseFloat(row.getAttribute('data-valor-total')) || 0;
+                    visibles++;
                 } else {
                     row.style.display = 'none';
                 }
             });
 
-            const formattedTotal = currencyFormatter.format(totalSuma);
-            document.getElementById('kpiTotal').innerText = formattedTotal;
-            document.getElementById('tableFooterTotal').innerText = formattedTotal;
-            document.getElementById('kpiCount').innerText = visiblesCount;
+            const totalFormateado = currencyFormatter.format(sumaAcumulada);
+            document.getElementById('kpiTotal').innerText = totalFormateado;
+            document.getElementById('tableFooterTotal').innerText = totalFormateado;
+            document.getElementById('kpiCount').innerText = visibles;
         }
 
-        document.addEventListener('DOMContentLoaded', cargarExcel);
+        document.addEventListener('DOMContentLoaded', CargarYProcesarExcel);
     </script>
 </body>
 </html>
