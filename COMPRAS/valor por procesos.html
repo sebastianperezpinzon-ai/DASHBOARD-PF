@@ -243,21 +243,33 @@
             fetchAutoCSV();
         });
 
-        // 1. INTENTO DE CARGA AUTOMÁTICA DEL ARCHIVO github.csv
-        function fetchAutoCSV() {
-            // Se prueban los nombres posibles de archivo
+        // BÚSQUEDA AUTOMÁTICA EN EL REPOSOTORIO (Soporta .xlsx y .csv)
+function fetchAutoCSV() {
+    // 1. Intentar cargar archivo Excel (.xlsx) automáticamente
+    fetch('github.xlsx') // <--- Pon aquí el nombre exacto de tu archivo Excel en el repositorio
+        .then(res => res.ok ? res.arrayBuffer() : Promise.reject())
+        .then(buffer => {
+            const data = new Uint8Array(buffer);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+            const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+            
+            if (jsonData.length > 0) {
+                rawDataset = normalizeJsonData(jsonData);
+                updateBadge('Cargado automáticamente: github.xlsx');
+                recalculateAndRender();
+            }
+        })
+        .catch(() => {
+            // 2. Si no encuentra el .xlsx, intentar buscar un archivo .csv
             fetch('github.csv')
                 .then(res => res.ok ? res.text() : Promise.reject())
-                .then(csvText => parseAndInit(csvText, 'Servidor Local (github.csv)'))
+                .then(csvText => parseAndInit(csvText, 'github.csv'))
                 .catch(() => {
-                    fetch('github.csv')
-                        .then(res => res.ok ? res.text() : Promise.reject())
-                        .then(csvText => parseAndInit(csvText, 'github.csv'))
-                        .catch(() => {
-                            document.getElementById('data-status-badge').innerText = 'Por favor selecciona un archivo';
-                        });
+                    document.getElementById('data-status-badge').innerText = 'En espera de archivo manual';
                 });
-        }
+        });
+}
 
         // 2. CARGA MANUAL DE ARCHIVO (RESPALDO EXCEL O CSV)
         function handleManualFile(e) {
