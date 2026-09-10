@@ -6,7 +6,7 @@
     <title>Consulta Detallada de Gastos | ECO-S</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- SheetJS (Lectura de .xlsx / .csv) -->
+    <!-- SheetJS para lectura de Excel/CSV -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     
     <script>
@@ -16,84 +16,136 @@
                 extend: {
                     colors: {
                         darkbg: '#0B0F19',
-                        cardbg: '#0D1322',
+                        cardbg: '#111827',
+                        innerbg: '#0D1322',
                         bordercolor: '#1E293B'
                     }
                 }
             }
         }
     </script>
+    <style>
+        body {
+            background-color: #0B0F19;
+            background-image: radial-gradient(circle at top right, #1f2937, transparent 40%), radial-gradient(circle at bottom left, #1f2937, transparent 40%);
+            background-attachment: fixed;
+        }
+        /* Personalización de la barra de desplazamiento interna */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0B0F19;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1E293B;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #374151;
+        }
+    </style>
 </head>
-<body class="bg-darkbg text-gray-200 font-sans min-h-screen p-4 md:p-8">
+<body class="text-gray-200 font-sans min-h-screen flex flex-col justify-between p-4 md:p-8">
 
-    <!-- ENCABEZADO Y NAVEGACIÓN -->
-    <header class="max-w-7xl mx-auto mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-800 pb-5">
-        <div>
-            <div class="flex items-center gap-2 mb-1">
-                <span class="text-xs bg-emerald-500/10 text-emerald-400 font-mono px-2 py-0.5 rounded border border-emerald-500/20">ECO-S Data Engine</span>
-                <span id="data-status-badge" class="text-xs bg-gray-800 text-gray-400 font-mono px-2 py-0.5 rounded border border-gray-700">Cargando datos...</span>
-            </div>
-            <h1 class="text-2xl md:text-3xl font-bold text-white tracking-tight">Registro Detallado de Gastos</h1>
-            <p class="text-xs text-gray-400 mt-1">Explora, filtra y audita los registros individuales del repositorio en tiempo real.</p>
-        </div>
-
-        <div class="flex items-center gap-3">
-            <a href="index.html" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs font-semibold rounded-lg border border-gray-700 transition flex items-center gap-2">
-                <span>← Volver al Dashboard</span>
-            </a>
-        </div>
-    </header>
-
-    <!-- PANEL DE CONTROL Y CONTADORES -->
-    <main class="max-w-7xl mx-auto space-y-4">
-        
-        <div class="bg-cardbg p-4 rounded-xl border border-gray-800 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <!-- Buscador Global -->
-            <div class="relative flex-1">
-                <input type="text" id="globalSearch" oninput="applyFilters()" placeholder="🔎 Buscar término en todo el archivo..." 
-                    class="w-full bg-[#080C14] text-xs text-white placeholder-gray-500 px-4 py-2.5 rounded-lg border border-gray-800 focus:outline-none focus:border-emerald-500 transition">
+    <div>
+        <!-- 1. BARRA DE NAVEGACIÓN SUPERIOR (Mismo estilo que las páginas anteriores) -->
+        <nav class="max-w-7xl mx-auto mb-8 bg-[#111827] border border-gray-800 px-6 py-4 rounded-xl shadow-xl flex flex-col sm:flex-row justify-between items-center gap-4 sticky top-4 z-50">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-extrabold text-lg">
+                    📊
+                </div>
+                <div>
+                    <span class="text-sm font-bold text-white tracking-wide">Planta Física & Gastos</span>
+                    <span class="text-[10px] text-emerald-400 block font-mono">ECO-S Analytics Engine</span>
+                </div>
             </div>
 
-            <!-- Contadores y Limpiar -->
-            <div class="flex items-center gap-4 justify-between md:justify-end">
-                <div class="text-xs font-mono text-gray-400">
-                    Mostrando: <span id="record-count" class="text-emerald-400 font-bold">0</span> / <span id="total-count" class="text-gray-200">0</span> registros
+            <!-- Menú de Navegación -->
+            <div class="flex flex-wrap items-center gap-3 text-xs">
+                <a href="index.html" class="px-3 py-1.5 bg-gray-800/80 hover:bg-gray-700 text-gray-300 rounded-lg border border-gray-700 transition">
+                    📈 Dashboard Principal
+                </a>
+                <a href="multimoneda.html" class="px-3 py-1.5 bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 rounded-lg border border-purple-500/30 transition">
+                    💱 Multimoneda
+                </a>
+                <a href="gastos.html" class="px-3 py-1.5 bg-emerald-500/20 text-emerald-300 rounded-lg border border-emerald-500/40 font-semibold transition">
+                    🔍 Detalle de Gastos
+                </a>
+            </div>
+        </nav>
+
+        <!-- 2. ENCABEZADO DE LA PÁGINA -->
+        <header class="max-w-7xl mx-auto mb-6">
+            <div class="flex items-center gap-2 mb-2">
+                <span class="text-xs bg-emerald-500/10 text-emerald-400 font-mono px-2.5 py-1 rounded-full border border-emerald-500/30">
+                    Registro de Insumos y Servicios
+                </span>
+                <span id="data-status-badge" class="text-xs bg-gray-800 text-gray-400 font-mono px-2 py-0.5 rounded border border-gray-700">
+                    Cargando datos...
+                </span>
+            </div>
+            <h1 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight">Tabla de Auditoría y Filtro por Cabecera</h1>
+            <p class="text-xs text-gray-400 mt-1">Explora cada registro individual del archivo Excel. Utiliza los cuadros de búsqueda ubicados bajo cada columna para filtrar la información.</p>
+        </header>
+
+        <!-- 3. CONTROLES GENERALES (Buscador Global + Métricas de Filas) -->
+        <main class="max-w-7xl mx-auto space-y-4 mb-10">
+            
+            <div class="bg-[#111827] p-4 rounded-xl border border-gray-800 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <!-- Buscador Global -->
+                <div class="relative flex-1">
+                    <input type="text" id="globalSearch" oninput="applyFilters()" placeholder="🔎 Buscar cualquier término en todo el archivo..." 
+                        class="w-full bg-[#0D1322] text-xs text-white placeholder-gray-500 px-4 py-2.5 rounded-lg border border-gray-800 focus:outline-none focus:border-emerald-500 transition font-mono">
                 </div>
 
-                <button onclick="clearAllFilters()" class="px-3 py-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs font-medium rounded-lg border border-rose-500/20 transition">
-                    🧹 Limpiar Filtros
-                </button>
+                <!-- Contadores de Registros y Botón Limpiar -->
+                <div class="flex items-center gap-4 justify-between md:justify-end">
+                    <div class="text-xs font-mono text-gray-400 bg-[#0D1322] px-3 py-2 rounded-lg border border-gray-800">
+                        Mostrando: <span id="record-count" class="text-emerald-400 font-bold">0</span> / <span id="total-count" class="text-gray-200">0</span> filas
+                    </div>
+
+                    <button onclick="clearAllFilters()" class="px-3.5 py-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs font-medium rounded-lg border border-rose-500/30 transition flex items-center gap-1.5">
+                        <span>🧹 Restablecer Filtros</span>
+                    </button>
+                </div>
             </div>
-        </div>
 
-        <!-- TABLA DINÁMICA CON FILTROS EN CABECERA -->
-        <div class="bg-cardbg rounded-xl border border-gray-800 shadow-xl overflow-hidden">
-            <div class="overflow-x-auto max-h-[70vh]">
-                <table class="w-full text-left text-xs border-collapse">
-                    <thead class="bg-[#080C14] text-gray-300 font-semibold sticky top-0 z-10 border-b border-gray-800">
-                        <!-- Fila 1: Títulos de las columnas -->
-                        <tr id="table-headers-title" class="divide-x divide-gray-800/60">
-                            <!-- Se generan dinámicamente -->
-                        </tr>
-                        <!-- Fila 2: Inputs de filtro por columna -->
-                        <tr id="table-headers-filter" class="bg-[#05080E] divide-x divide-gray-800/60">
-                            <!-- Se generan dinámicamente -->
-                        </tr>
-                    </thead>
-                    <tbody id="table-body" class="divide-y divide-gray-800/40 font-mono text-gray-300">
-                        <tr>
-                            <td colspan="100%" class="p-8 text-center text-gray-500 font-sans">
-                                Cargando información del archivo Excel...
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <!-- 4. CONTENEDOR DE LA TABLA CON FILTROS EN CABECERA -->
+            <div class="bg-[#111827] rounded-xl border border-gray-800 shadow-2xl overflow-hidden">
+                <div class="overflow-x-auto max-h-[68vh]">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead class="bg-[#080C14] text-gray-300 font-semibold sticky top-0 z-20 border-b border-gray-800">
+                            <!-- Fila 1: Títulos de las Columnas del Excel -->
+                            <tr id="table-headers-title" class="divide-x divide-gray-800/80">
+                                <!-- Se genera dinámicamente -->
+                            </tr>
+                            <!-- Fila 2: Inputs de Búsqueda bajo cada Columna -->
+                            <tr id="table-headers-filter" class="bg-[#0D1322] divide-x divide-gray-800/80 border-t border-gray-800">
+                                <!-- Se genera dinámicamente -->
+                            </tr>
+                        </thead>
+                        <tbody id="table-body" class="divide-y divide-gray-800/40 font-mono text-gray-300">
+                            <tr>
+                                <td colspan="100%" class="p-10 text-center text-gray-500 font-sans">
+                                    Cargando y procesando información de la hoja de cálculo...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
 
-    </main>
+        </main>
+    </div>
 
-    <!-- LÓGICA JAVASCRIPT -->
+    <!-- PIE DE PÁGINA -->
+    <footer class="bg-[#111827] border-t border-gray-800 text-center py-4 text-xs text-gray-500 rounded-xl max-w-7xl mx-auto w-full">
+        <p>Planta Física • Sistema de Auditoría y Consulta de Gastos Detallados | ECO-S Engine</p>
+    </footer>
+
+    <!-- 5. LÓGICA JAVASCRIPT DE CARGA Y FILTRADO DYNAMIC -->
     <script>
         let rawData = [];
         let filteredData = [];
@@ -104,9 +156,9 @@
             fetchAutoData();
         });
 
-        // 1. CARGA AUTOMÁTICA (.xlsx con fallback a .csv)
+        // Carga automática del archivo (Intentando github.xlsx y fallback a github.csv)
         function fetchAutoData() {
-            const excelFile = 'COMPRAS/github.xlsx';
+            const excelFile = 'github.xlsx';
             const badge = document.getElementById('data-status-badge');
 
             fetch(excelFile)
@@ -118,13 +170,13 @@
                     const json = XLSX.utils.sheet_to_json(firstSheet, { defval: "" });
 
                     if (json.length > 0) {
-                        badge.innerText = `Cargado: ${excelFile}`;
+                        badge.innerText = `Origen: ${excelFile}`;
                         badge.className = "text-xs bg-emerald-500/10 text-emerald-400 font-mono px-2 py-0.5 rounded border border-emerald-500/20";
                         processDataset(json);
                     }
                 })
                 .catch(() => {
-                    // Fallback a CSV
+                    // Fallback a CSV si no se encuentra el .xlsx
                     fetch('github.csv')
                         .then(res => res.ok ? res.text() : Promise.reject())
                         .then(csvText => {
@@ -132,31 +184,31 @@
                             const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
                             const json = XLSX.utils.sheet_to_json(firstSheet, { defval: "" });
                             
-                            badge.innerText = "Cargado: github.csv";
+                            badge.innerText = "Origen: github.csv";
                             badge.className = "text-xs bg-emerald-500/10 text-emerald-400 font-mono px-2 py-0.5 rounded border border-emerald-500/20";
                             processDataset(json);
                         })
                         .catch(() => {
-                            badge.innerText = "Error al cargar archivo";
+                            badge.innerText = "Sin archivo";
                             badge.className = "text-xs bg-rose-500/10 text-rose-400 font-mono px-2 py-0.5 rounded border border-rose-500/20";
                             document.getElementById('table-body').innerHTML = `
                                 <tr>
                                     <td colspan="100%" class="p-8 text-center text-rose-400 font-sans">
-                                        ❌ No se encontró 'github.xlsx' ni 'github.csv' en la raíz del repositorio.
+                                        ⚠️ No se pudo localizar el archivo <strong>github.xlsx</strong> ni <strong>github.csv</strong> en la carpeta raíz.
                                     </td>
                                 </tr>`;
                         });
                 });
         }
 
-        // 2. PROCESAR DATASET Y CREAR CABECERAS
+        // Construir Cabeceras e Inputs de Filtro
         function processDataset(data) {
             rawData = data;
             filteredData = [...rawData];
 
             if (rawData.length === 0) return;
 
-            // Extraer nombres de las columnas
+            // Extraer las llaves/columnas del archivo
             columns = Object.keys(rawData[0]);
 
             const headerTitleRow = document.getElementById('table-headers-title');
@@ -165,24 +217,24 @@
             headerTitleRow.innerHTML = '';
             headerFilterRow.innerHTML = '';
 
-            columns.forEach((col, idx) => {
+            columns.forEach(col => {
                 columnFilters[col] = "";
 
-                // 1. Título de Columna
+                // 1. Fila de Títulos
                 const thTitle = document.createElement('th');
-                thTitle.className = "p-3 font-semibold text-gray-200 tracking-wider text-left min-w-[140px]";
+                thTitle.className = "p-3 font-semibold text-gray-200 tracking-wider text-left min-w-[150px] font-sans text-xs bg-[#080C14]";
                 thTitle.innerText = col;
                 headerTitleRow.appendChild(thTitle);
 
-                // 2. Campo de Filtro por Columna
+                // 2. Fila de Campos de Entrada de Filtro
                 const thFilter = document.createElement('th');
-                thFilter.className = "p-2";
+                thFilter.className = "p-2 bg-[#0D1322]";
                 thFilter.innerHTML = `
                     <input type="text" 
                         placeholder="Filtrar..." 
                         data-col="${col}"
                         oninput="onColumnFilterChange(this)"
-                        class="w-full bg-[#0D1322] text-[11px] text-gray-300 placeholder-gray-600 px-2 py-1 rounded border border-gray-800 focus:outline-none focus:border-emerald-500 font-mono">
+                        class="w-full bg-[#080C14] text-[11px] text-emerald-300 placeholder-gray-600 px-2 py-1 rounded border border-gray-800 focus:outline-none focus:border-emerald-500 font-mono">
                 `;
                 headerFilterRow.appendChild(thFilter);
             });
@@ -191,19 +243,19 @@
             renderTableBody();
         }
 
-        // 3. CAPTURAR EVENTOS DE FILTRO POR COLUMNA
+        // Cambio en el input individual de columna
         function onColumnFilterChange(input) {
             const col = input.getAttribute('data-col');
             columnFilters[col] = input.value.toLowerCase().trim();
             applyFilters();
         }
 
-        // 4. APLICAR FILTROS COMBINADOS (Global + Columnas)
+        // Aplicar filtros combinados (Global + Columnas)
         function applyFilters() {
             const globalQuery = document.getElementById('globalSearch').value.toLowerCase().trim();
 
             filteredData = rawData.filter(row => {
-                // Filtro global
+                // Buscador Global
                 if (globalQuery !== "") {
                     const matchGlobal = Object.values(row).some(val => 
                         String(val).toLowerCase().includes(globalQuery)
@@ -211,7 +263,7 @@
                     if (!matchGlobal) return false;
                 }
 
-                // Filtros individuales de cabecera
+                // Filtros individuales por Columna
                 for (let col of columns) {
                     const filterVal = columnFilters[col];
                     if (filterVal && filterVal !== "") {
@@ -228,7 +280,7 @@
             renderTableBody();
         }
 
-        // 5. RENDERIZAR CUERPO DE LA TABLA
+        // Renderizar filas de la tabla
         function renderTableBody() {
             const tbody = document.getElementById('table-body');
             document.getElementById('record-count').innerText = filteredData.length;
@@ -237,26 +289,25 @@
                 tbody.innerHTML = `
                     <tr>
                         <td colspan="${columns.length || 1}" class="p-8 text-center text-gray-500 font-sans">
-                            No se encontraron registros que coincidan con los criterios de búsqueda.
+                            No se encontraron registros que coincidan con los filtros aplicados.
                         </td>
                     </tr>`;
                 return;
             }
 
             let html = '';
-            filteredData.forEach((row, i) => {
-                html += `<tr class="hover:bg-gray-800/30 transition-colors border-b border-gray-800/30 divide-x divide-gray-800/30">`;
+            filteredData.forEach(row => {
+                html += `<tr class="hover:bg-gray-800/40 transition-colors border-b border-gray-800/30 divide-x divide-gray-800/30">`;
                 columns.forEach(col => {
                     const val = row[col];
                     const isNumeric = typeof val === 'number';
                     
-                    // Formato visual ligero si detecta valores numéricos altos (ej. valores monetarios)
                     let formattedVal = val;
                     if (isNumeric && val > 1000) {
                         formattedVal = val.toLocaleString('es-CO');
                     }
 
-                    html += `<td class="p-2.5 text-gray-300 font-sans text-xs whitespace-nowrap ${isNumeric ? 'text-right font-mono text-emerald-300/90' : ''}">${formattedVal}</td>`;
+                    html += `<td class="p-2.5 text-gray-300 font-mono text-xs whitespace-nowrap ${isNumeric ? 'text-right text-emerald-300/90 font-semibold' : ''}">${formattedVal}</td>`;
                 });
                 html += `</tr>`;
             });
@@ -264,11 +315,10 @@
             tbody.innerHTML = html;
         }
 
-        // 6. LIMPIAR TODOS LOS FILTROS
+        // Limpiar todas las entradas de búsqueda
         function clearAllFilters() {
             document.getElementById('globalSearch').value = '';
             
-            // Limpiar objeto de filtros y campos HTML
             columns.forEach(col => {
                 columnFilters[col] = "";
             });
