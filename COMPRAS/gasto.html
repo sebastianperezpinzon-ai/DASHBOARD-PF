@@ -1,333 +1,211 @@
 <!DOCTYPE html>
-<html lang="es" class="dark">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consulta Detallada de Gastos | ECO-S</title>
-    <!-- Tailwind CSS CDN -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📦</text></svg>">
+    <title>Gestión de Pedidos e Insumos - Planta Física</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- SheetJS para lectura de Excel/CSV -->
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        darkbg: '#0B0F19',
-                        cardbg: '#111827',
-                        innerbg: '#0D1322',
-                        bordercolor: '#1E293B'
-                    }
-                }
-            }
-        }
-    </script>
+
     <style>
-        body {
-            background-color: #0B0F19;
-            background-image: radial-gradient(circle at top right, #1f2937, transparent 40%), radial-gradient(circle at bottom left, #1f2937, transparent 40%);
-            background-attachment: fixed;
-        }
-        /* Personalización de la barra de desplazamiento interna */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0B0F19;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #1E293B;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #374151;
-        }
+    body {
+        background-image: url('../images/bg-pattern.png');
+        background-repeat: repeat;
+        background-size: 350px;
+        background-attachment: fixed;
+        background-color: #0B0F19;
+    }
     </style>
 </head>
-<body class="text-gray-200 font-sans min-h-screen flex flex-col justify-between p-4 md:p-8">
+<body class="text-white font-sans min-h-screen flex flex-col justify-between">
 
-    <div>
-        <!-- 1. BARRA DE NAVEGACIÓN SUPERIOR (Mismo estilo que las páginas anteriores) -->
-        <nav class="max-w-7xl mx-auto mb-8 bg-[#111827] border border-gray-800 px-6 py-4 rounded-xl shadow-xl flex flex-col sm:flex-row justify-between items-center gap-4 sticky top-4 z-50">
-            <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-extrabold text-lg">
-                    📊
-                </div>
-                <div>
-                    <span class="text-sm font-bold text-white tracking-wide">Planta Física & Gastos</span>
-                    <span class="text-[10px] text-emerald-400 block font-mono">ECO-S Analytics Engine</span>
-                </div>
-            </div>
+    <!-- Navegación -->
+    <nav class="bg-[#111827] border-b border-gray-800 px-6 py-4">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <a href="../index.html" class="flex items-center text-sm font-semibold text-gray-400 hover:text-[#00A859] transition duration-200">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Volver al Dashboard Principal
+            </a>
+            <span class="text-xs bg-[#00A859]/10 text-[#00A859] px-3 py-1 rounded-full border border-[#00A859]/30 font-mono">
+                Área: Logística e Insumos
+            </span>
+        </div>
+    </nav>
 
-            <!-- Menú de Navegación -->
-            <div class="flex flex-wrap items-center gap-3 text-xs">
-                <a href="index.html" class="px-3 py-1.5 bg-gray-800/80 hover:bg-gray-700 text-gray-300 rounded-lg border border-gray-700 transition">
-                    📈 Dashboard Principal
-                </a>
-                <a href="multimoneda.html" class="px-3 py-1.5 bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 rounded-lg border border-purple-500/30 transition">
-                    💱 Multimoneda
-                </a>
-                <a href="gastos.html" class="px-3 py-1.5 bg-emerald-500/20 text-emerald-300 rounded-lg border border-emerald-500/40 font-semibold transition">
-                    🔍 Detalle de Gastos
-                </a>
-            </div>
-        </nav>
+    <!-- Encabezado -->
+    <header class="py-10 px-6 text-center max-w-4xl mx-auto">
+        <h1 class="text-3xl font-extrabold tracking-tight md:text-5xl text-white mb-4">
+            Control de Pedidos y Solicitudes
+        </h1>
+        <p class="text-gray-400 text-lg leading-relaxed">
+            Monitoreo y optimización de adquisición de insumos operativos en sedes. Los totales se recalculan automáticamente al filtrar categorías o búsquedas específicas.
+        </p>
+    </header>
 
-        <!-- 2. ENCABEZADO DE LA PÁGINA -->
-        <header class="max-w-7xl mx-auto mb-6">
-            <div class="flex items-center gap-2 mb-2">
-                <span class="text-xs bg-emerald-500/10 text-emerald-400 font-mono px-2.5 py-1 rounded-full border border-emerald-500/30">
-                    Registro de Insumos y Servicios
-                </span>
-                <span id="data-status-badge" class="text-xs bg-gray-800 text-gray-400 font-mono px-2 py-0.5 rounded border border-gray-700">
-                    Cargando datos...
-                </span>
-            </div>
-            <h1 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight">Tabla de Auditoría y Filtro por Cabecera</h1>
-            <p class="text-xs text-gray-400 mt-1">Explora cada registro individual del archivo Excel. Utiliza los cuadros de búsqueda ubicados bajo cada columna para filtrar la información.</p>
-        </header>
+    <!-- Contenido Principal -->
+    <main class="max-w-6xl mx-auto px-6 mb-16 flex-grow w-full">
 
-        <!-- 3. CONTROLES GENERALES (Buscador Global + Métricas de Filas) -->
-        <main class="max-w-7xl mx-auto space-y-4 mb-10">
+        <!-- TARJETAS DE KPI Y FILTROS -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
             
-            <div class="bg-[#111827] p-4 rounded-xl border border-gray-800 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <!-- Buscador Global -->
-                <div class="relative flex-1">
-                    <input type="text" id="globalSearch" oninput="applyFilters()" placeholder="🔎 Buscar cualquier término en todo el archivo..." 
-                        class="w-full bg-[#0D1322] text-xs text-white placeholder-gray-500 px-4 py-2.5 rounded-lg border border-gray-800 focus:outline-none focus:border-emerald-500 transition font-mono">
-                </div>
-
-                <!-- Contadores de Registros y Botón Limpiar -->
-                <div class="flex items-center gap-4 justify-between md:justify-end">
-                    <div class="text-xs font-mono text-gray-400 bg-[#0D1322] px-3 py-2 rounded-lg border border-gray-800">
-                        Mostrando: <span id="record-count" class="text-emerald-400 font-bold">0</span> / <span id="total-count" class="text-gray-200">0</span> filas
+            <!-- Controles de Filtro -->
+            <div class="lg:col-span-2 bg-[#111827] rounded-xl border border-gray-800 p-6 shadow-xl flex flex-col justify-center gap-4">
+                <h3 class="text-sm font-semibold text-gray-300 font-mono flex items-center gap-2">
+                    🔍 FILTRAR REGISTROS
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1">Buscar por Descripción</label>
+                        <input type="text" id="searchInput" oninput="filtrarTabla()" placeholder="Ej. Jabón, Sensores, Luminaria..." 
+                               class="w-full bg-[#0B0F19] border border-gray-700 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#00A859] transition">
                     </div>
-
-                    <button onclick="clearAllFilters()" class="px-3.5 py-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs font-medium rounded-lg border border-rose-500/30 transition flex items-center gap-1.5">
-                        <span>🧹 Restablecer Filtros</span>
-                    </button>
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1">Categoría</label>
+                        <select id="categorySelect" onchange="filtrarTabla()" 
+                                class="w-full bg-[#0B0F19] border border-gray-700 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#00A859] transition">
+                            <option value="TODAS">Todas las categorías</option>
+                            <option value="Aseo y Limpieza">Aseo y Limpieza</option>
+                            <option value="Mantenimiento">Mantenimiento</option>
+                            <option value="Tecnología e IoT">Tecnología e IoT</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
-            <!-- 4. CONTENEDOR DE LA TABLA CON FILTROS EN CABECERA -->
-            <div class="bg-[#111827] rounded-xl border border-gray-800 shadow-2xl overflow-hidden">
-                <div class="overflow-x-auto max-h-[68vh]">
-                    <table class="w-full text-left text-xs border-collapse">
-                        <thead class="bg-[#080C14] text-gray-300 font-semibold sticky top-0 z-20 border-b border-gray-800">
-                            <!-- Fila 1: Títulos de las Columnas del Excel -->
-                            <tr id="table-headers-title" class="divide-x divide-gray-800/80">
-                                <!-- Se genera dinámicamente -->
-                            </tr>
-                            <!-- Fila 2: Inputs de Búsqueda bajo cada Columna -->
-                            <tr id="table-headers-filter" class="bg-[#0D1322] divide-x divide-gray-800/80 border-t border-gray-800">
-                                <!-- Se genera dinámicamente -->
-                            </tr>
-                        </thead>
-                        <tbody id="table-body" class="divide-y divide-gray-800/40 font-mono text-gray-300">
-                            <tr>
-                                <td colspan="100%" class="p-10 text-center text-gray-500 font-sans">
-                                    Cargando y procesando información de la hoja de cálculo...
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <!-- KPI Valor Total Filtrado -->
+            <div class="bg-[#111827] rounded-xl border border-gray-800 p-6 shadow-xl flex items-center justify-between border-l-4 border-l-[#00A859]">
+                <div>
+                    <span class="text-xs font-semibold text-[#00A859] bg-[#00A859]/10 px-2.5 py-1 rounded-full border border-[#00A859]/20 font-mono">
+                        💰 Valor Total Pedido (Filtrado)
+                    </span>
+                    <h2 id="kpiTotal" class="text-3xl font-extrabold text-white mt-3 tracking-tight">
+                        $ 0
+                    </h2>
+                    <p class="text-xs text-gray-400 mt-2">
+                        Registros visibles: <span id="kpiCount" class="text-emerald-400 font-bold">0</span>
+                    </p>
+                </div>
+                <div class="hidden sm:flex w-12 h-12 rounded-xl bg-[#00A859]/10 border border-[#00A859]/20 items-center justify-center text-[#00A859] text-2xl">
+                    💵
                 </div>
             </div>
 
-        </main>
-    </div>
+        </div>
 
-    <!-- PIE DE PÁGINA -->
-    <footer class="bg-[#111827] border-t border-gray-800 text-center py-4 text-xs text-gray-500 rounded-xl max-w-7xl mx-auto w-full">
-        <p>Planta Física • Sistema de Auditoría y Consulta de Gastos Detallados | ECO-S Engine</p>
+        <!-- TABLA DE DETALLE DE PEDIDOS -->
+        <div class="bg-[#111827] rounded-xl border border-gray-800 shadow-xl overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm text-gray-300">
+                    <thead class="bg-[#0B0F19] text-xs font-mono text-gray-400 uppercase border-b border-gray-800">
+                        <tr>
+                            <th scope="col" class="py-4 px-6">Código / ID</th>
+                            <th scope="col" class="py-4 px-6">Descripción del Insumo / Servicio</th>
+                            <th scope="col" class="py-4 px-6">Categoría</th>
+                            <th scope="col" class="py-4 px-6 text-center">Cantidad</th>
+                            <th scope="col" class="py-4 px-6 text-right">Valor Unitario</th>
+                            <th scope="col" class="py-4 px-6 text-right">Valor Total Pedido</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pedidosTableBody" class="divide-y divide-gray-800/60">
+                        <tr class="pedido-row hover:bg-gray-800/40 transition" data-categoria="Aseo y Limpieza" data-valor="1250000">
+                            <td class="py-4 px-6 font-mono text-xs text-gray-400">PED-2026-001</td>
+                            <td class="py-4 px-6 font-semibold text-white">Detergente Biodegradable Multiusos (20L)</td>
+                            <td class="py-4 px-6"><span class="bg-blue-500/10 text-blue-400 text-xs px-2.5 py-0.5 rounded-full border border-blue-500/20">Aseo y Limpieza</span></td>
+                            <td class="py-4 px-6 text-center">10</td>
+                            <td class="py-4 px-6 text-right text-gray-400">$ 125.000</td>
+                            <td class="py-4 px-6 text-right font-bold text-emerald-400">$ 1.250.000</td>
+                        </tr>
+                        <tr class="pedido-row hover:bg-gray-800/40 transition" data-categoria="Tecnología e IoT" data-valor="3400000">
+                            <td class="py-4 px-6 font-mono text-xs text-gray-400">PED-2026-002</td>
+                            <td class="py-4 px-6 font-semibold text-white">Sensores IoT de Ocupación para Aulas</td>
+                            <td class="py-4 px-6"><span class="bg-purple-500/10 text-purple-400 text-xs px-2.5 py-0.5 rounded-full border border-purple-500/20">Tecnología e IoT</span></td>
+                            <td class="py-4 px-6 text-center">8</td>
+                            <td class="py-4 px-6 text-right text-gray-400">$ 425.000</td>
+                            <td class="py-4 px-6 text-right font-bold text-emerald-400">$ 3.400.000</td>
+                        </tr>
+                        <tr class="pedido-row hover:bg-gray-800/40 transition" data-categoria="Aseo y Limpieza" data-valor="890000">
+                            <td class="py-4 px-6 font-mono text-xs text-gray-400">PED-2026-003</td>
+                            <td class="py-4 px-6 font-semibold text-white">Toallas de Papel Reciclado (Caja x 12)</td>
+                            <td class="py-4 px-6"><span class="bg-blue-500/10 text-blue-400 text-xs px-2.5 py-0.5 rounded-full border border-blue-500/20">Aseo y Limpieza</span></td>
+                            <td class="py-4 px-6 text-center">15</td>
+                            <td class="py-4 px-6 text-right text-gray-400">$ 59.333</td>
+                            <td class="py-4 px-6 text-right font-bold text-emerald-400">$ 890.000</td>
+                        </tr>
+                        <tr class="pedido-row hover:bg-gray-800/40 transition" data-categoria="Mantenimiento" data-valor="2150000">
+                            <td class="py-4 px-6 font-mono text-xs text-gray-400">PED-2026-004</td>
+                            <td class="py-4 px-6 font-semibold text-white">Kits de Empaques y Válvulas para Fluxómetros</td>
+                            <td class="py-4 px-6"><span class="bg-yellow-500/10 text-yellow-400 text-xs px-2.5 py-0.5 rounded-full border border-yellow-500/20">Mantenimiento</span></td>
+                            <td class="py-4 px-6 text-center">25</td>
+                            <td class="py-4 px-6 text-right text-gray-400">$ 86.000</td>
+                            <td class="py-4 px-6 text-right font-bold text-emerald-400">$ 2.150.000</td>
+                        </tr>
+                    </tbody>
+                    <!-- FILA DE TOTALES GENERALES (SUMA DINÁMICA DE FILTROS) -->
+                    <tfoot class="bg-[#0B0F19] border-t-2 border-gray-800 text-white font-bold">
+                        <tr>
+                            <td colspan="5" class="py-4 px-6 text-right uppercase tracking-wider text-xs font-mono text-gray-400">
+                                Total Pedido (Suma según Filtro Aplicado):
+                            </td>
+                            <td id="tableFooterTotal" class="py-4 px-6 text-right text-lg text-[#00A859] font-mono font-extrabold">
+                                $ 0
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Pie de página -->
+    <footer class="bg-[#0B0F19] text-center py-6 text-xs text-gray-500 border-t border-gray-800">
+        <p>Sistema de Gestión Interna de Planta Física | ECO-S</p>
     </footer>
 
-    <!-- 5. LÓGICA JAVASCRIPT DE CARGA Y FILTRADO DYNAMIC -->
+    <!-- Lógica de Filtrado y Recálculo Dinámico -->
     <script>
-        let rawData = [];
-        let filteredData = [];
-        let columns = [];
-        const columnFilters = {};
-
-        document.addEventListener("DOMContentLoaded", () => {
-            fetchAutoData();
+        const currencyFormatter = new Intl.NumberFormat('es-CO', {
+            style: 'currency',
+            currency: 'COP',
+            maximumFractionDigits: 0
         });
 
-        // Carga automática del archivo (Intentando github.xlsx y fallback a github.csv)
-        function fetchAutoData() {
-            const excelFile = 'github.xlsx';
-            const badge = document.getElementById('data-status-badge');
+        function filtrarTabla() {
+            const searchVal = document.getElementById('searchInput').value.toLowerCase();
+            const categoryVal = document.getElementById('categorySelect').value;
+            const rows = document.querySelectorAll('.pedido-row');
 
-            fetch(excelFile)
-                .then(res => res.ok ? res.arrayBuffer() : Promise.reject())
-                .then(buffer => {
-                    const data = new Uint8Array(buffer);
-                    const workbook = XLSX.read(data, { type: 'array' });
-                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                    const json = XLSX.utils.sheet_to_json(firstSheet, { defval: "" });
+            let totalSuma = 0;
+            let visiblesCount = 0;
 
-                    if (json.length > 0) {
-                        badge.innerText = `Origen: ${excelFile}`;
-                        badge.className = "text-xs bg-emerald-500/10 text-emerald-400 font-mono px-2 py-0.5 rounded border border-emerald-500/20";
-                        processDataset(json);
-                    }
-                })
-                .catch(() => {
-                    // Fallback a CSV si no se encuentra el .xlsx
-                    fetch('github.csv')
-                        .then(res => res.ok ? res.text() : Promise.reject())
-                        .then(csvText => {
-                            const workbook = XLSX.read(csvText, { type: 'string' });
-                            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                            const json = XLSX.utils.sheet_to_json(firstSheet, { defval: "" });
-                            
-                            badge.innerText = "Origen: github.csv";
-                            badge.className = "text-xs bg-emerald-500/10 text-emerald-400 font-mono px-2 py-0.5 rounded border border-emerald-500/20";
-                            processDataset(json);
-                        })
-                        .catch(() => {
-                            badge.innerText = "Sin archivo";
-                            badge.className = "text-xs bg-rose-500/10 text-rose-400 font-mono px-2 py-0.5 rounded border border-rose-500/20";
-                            document.getElementById('table-body').innerHTML = `
-                                <tr>
-                                    <td colspan="100%" class="p-8 text-center text-rose-400 font-sans">
-                                        ⚠️ No se pudo localizar el archivo <strong>github.xlsx</strong> ni <strong>github.csv</strong> en la carpeta raíz.
-                                    </td>
-                                </tr>`;
-                        });
-                });
-        }
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                const category = row.getAttribute('data-categoria');
+                const valor = parseFloat(row.getAttribute('data-valor')) || 0;
 
-        // Construir Cabeceras e Inputs de Filtro
-        function processDataset(data) {
-            rawData = data;
-            filteredData = [...rawData];
+                const matchSearch = text.includes(searchVal);
+                const matchCategory = (categoryVal === 'TODAS' || category === categoryVal);
 
-            if (rawData.length === 0) return;
-
-            // Extraer las llaves/columnas del archivo
-            columns = Object.keys(rawData[0]);
-
-            const headerTitleRow = document.getElementById('table-headers-title');
-            const headerFilterRow = document.getElementById('table-headers-filter');
-
-            headerTitleRow.innerHTML = '';
-            headerFilterRow.innerHTML = '';
-
-            columns.forEach(col => {
-                columnFilters[col] = "";
-
-                // 1. Fila de Títulos
-                const thTitle = document.createElement('th');
-                thTitle.className = "p-3 font-semibold text-gray-200 tracking-wider text-left min-w-[150px] font-sans text-xs bg-[#080C14]";
-                thTitle.innerText = col;
-                headerTitleRow.appendChild(thTitle);
-
-                // 2. Fila de Campos de Entrada de Filtro
-                const thFilter = document.createElement('th');
-                thFilter.className = "p-2 bg-[#0D1322]";
-                thFilter.innerHTML = `
-                    <input type="text" 
-                        placeholder="Filtrar..." 
-                        data-col="${col}"
-                        oninput="onColumnFilterChange(this)"
-                        class="w-full bg-[#080C14] text-[11px] text-emerald-300 placeholder-gray-600 px-2 py-1 rounded border border-gray-800 focus:outline-none focus:border-emerald-500 font-mono">
-                `;
-                headerFilterRow.appendChild(thFilter);
-            });
-
-            document.getElementById('total-count').innerText = rawData.length;
-            renderTableBody();
-        }
-
-        // Cambio en el input individual de columna
-        function onColumnFilterChange(input) {
-            const col = input.getAttribute('data-col');
-            columnFilters[col] = input.value.toLowerCase().trim();
-            applyFilters();
-        }
-
-        // Aplicar filtros combinados (Global + Columnas)
-        function applyFilters() {
-            const globalQuery = document.getElementById('globalSearch').value.toLowerCase().trim();
-
-            filteredData = rawData.filter(row => {
-                // Buscador Global
-                if (globalQuery !== "") {
-                    const matchGlobal = Object.values(row).some(val => 
-                        String(val).toLowerCase().includes(globalQuery)
-                    );
-                    if (!matchGlobal) return false;
+                if (matchSearch && matchCategory) {
+                    row.style.display = '';
+                    totalSuma += valor;
+                    visiblesCount++;
+                } else {
+                    row.style.display = 'none';
                 }
-
-                // Filtros individuales por Columna
-                for (let col of columns) {
-                    const filterVal = columnFilters[col];
-                    if (filterVal && filterVal !== "") {
-                        const cellVal = String(row[col] || "").toLowerCase();
-                        if (!cellVal.includes(filterVal)) {
-                            return false;
-                        }
-                    }
-                }
-
-                return true;
             });
 
-            renderTableBody();
+            // Actualización de KPIs y Footer
+            const formattedTotal = currencyFormatter.format(totalSuma);
+            document.getElementById('kpiTotal').innerText = formattedTotal;
+            document.getElementById('tableFooterTotal').innerText = formattedTotal;
+            document.getElementById('kpiCount').innerText = visiblesCount;
         }
 
-        // Renderizar filas de la tabla
-        function renderTableBody() {
-            const tbody = document.getElementById('table-body');
-            document.getElementById('record-count').innerText = filteredData.length;
-
-            if (filteredData.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="${columns.length || 1}" class="p-8 text-center text-gray-500 font-sans">
-                            No se encontraron registros que coincidan con los filtros aplicados.
-                        </td>
-                    </tr>`;
-                return;
-            }
-
-            let html = '';
-            filteredData.forEach(row => {
-                html += `<tr class="hover:bg-gray-800/40 transition-colors border-b border-gray-800/30 divide-x divide-gray-800/30">`;
-                columns.forEach(col => {
-                    const val = row[col];
-                    const isNumeric = typeof val === 'number';
-                    
-                    let formattedVal = val;
-                    if (isNumeric && val > 1000) {
-                        formattedVal = val.toLocaleString('es-CO');
-                    }
-
-                    html += `<td class="p-2.5 text-gray-300 font-mono text-xs whitespace-nowrap ${isNumeric ? 'text-right text-emerald-300/90 font-semibold' : ''}">${formattedVal}</td>`;
-                });
-                html += `</tr>`;
-            });
-
-            tbody.innerHTML = html;
-        }
-
-        // Limpiar todas las entradas de búsqueda
-        function clearAllFilters() {
-            document.getElementById('globalSearch').value = '';
-            
-            columns.forEach(col => {
-                columnFilters[col] = "";
-            });
-
-            const inputs = document.querySelectorAll('#table-headers-filter input');
-            inputs.forEach(input => input.value = '');
-
-            applyFilters();
-        }
+        // Ejecución inicial al cargar la página
+        document.addEventListener('DOMContentLoaded', filtrarTabla);
     </script>
 </body>
 </html>
