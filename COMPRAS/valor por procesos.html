@@ -1,308 +1,519 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tablero de Compras - Tendencia Mensual</title>
-  
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏷️</text></svg>">
+    <title>Clasificación de Compras - Analítica Multimoneda</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-  <style>
-    * { box-sizing: border-box; }
+    <style>
     body {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      margin: 0;
-      padding: 24px;
-      background-color: #f8fafc;
-      color: #1e293b;
+        background-color: #0B0F19;
+        background-image: radial-gradient(circle at top right, #1f2937, transparent 40%), radial-gradient(circle at bottom left, #1f2937, transparent 40%);
+        background-attachment: fixed;
     }
-
-    .header-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #ffffff;
-      padding: 18px 24px;
-      border-radius: 12px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-      margin-bottom: 24px;
-      border: 1px solid #e2e8f0;
+    .currency-btn-active {
+        background-color: #8B5CF6 !important;
+        color: #ffffff !important;
+        border-color: #A78BFA !important;
     }
-
-    .header-title h2 { margin: 0; font-size: 1.4rem; color: #0f172a; }
-    .header-title p { margin: 4px 0 0 0; font-size: 0.85rem; color: #64748b; }
-
-    .status-badge {
-      font-size: 0.8rem;
-      padding: 6px 12px;
-      border-radius: 20px;
-      background-color: #f1f5f9;
-      color: #475569;
-      font-weight: 600;
-    }
-    .status-active { background-color: #dcfce7; color: #166534; }
-
-    .btn {
-      padding: 8px 16px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.85rem;
-      transition: all 0.2s;
-      margin-left: 8px;
-    }
-    .btn-primary { background: #2563eb; color: white; }
-    .btn-primary:hover { background: #1d4ed8; }
-    .btn-danger { background: #ef4444; color: white; }
-    .btn-danger:hover { background: #dc2626; }
-
-    #upload-container {
-      background: white;
-      padding: 24px;
-      border-radius: 12px;
-      margin-bottom: 24px;
-      border: 1px solid #e2e8f0;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    }
-
-    /* Tarjetas KPI */
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-    .kpi-card {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      border: 1px solid #e2e8f0;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    }
-    .kpi-card .kpi-title { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 600; }
-    .kpi-card .kpi-value { font-size: 1.6rem; font-weight: 700; color: #0f172a; margin-top: 8px; }
-
-    /* Contenedor del Gráfico */
-    .chart-card {
-      background: white;
-      padding: 24px;
-      border-radius: 12px;
-      border: 1px solid #e2e8f0;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    }
-    .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-    .chart-header h3 { margin: 0; font-size: 1.1rem; color: #1e293b; }
-    .chart-wrapper { position: relative; height: 360px; width: 100%; }
-
-    .hidden { display: none !important; }
-  </style>
+    </style>
 </head>
-<body>
+<body class="text-white font-sans min-h-screen flex flex-col justify-between">
 
-  <div class="header-bar">
-    <div class="header-title">
-      <h2>Tablero de Control de Compras</h2>
-      <p>Análisis visual de ejecución presupuestal</p>
-    </div>
     <div>
-      <span id="data-status" class="status-badge">Sin datos cargados</span>
-      <button id="btn-change-file" class="btn btn-primary hidden" onclick="toggleUploadUI()">Cambiar Archivo</button>
-      <button id="btn-clear-data" class="btn btn-danger hidden" onclick="clearStoredData()">Borrar Datos</button>
+        <nav class="bg-[#111827] border-b border-gray-800 px-6 py-4 sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+                <a href="../index.html?tab=compras" class="flex items-center text-sm font-semibold text-gray-400 hover:text-purple-400 transition duration-200">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Volver al Dashboard Principal
+                </a>
+                
+                <div class="flex items-center gap-3">
+                    <span id="data-status-badge" class="text-xs bg-purple-500/10 text-purple-400 px-3 py-1 rounded-full border border-purple-500/30 font-mono">
+                        Cargando datos...
+                    </span>
+                    <label class="cursor-pointer text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-1 rounded-md border border-gray-700 transition">
+                        📁 Cargar CSV/Excel
+                        <input type="file" id="manualFileInput" accept=".csv, .xlsx, .xls" class="hidden" onchange="handleManualFile(event)">
+                    </label>
+                </div>
+            </div>
+        </nav>
+
+        <header class="text-center py-8 px-6 relative z-10">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-3 tracking-tight drop-shadow-md">
+                Clasificación Multimoneda de Compras
+            </h1>
+            <p class="text-gray-400 text-base md:text-lg max-w-3xl mx-auto leading-relaxed">
+                Distribución del presupuesto por Procesos Institucionales y Tipos de Compra (Enero - Agosto). Análisis nominal independiente por divisa.
+            </p>
+
+            <div class="mt-6 flex justify-center items-center gap-3">
+                <span class="text-sm font-semibold text-gray-300">Periodo de Análisis:</span>
+                <select id="monthSelect" onchange="onMonthChange()" class="bg-[#111827] text-purple-300 border border-purple-500/40 text-sm rounded-lg px-4 py-2 font-bold focus:ring-2 focus:ring-purple-500 outline-none cursor-pointer">
+                    <option value="ALL">📊 Acumulado General (Ene - Ago)</option>
+                    <option value="enero">Enero</option>
+                    <option value="febrero">Febrero</option>
+                    <option value="marzo">Marzo</option>
+                    <option value="abril">Abril</option>
+                    <option value="mayo">Mayo</option>
+                    <option value="junio">Junio</option>
+                    <option value="julio">Julio</option>
+                    <option value="agosto">Agosto</option>
+                </select>
+            </div>
+        </header>
+
+        <section class="w-full max-w-7xl mx-auto px-6 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="bg-[#111827] p-5 rounded-xl border border-gray-800 shadow-lg">
+                    <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold flex justify-between">
+                        <span>Gasto Ejecutado COP</span>
+                        <span class="text-purple-400 font-bold">COP</span>
+                    </p>
+                    <p id="kpi-cop" class="text-2xl font-extrabold text-purple-400 mt-2">$ 0</p>
+                    <p class="text-[11px] text-gray-500 mt-1">Gasto total en moneda nacional</p>
+                </div>
+
+                <div class="bg-[#111827] p-5 rounded-xl border border-gray-800 shadow-lg">
+                    <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold flex justify-between">
+                        <span>Gasto Ejecutado USD</span>
+                        <span class="text-emerald-400 font-bold">USD</span>
+                    </p>
+                    <p id="kpi-usd" class="text-2xl font-extrabold text-emerald-400 mt-2">$ 0</p>
+                    <p class="text-[11px] text-gray-500 mt-1">Licencias, Software y Servicios IT</p>
+                </div>
+
+                <div class="bg-[#111827] p-5 rounded-xl border border-gray-800 shadow-lg">
+                    <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold flex justify-between">
+                        <span>Gasto Ejecutado EUR</span>
+                        <span class="text-amber-400 font-bold">EUR</span>
+                    </p>
+                    <p id="kpi-eur" class="text-2xl font-extrabold text-amber-400 mt-2">€ 0</p>
+                    <p class="text-[11px] text-gray-500 mt-1">Investigación y Desarrollo Integral</p>
+                </div>
+
+                <div class="bg-[#111827] p-5 rounded-xl border border-gray-800 shadow-lg">
+                    <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold">Proceso Mayor Gasto</p>
+                    <p id="kpi-top-proceso" class="text-lg font-bold text-gray-200 mt-2 truncate">-</p>
+                    <p id="kpi-top-val" class="text-[11px] text-purple-400 mt-1">$ 0 COP (0%)</p>
+                </div>
+            </div>
+        </section>
+
+        <main class="w-full max-w-7xl mx-auto px-6 mb-12 space-y-10">
+
+            <section class="bg-[#111827] rounded-xl border border-gray-800 shadow-xl p-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                            <span class="text-purple-400">🏢</span> 1. Gasto por Proceso o Área
+                        </h2>
+                        <p class="text-xs text-gray-400 mt-1">Selecciona la divisa para adaptar la escala del gráfico sin alterar valores reales.</p>
+                    </div>
+
+                    <div class="flex items-center bg-[#0B0F19] p-1 rounded-lg border border-gray-800 text-xs">
+                        <span class="text-gray-500 px-2 font-semibold">Divisa:</span>
+                        <button onclick="changeProcesoCurrency('COP')" id="btn-proc-cop" class="currency-btn-active px-3 py-1.5 rounded-md font-bold transition">COP ($)</button>
+                        <button onclick="changeProcesoCurrency('USD')" id="btn-proc-usd" class="px-3 py-1.5 rounded-md font-bold text-gray-400 hover:text-white transition">USD ($)</button>
+                        <button onclick="changeProcesoCurrency('EUR')" id="btn-proc-eur" class="px-3 py-1.5 rounded-md font-bold text-gray-400 hover:text-white transition">EUR (€)</button>
+                    </div>
+                </div>
+
+                <div class="relative h-80 w-full mb-6">
+                    <canvas id="procesoChart"></canvas>
+                </div>
+
+                <details class="group border-t border-gray-800/80 pt-4">
+                    <summary class="flex justify-between items-center cursor-pointer bg-[#0B0F19] hover:bg-gray-800/50 p-3.5 rounded-lg border border-gray-800 text-xs font-semibold text-gray-300 hover:text-purple-400 transition select-none">
+                        <span class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18M3 18h18M3 6h18"/>
+                            </svg>
+                            Ver / Ocultar Tabla Detallada por Proceso
+                        </span>
+                        <svg class="w-4 h-4 text-gray-400 transform group-open:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </summary>
+
+                    <div class="w-full overflow-x-auto mt-4">
+                        <table class="w-full text-left text-xs text-gray-300">
+                            <thead class="bg-[#0B0F19] text-purple-400 uppercase text-[10px] tracking-wider">
+                                <tr>
+                                    <th class="p-3 rounded-l">Proceso / Área</th>
+                                    <th class="p-3 text-right">Gasto COP</th>
+                                    <th class="p-3 text-right">Gasto USD</th>
+                                    <th class="p-3 text-right rounded-r">Gasto EUR</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaProcesosBody" class="divide-y divide-gray-800/50">
+                                </tbody>
+                        </table>
+                    </div>
+                </details>
+            </section>
+
+            <section class="bg-[#111827] rounded-xl border border-gray-800 shadow-xl p-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                            <span class="text-emerald-400">📦</span> 2. Gasto según Tipo de Compra
+                        </h2>
+                        <p class="text-xs text-gray-400 mt-1">Clasificación temática de adquisiciones y distribución por categoría de rubro.</p>
+                    </div>
+
+                    <div class="flex items-center bg-[#0B0F19] p-1 rounded-lg border border-gray-800 text-xs">
+                        <span class="text-gray-500 px-2 font-semibold">Divisa:</span>
+                        <button onclick="changeTipoCurrency('COP')" id="btn-tipo-cop" class="currency-btn-active px-3 py-1.5 rounded-md font-bold transition">COP ($)</button>
+                        <button onclick="changeTipoCurrency('USD')" id="btn-tipo-usd" class="px-3 py-1.5 rounded-md font-bold text-gray-400 hover:text-white transition">USD ($)</button>
+                        <button onclick="changeTipoCurrency('EUR')" id="btn-tipo-eur" class="px-3 py-1.5 rounded-md font-bold text-gray-400 hover:text-white transition">EUR (€)</button>
+                    </div>
+                </div>
+
+                <div class="relative h-80 w-full mb-6">
+                    <canvas id="tipoChart"></canvas>
+                </div>
+
+                <details class="group border-t border-gray-800/80 pt-4">
+                    <summary class="flex justify-between items-center cursor-pointer bg-[#0B0F19] hover:bg-gray-800/50 p-3.5 rounded-lg border border-gray-800 text-xs font-semibold text-gray-300 hover:text-emerald-400 transition select-none">
+                        <span class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18M3 18h18M3 6h18"/>
+                            </svg>
+                            Ver / Ocultar Tabla Detallada por Tipo de Compra
+                        </span>
+                        <svg class="w-4 h-4 text-gray-400 transform group-open:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </summary>
+
+                    <div class="w-full overflow-x-auto mt-4">
+                        <table class="w-full text-left text-xs text-gray-300">
+                            <thead class="bg-[#0B0F19] text-emerald-400 uppercase text-[10px] tracking-wider">
+                                <tr>
+                                    <th class="p-3 rounded-l">Tipo de Compra / Categoría</th>
+                                    <th class="p-3 text-right">Gasto COP</th>
+                                    <th class="p-3 text-right">Gasto USD</th>
+                                    <th class="p-3 text-right rounded-r">Gasto EUR</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaTiposBody" class="divide-y divide-gray-800/50">
+                                </tbody>
+                        </table>
+                    </div>
+                </details>
+            </section>
+
+        </main>
     </div>
-  </div>
 
-  <div id="upload-container">
-    <h3 style="margin-top: 0;">Cargar Archivo</h3>
-    <p style="color: #64748b; font-size: 0.9rem;">Selecciona el archivo Excel (.xlsx) o CSV para analizar:</p>
-    <input type="file" id="fileInput" accept=".csv, .xlsx, .xls">
-  </div>
+    <footer class="bg-[#0B0F19] text-center py-6 text-xs text-gray-500 border-t border-gray-800">
+        <p>Dirección de Gestión Administrativa • Control Presupuestal y Analítica de Compras</p>
+    </footer>
 
-  <div id="dashboard" class="hidden">
-    <div class="kpi-grid">
-      <div class="kpi-card">
-        <div class="kpi-title">Monto Total Pedidos</div>
-        <div class="kpi-value" id="kpi-total-val">$0</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-title">Total Registros</div>
-        <div class="kpi-value" id="kpi-records">0</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-title">Mes con Mayor Gasto</div>
-        <div class="kpi-value" id="kpi-peak-month">-</div>
-      </div>
-    </div>
+    <script>
+        // ESTADO GLOBAL
+        let rawDataset = [];
+        let currentProcesoCurrency = 'COP';
+        let currentTipoCurrency = 'COP';
+        let chartProceso = null;
+        let chartTipo = null;
 
-    <div class="chart-card">
-      <div class="chart-header">
-        <h3>Tendencia de Gastos (Enero - Agosto)</h3>
-      </div>
-      <div class="chart-wrapper">
-        <canvas id="monthlyChart"></canvas>
-      </div>
-    </div>
-  </div>
+        // FORMATO MONEDA INSTITUCIONAL
+        const formatMoney = (val, currency) => {
+            if (!val || val === 0) return '-';
+            const formatted = new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(val);
+            if (currency === 'COP') return `$ ${formatted}`;
+            if (currency === 'USD') return `$ ${formatted} USD`;
+            if (currency === 'EUR') return `€ ${formatted} EUR`;
+            return formatted;
+        };
 
-  <script>
-    const STORAGE_KEY = 'cubo_compras_data';
-    let chartInstance = null;
+        // AL CARGAR LA PÁGINA
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchAutoCSV();
+        });
 
-    const MONTH_NAMES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto"];
-
-    window.addEventListener('DOMContentLoaded', () => {
-      const storedData = localStorage.getItem(STORAGE_KEY);
-      if (storedData) {
-        try {
-          renderDashboard(JSON.parse(storedData), 'Datos guardados');
-          return;
-        } catch (e) {
-          localStorage.removeItem(STORAGE_KEY);
-        }
-      }
-      fetchAutoFile();
-    });
-
-    document.getElementById('fileInput').addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        try {
-          const workbook = XLSX.read(new Uint8Array(evt.target.result), { type: 'array' });
-          const jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
-          if (jsonData.length > 0) {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(jsonData));
-            renderDashboard(jsonData, 'Archivo cargado correctamente');
-          }
-        } catch (err) {
-          alert('Error al leer el archivo. Verifica que contenga el formato correcto.');
-        }
-      };
-      reader.readAsArrayBuffer(file);
-    });
-
-    function fetchAutoFile() {
-      fetch('github.csv')
-        .then(res => res.ok ? res.arrayBuffer() : Promise.reject())
-        .then(buffer => {
-          const workbook = XLSX.read(new Uint8Array(buffer), { type: 'array' });
-          const jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
-          if (jsonData.length > 0) {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(jsonData));
-            renderDashboard(jsonData, 'Cargado automáticamente');
-          }
-        })
-        .catch(() => {});
-    }
-
-    function renderDashboard(data, statusText) {
-      document.getElementById('upload-container').classList.add('hidden');
-      document.getElementById('dashboard').classList.remove('hidden');
-      document.getElementById('btn-change-file').classList.remove('hidden');
-      document.getElementById('btn-clear-data').classList.remove('hidden');
-
-      const badge = document.getElementById('data-status');
-      badge.textContent = `Estado: ${statusText}`;
-      badge.classList.add('status-active');
-
-      // Procesar datos para KPI y Gráfico
-      processAndRenderChart(data);
-    }
-
-    function processAndRenderChart(data) {
-      const monthlyTotals = { enero: 0, febrero: 0, marzo: 0, abril: 0, mayo: 0, junio: 0, julio: 0, agosto: 0 };
-      let grandTotal = 0;
-
-      data.forEach(row => {
-        // Obtención de monto acumulado
-        const valStr = row['Valor total Pedido'] || row['Valor Total'] || 0;
-        const val = parseFloat(String(valStr).replace(/[^0-9.-]+/g, "")) || 0;
-        grandTotal += val;
-
-        // Obtención de mes desde campo 'MES' o campo de fecha
-        let monthKey = "";
-        if (row['MES']) {
-          monthKey = String(row['MES']).toLowerCase().trim();
-        } else if (row['Fecha Lib. Solped'] || row['Fecha de solicitud']) {
-          const dateStr = row['Fecha Lib. Solped'] || row['Fecha de solicitud'];
-          const dateObj = new Date(dateStr);
-          if (!isNaN(dateObj.getMonth())) {
-            monthKey = MONTH_NAMES[dateObj.getMonth()];
-          }
+        // 1. INTENTO DE CARGA AUTOMÁTICA DEL ARCHIVO github.csv
+        function fetchAutoCSV() {
+            // Se prueban los nombres posibles de archivo
+            fetch('Cubo de compras-enero-julio-v2 1.xlsx - github.csv')
+                .then(res => res.ok ? res.text() : Promise.reject())
+                .then(csvText => parseAndInit(csvText, 'Servidor Local (github.csv)'))
+                .catch(() => {
+                    fetch('github.csv')
+                        .then(res => res.ok ? res.text() : Promise.reject())
+                        .then(csvText => parseAndInit(csvText, 'github.csv'))
+                        .catch(() => {
+                            document.getElementById('data-status-badge').innerText = 'Por favor selecciona un archivo';
+                        });
+                });
         }
 
-        if (monthlyTotals.hasOwnProperty(monthKey)) {
-          monthlyTotals[monthKey] += val;
+        // 2. CARGA MANUAL DE ARCHIVO (RESPALDO EXCEL O CSV)
+        function handleManualFile(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                try {
+                    const data = new Uint8Array(evt.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
+                    
+                    if (jsonData.length > 0) {
+                        rawDataset = normalizeJsonData(jsonData);
+                        updateBadge('Archivo cargado exitosamente');
+                        recalculateAndRender();
+                    }
+                } catch (err) {
+                    alert('Error al leer el archivo. Verifica el formato.');
+                }
+            };
+            reader.readAsArrayBuffer(file);
         }
-      });
 
-      // Actualizar Tarjetas KPI
-      document.getElementById('kpi-total-val').textContent = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(grandTotal);
-      document.getElementById('kpi-records').textContent = data.length.toLocaleString('es-CO');
+        function parseAndInit(csvText, sourceName) {
+            Papa.parse(csvText, {
+                header: true,
+                skipEmptyLines: true,
+                complete: function(results) {
+                    rawDataset = normalizeJsonData(results.data);
+                    updateBadge(`Cargado: ${sourceName}`);
+                    recalculateAndRender();
+                }
+            });
+        }
 
-      let maxMonth = '-';
-      let maxVal = -1;
-      Object.entries(monthlyTotals).forEach(([m, v]) => {
-        if (v > maxVal) { maxVal = v; maxMonth = m.charAt(0).toUpperCase() + m.slice(1); }
-      });
-      document.getElementById('kpi-peak-month').textContent = maxVal > 0 ? maxMonth : 'N/A';
+        function updateBadge(text) {
+            const badge = document.getElementById('data-status-badge');
+            badge.innerText = text;
+            badge.className = 'text-xs bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/30 font-mono';
+        }
 
-      // Configurar y renderizar Chart.js
-      const ctx = document.getElementById('monthlyChart').getContext('2d');
-      if (chartInstance) chartInstance.destroy();
+        // NORMALIZAR ESTRUCTURA DEL CSV/EXCEL
+        function normalizeJsonData(data) {
+            return data.map(row => {
+                const mes = (row['MES'] || row['Mes'] || row['Fecha de solicitud'] || '').toString().toLowerCase().trim();
+                const moneda = (row['Moneda'] || row['MONEDA'] || 'COP').toString().toUpperCase().trim();
+                const area = (row['Nombre área solicitante'] || row['Nombre área'] || row['Área'] || 'SIN ÁREA').toString().toUpperCase().trim();
+                const tipo = (row['Denominación GrpComp'] || row['Tipo de compra'] || 'SIN CLASIFICAR').toString().toUpperCase().trim();
+                
+                let valRaw = (row['Valor total Pedido'] || row['Valor Total'] || row['Valor'] || '0').toString();
+                valRaw = valRaw.replace(/[^0-9.-]+/g, ""); // Limpiar formato monetario
+                const valor = parseFloat(valRaw) || 0;
 
-      const labels = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto"];
-      const chartValues = labels.map(l => monthlyTotals[l.toLowerCase()]);
+                return { mes, moneda, area, tipo, valor };
+            });
+        }
 
-      chartInstance = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Gasto Total ($)',
-            data: chartValues,
-            backgroundColor: 'rgba(37, 99, 235, 0.8)',
-            borderColor: '#1d4ed8',
-            borderWidth: 1,
-            borderRadius: 6
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              callbacks: {
-                label: (ctx) => ` Total: ${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(ctx.raw)}`
-              }
+        // EVENTO DE CAMBIO DE MES
+        function onMonthChange() {
+            recalculateAndRender();
+        }
+
+        // RECALCULAR Y RENDERIZAR TODO
+        function recalculateAndRender() {
+            const selectedMonth = document.getElementById('monthSelect').value.toLowerCase();
+
+            // Filtrar dataset por mes
+            const filtered = rawDataset.filter(item => {
+                if (selectedMonth === 'all') return true;
+                return item.mes.includes(selectedMonth);
+            });
+
+            // Agrupación por Procesos y por Tipos
+            const procesosMap = {};
+            const tiposMap = {};
+            let totalCOP = 0, totalUSD = 0, totalEUR = 0;
+
+            filtered.forEach(item => {
+                // KPIs Moneda
+                if (item.moneda === 'COP') totalCOP += item.valor;
+                else if (item.moneda === 'USD') totalUSD += item.valor;
+                else if (item.moneda === 'EUR') totalEUR += item.valor;
+
+                // Agrupar Proceso
+                if (!procesosMap[item.area]) procesosMap[item.area] = { nombre: item.area, cop: 0, usd: 0, eur: 0 };
+                if (['COP', 'USD', 'EUR'].includes(item.moneda)) {
+                    procesosMap[item.area][item.moneda.toLowerCase()] += item.valor;
+                }
+
+                // Agrupar Tipo
+                if (!tiposMap[item.tipo]) tiposMap[item.tipo] = { nombre: item.tipo, cop: 0, usd: 0, eur: 0 };
+                if (['COP', 'USD', 'EUR'].includes(item.moneda)) {
+                    tiposMap[item.tipo][item.moneda.toLowerCase()] += item.valor;
+                }
+            });
+
+            const procesosArray = Object.values(procesosMap);
+            const tiposArray = Object.values(tiposMap);
+
+            // 1. Renderizar KPIs
+            document.getElementById('kpi-cop').innerText = formatMoney(totalCOP, 'COP');
+            document.getElementById('kpi-usd').innerText = formatMoney(totalUSD, 'USD');
+            document.getElementById('kpi-eur').innerText = formatMoney(totalEUR, 'EUR');
+
+            // Top Proceso (COP)
+            let topProceso = { nombre: '-', cop: 0 };
+            procesosArray.forEach(p => { if (p.cop > topProceso.cop) topProceso = p; });
+            document.getElementById('kpi-top-proceso').innerText = topProceso.nombre;
+            if (totalCOP > 0 && topProceso.cop > 0) {
+                const pct = ((topProceso.cop / totalCOP) * 100).toFixed(1);
+                document.getElementById('kpi-top-val').innerText = `${formatMoney(topProceso.cop, 'COP')} (${pct}%)`;
+            } else {
+                document.getElementById('kpi-top-val').innerText = '$ 0 (0%)';
             }
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                callback: (val) => '$' + (val / 1e6).toFixed(0) + 'M'
-              }
-            }
-          }
+
+            // 2. Renderizar Tablas
+            renderTabla(procesosArray, 'tablaProcesosBody');
+            renderTabla(tiposArray, 'tablaTiposBody');
+
+            // 3. Renderizar Gráficas
+            renderChartProceso(procesosArray);
+            renderChartTipo(tiposArray);
         }
-      });
-    }
 
-    function toggleUploadUI() {
-      document.getElementById('upload-container').classList.toggle('hidden');
-    }
+        // RENDERIZAR TABLAS
+        function renderTabla(datosArray, tbodyId) {
+            datosArray.sort((a, b) => b.cop - a.cop);
 
-    function clearStoredData() {
-      if (confirm('¿Deseas borrar los datos guardados?')) {
-        localStorage.removeItem(STORAGE_KEY);
-        location.reload();
-      }
-    }
-  </script>
+            const tbody = document.getElementById(tbodyId);
+            if (datosArray.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500">No hay registros para el periodo seleccionado.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = datosArray.map(item => `
+                <tr class="hover:bg-gray-800/30 transition-colors">
+                    <td class="p-3 font-medium text-white">${item.nombre}</td>
+                    <td class="p-3 text-right font-mono ${item.cop > 0 ? 'text-purple-300 font-bold' : 'text-gray-600'}">${formatMoney(item.cop, 'COP')}</td>
+                    <td class="p-3 text-right font-mono ${item.usd > 0 ? 'text-emerald-400 font-bold' : 'text-gray-600'}">${formatMoney(item.usd, 'USD')}</td>
+                    <td class="p-3 text-right font-mono ${item.eur > 0 ? 'text-amber-400 font-bold' : 'text-gray-600'}">${formatMoney(item.eur, 'EUR')}</td>
+                </tr>
+            `).join('');
+        }
+
+        // RENDERIZAR GRÁFICA PROCESOS
+        function renderChartProceso(dataArray) {
+            const key = currentProcesoCurrency.toLowerCase();
+            const filtered = dataArray.filter(i => i[key] > 0).sort((a, b) => b[key] - a[key]).slice(0, 10);
+
+            const labels = filtered.map(i => i.nombre.length > 28 ? i.nombre.substring(0, 26) + '...' : i.nombre);
+            const values = filtered.map(i => i[key]);
+
+            let barColor = 'rgba(139, 92, 246, 0.85)', borderColor = '#8B5CF6';
+            if (currentProcesoCurrency === 'USD') { barColor = 'rgba(16, 185, 129, 0.85)'; borderColor = '#10B981'; }
+            if (currentProcesoCurrency === 'EUR') { barColor = 'rgba(245, 158, 11, 0.85)'; borderColor = '#F59E0B'; }
+
+            const ctx = document.getElementById('procesoChart').getContext('2d');
+            if (chartProceso) chartProceso.destroy();
+
+            chartProceso = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: `Monto (${currentProcesoCurrency})`,
+                        data: values,
+                        backgroundColor: barColor,
+                        borderColor: borderColor,
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: { label: (ctx) => ` Gasto: ${formatMoney(ctx.parsed.y, currentProcesoCurrency)}` }
+                        }
+                    },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#9ca3af', font: { size: 10 } } },
+                        y: { grid: { color: '#1f2937' }, ticks: { color: '#9ca3af' } }
+                    }
+                }
+            });
+        }
+
+        // RENDERIZAR GRÁFICA TIPOS DE COMPRA
+        function renderChartTipo(dataArray) {
+            const key = currentTipoCurrency.toLowerCase();
+            const filtered = dataArray.filter(i => i[key] > 0).sort((a, b) => b[key] - a[key]).slice(0, 10);
+
+            const labels = filtered.map(i => i.nombre.length > 28 ? i.nombre.substring(0, 26) + '...' : i.nombre);
+            const values = filtered.map(i => i[key]);
+
+            let barColor = 'rgba(139, 92, 246, 0.85)', borderColor = '#8B5CF6';
+            if (currentTipoCurrency === 'USD') { barColor = 'rgba(16, 185, 129, 0.85)'; borderColor = '#10B981'; }
+            if (currentTipoCurrency === 'EUR') { barColor = 'rgba(245, 158, 11, 0.85)'; borderColor = '#F59E0B'; }
+
+            const ctx = document.getElementById('tipoChart').getContext('2d');
+            if (chartTipo) chartTipo.destroy();
+
+            chartTipo = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: `Monto (${currentTipoCurrency})`,
+                        data: values,
+                        backgroundColor: barColor,
+                        borderColor: borderColor,
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: { label: (ctx) => ` Gasto: ${formatMoney(ctx.parsed.y, currentTipoCurrency)}` }
+                        }
+                    },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#9ca3af', font: { size: 10 } } },
+                        y: { grid: { color: '#1f2937' }, ticks: { color: '#9ca3af' } }
+                    }
+                }
+            });
+        }
+
+        // CONTROLADORES DE CAMBIO DE MONEDA EN BOTONES
+        function changeProcesoCurrency(curr) {
+            currentProcesoCurrency = curr;
+            ['cop', 'usd', 'eur'].forEach(c => {
+                document.getElementById(`btn-proc-${c}`).classList.remove('currency-btn-active', 'text-white');
+                document.getElementById(`btn-proc-${c}`).classList.add('text-gray-400');
+            });
+            document.getElementById(`btn-proc-${curr.toLowerCase()}`).classList.add('currency-btn-active', 'text-white');
+            recalculateAndRender();
+        }
+
+        function changeTipoCurrency(curr) {
+            currentTipoCurrency = curr;
+            ['cop', 'usd', 'eur'].forEach(c => {
+                document.getElementById(`btn-tipo-${c}`).classList.remove('currency-btn-active', 'text-white');
+                document.getElementById(`btn-tipo-${c}`).classList.add('text-gray-400');
+            });
+            document.getElementById(`btn-tipo-${curr.toLowerCase()}`).classList.add('currency-btn-active', 'text-white');
+            recalculateAndRender();
+        }
+    </script>
 </body>
 </html>
