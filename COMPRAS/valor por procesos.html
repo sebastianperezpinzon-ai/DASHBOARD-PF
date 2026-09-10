@@ -246,7 +246,7 @@
         // BÚSQUEDA AUTOMÁTICA EN EL REPOSOTORIO (Soporta .xlsx y .csv)
 function fetchAutoCSV() {
     // 1. Intentar cargar archivo Excel (.xlsx) automáticamente
-    fetch('github.xlsx') // <--- Pon aquí el nombre exacto de tu archivo Excel en el repositorio
+    fetch('COMPRAS/multimoneda.xlsx') // <--- Pon aquí el nombre exacto de tu archivo Excel en el repositorio
         .then(res => res.ok ? res.arrayBuffer() : Promise.reject())
         .then(buffer => {
             const data = new Uint8Array(buffer);
