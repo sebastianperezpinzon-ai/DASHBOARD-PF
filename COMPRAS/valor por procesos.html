@@ -246,7 +246,7 @@
         // 1. INTENTO DE CARGA AUTOMÁTICA DEL ARCHIVO github.csv
         function fetchAutoCSV() {
             // Se prueban los nombres posibles de archivo
-            fetch('Cubo de compras-enero-julio-v2 1.xlsx - github.csv')
+            fetch('github.csv')
                 .then(res => res.ok ? res.text() : Promise.reject())
                 .then(csvText => parseAndInit(csvText, 'Servidor Local (github.csv)'))
                 .catch(() => {
