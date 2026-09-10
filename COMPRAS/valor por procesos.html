@@ -3,176 +3,294 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tablero de Compras</title>
+  <title>Tablero de Compras - Tendencia Mensual</title>
   
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
+    * { box-sizing: border-box; }
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 20px;
-      background-color: #f4f6f9;
-      color: #333;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      margin: 0;
+      padding: 24px;
+      background-color: #f8fafc;
+      color: #1e293b;
     }
+
     .header-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       background: #ffffff;
-      padding: 15px 25px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      margin-bottom: 20px;
+      padding: 18px 24px;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      margin-bottom: 24px;
+      border: 1px solid #e2e8f0;
     }
+
+    .header-title h2 { margin: 0; font-size: 1.4rem; color: #0f172a; }
+    .header-title p { margin: 4px 0 0 0; font-size: 0.85rem; color: #64748b; }
+
     .status-badge {
-      font-size: 0.9em;
+      font-size: 0.8rem;
       padding: 6px 12px;
       border-radius: 20px;
-      background-color: #e0e0e0;
-      color: #555;
+      background-color: #f1f5f9;
+      color: #475569;
+      font-weight: 600;
     }
-    .status-active {
-      background-color: #e8f5e9;
-      color: #2e7d32;
-    }
+    .status-active { background-color: #dcfce7; color: #166534; }
+
     .btn {
       padding: 8px 16px;
       border: none;
       border-radius: 6px;
       cursor: pointer;
       font-weight: 600;
-      transition: background 0.2s;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+      margin-left: 8px;
     }
-    .btn-primary { background: #0056b3; color: white; }
-    .btn-primary:hover { background: #004085; }
-    .btn-danger { background: #dc3545; color: white; }
-    .btn-danger:hover { background: #bd2130; }
+    .btn-primary { background: #2563eb; color: white; }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-danger { background: #ef4444; color: white; }
+    .btn-danger:hover { background: #dc2626; }
+
     #upload-container {
       background: white;
-      padding: 20px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      padding: 24px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
+
+    /* Tarjetas KPI */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .kpi-card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .kpi-card .kpi-title { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 600; }
+    .kpi-card .kpi-value { font-size: 1.6rem; font-weight: 700; color: #0f172a; margin-top: 8px; }
+
+    /* Contenedor del Gráfico */
+    .chart-card {
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .chart-header h3 { margin: 0; font-size: 1.1rem; color: #1e293b; }
+    .chart-wrapper { position: relative; height: 360px; width: 100%; }
+
     .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
   <div class="header-bar">
-    <h2>Tablero de Control de Compras</h2>
+    <div class="header-title">
+      <h2>Tablero de Control de Compras</h2>
+      <p>Análisis visual de ejecución presupuestal</p>
+    </div>
     <div>
       <span id="data-status" class="status-badge">Sin datos cargados</span>
       <button id="btn-change-file" class="btn btn-primary hidden" onclick="toggleUploadUI()">Cambiar Archivo</button>
-      <button id="btn-clear-data" class="btn btn-danger hidden" onclick="clearStoredData()">Borrar Datos Guardados</button>
+      <button id="btn-clear-data" class="btn btn-danger hidden" onclick="clearStoredData()">Borrar Datos</button>
     </div>
   </div>
 
   <div id="upload-container">
-    <h3>Cargar Datos</h3>
-    <p>Selecciona tu archivo de compras (Soporta formatos <strong>.xlsx, .xls y .csv</strong>):</p>
-    <input type="file" id="fileInput" accept=".csv, .xlsx, .xls, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel, text/csv">
+    <h3 style="margin-top: 0;">Cargar Archivo</h3>
+    <p style="color: #64748b; font-size: 0.9rem;">Selecciona el archivo Excel (.xlsx) o CSV para analizar:</p>
+    <input type="file" id="fileInput" accept=".csv, .xlsx, .xls">
   </div>
 
   <div id="dashboard" class="hidden">
-    <h3>Resumen General</h3>
-    <p>Total registros procesados: <strong id="total-records">0</strong></p>
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-title">Monto Total Pedidos</div>
+        <div class="kpi-value" id="kpi-total-val">$0</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Total Registros</div>
+        <div class="kpi-value" id="kpi-records">0</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Mes con Mayor Gasto</div>
+        <div class="kpi-value" id="kpi-peak-month">-</div>
+      </div>
     </div>
+
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3>Tendencia de Gastos (Enero - Agosto)</h3>
+      </div>
+      <div class="chart-wrapper">
+        <canvas id="monthlyChart"></canvas>
+      </div>
+    </div>
+  </div>
 
   <script>
     const STORAGE_KEY = 'cubo_compras_data';
+    let chartInstance = null;
 
-    // Al cargar la página
+    const MONTH_NAMES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto"];
+
     window.addEventListener('DOMContentLoaded', () => {
-      // 1. Intentar cargar desde localStorage (Solución Falla 2)
       const storedData = localStorage.getItem(STORAGE_KEY);
       if (storedData) {
         try {
-          const parsedData = JSON.parse(storedData);
-          renderDashboard(parsedData, 'Guardado local (localStorage)');
+          renderDashboard(JSON.parse(storedData), 'Datos guardados');
           return;
         } catch (e) {
-          console.error("Error al leer datos guardados:", e);
           localStorage.removeItem(STORAGE_KEY);
         }
       }
-
-      // 2. Si no hay en localStorage, intentar leer automáticamente un archivo local si existe
       fetchAutoFile();
     });
 
-    // Escuchar el evento de selección de archivo
-    document.getElementById('fileInput').addEventListener('change', handleFileSelect);
-
-    function handleFileSelect(event) {
-      const file = event.target.files[0];
+    document.getElementById('fileInput').addEventListener('change', (e) => {
+      const file = e.target.files[0];
       if (!file) return;
 
       const reader = new FileReader();
-      reader.onload = function(e) {
+      reader.onload = function(evt) {
         try {
-          const data = new Uint8Array(e.target.result);
-          // SheetJS lee tanto Excel (.xlsx) como CSV automáticamente
-          const workbook = XLSX.read(data, { type: 'array' });
-          const firstSheetName = workbook.SheetNames[0];
-          const worksheet = workbook.Sheets[firstSheetName];
-          
-          // Convertir a objeto JSON
-          const jsonData = XLSX.utils.sheet_to_json(worksheet);
-
-          if (jsonData.length > 0) {
-            // Guardar en localStorage para que persista tras F5 / Recargar
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(jsonData));
-            renderDashboard(jsonData, 'Archivo cargado correctamente');
-          } else {
-            alert('El archivo cargado no contiene datos válidos.');
-          }
-        } catch (err) {
-          alert('Error al procesar el archivo. Asegúrate de que sea un archivo .xlsx o .csv válido.');
-          console.error(err);
-        }
-      };
-      reader.readAsArrayBuffer(file);
-    }
-
-    // Intenta buscar automáticamente el archivo 'github.csv' si está en el mismo servidor o carpeta
-    function fetchAutoFile() {
-      fetch('github.csv')
-        .then(response => {
-          if (!response.ok) throw new Error("No se encontró archivo automático.");
-          return response.arrayBuffer();
-        })
-        .then(buffer => {
-          const data = new Uint8Array(buffer);
-          const workbook = XLSX.read(data, { type: 'array' });
+          const workbook = XLSX.read(new Uint8Array(evt.target.result), { type: 'array' });
           const jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
           if (jsonData.length > 0) {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(jsonData));
-            renderDashboard(jsonData, 'Cargado automáticamente desde el servidor');
+            renderDashboard(jsonData, 'Archivo cargado correctamente');
+          }
+        } catch (err) {
+          alert('Error al leer el archivo. Verifica que contenga el formato correcto.');
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    });
+
+    function fetchAutoFile() {
+      fetch('github.csv')
+        .then(res => res.ok ? res.arrayBuffer() : Promise.reject())
+        .then(buffer => {
+          const workbook = XLSX.read(new Uint8Array(buffer), { type: 'array' });
+          const jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
+          if (jsonData.length > 0) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(jsonData));
+            renderDashboard(jsonData, 'Cargado automáticamente');
           }
         })
-        .catch(err => {
-          // Si no se encuentra el archivo remoto/local, queda en espera de que el usuario lo suba manualmente
-          console.log("Carga automática no disponible. En espera de archivo manual.");
-        });
+        .catch(() => {});
     }
 
-    // Muestra los datos en el dashboard y gestiona la visibilidad de los controles
-    function renderDashboard(data, statusMessage) {
+    function renderDashboard(data, statusText) {
       document.getElementById('upload-container').classList.add('hidden');
       document.getElementById('dashboard').classList.remove('hidden');
       document.getElementById('btn-change-file').classList.remove('hidden');
       document.getElementById('btn-clear-data').classList.remove('hidden');
-      
+
       const badge = document.getElementById('data-status');
-      badge.textContent = `Estado: ${statusMessage}`;
+      badge.textContent = `Estado: ${statusText}`;
       badge.classList.add('status-active');
 
-      document.getElementById('total-records').textContent = data.length;
+      // Procesar datos para KPI y Gráfico
+      processAndRenderChart(data);
+    }
 
-      // TODO: Aquí invocas las funciones que construyen tus gráficos o tablas con el parámetro 'data'
-      console.log("Datos listos para procesar:", data);
+    function processAndRenderChart(data) {
+      const monthlyTotals = { enero: 0, febrero: 0, marzo: 0, abril: 0, mayo: 0, junio: 0, julio: 0, agosto: 0 };
+      let grandTotal = 0;
+
+      data.forEach(row => {
+        // Obtención de monto acumulado
+        const valStr = row['Valor total Pedido'] || row['Valor Total'] || 0;
+        const val = parseFloat(String(valStr).replace(/[^0-9.-]+/g, "")) || 0;
+        grandTotal += val;
+
+        // Obtención de mes desde campo 'MES' o campo de fecha
+        let monthKey = "";
+        if (row['MES']) {
+          monthKey = String(row['MES']).toLowerCase().trim();
+        } else if (row['Fecha Lib. Solped'] || row['Fecha de solicitud']) {
+          const dateStr = row['Fecha Lib. Solped'] || row['Fecha de solicitud'];
+          const dateObj = new Date(dateStr);
+          if (!isNaN(dateObj.getMonth())) {
+            monthKey = MONTH_NAMES[dateObj.getMonth()];
+          }
+        }
+
+        if (monthlyTotals.hasOwnProperty(monthKey)) {
+          monthlyTotals[monthKey] += val;
+        }
+      });
+
+      // Actualizar Tarjetas KPI
+      document.getElementById('kpi-total-val').textContent = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(grandTotal);
+      document.getElementById('kpi-records').textContent = data.length.toLocaleString('es-CO');
+
+      let maxMonth = '-';
+      let maxVal = -1;
+      Object.entries(monthlyTotals).forEach(([m, v]) => {
+        if (v > maxVal) { maxVal = v; maxMonth = m.charAt(0).toUpperCase() + m.slice(1); }
+      });
+      document.getElementById('kpi-peak-month').textContent = maxVal > 0 ? maxMonth : 'N/A';
+
+      // Configurar y renderizar Chart.js
+      const ctx = document.getElementById('monthlyChart').getContext('2d');
+      if (chartInstance) chartInstance.destroy();
+
+      const labels = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto"];
+      const chartValues = labels.map(l => monthlyTotals[l.toLowerCase()]);
+
+      chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Gasto Total ($)',
+            data: chartValues,
+            backgroundColor: 'rgba(37, 99, 235, 0.8)',
+            borderColor: '#1d4ed8',
+            borderWidth: 1,
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => ` Total: ${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(ctx.raw)}`
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: (val) => '$' + (val / 1e6).toFixed(0) + 'M'
+              }
+            }
+          }
+        }
+      });
     }
 
     function toggleUploadUI() {
@@ -180,9 +298,9 @@
     }
 
     function clearStoredData() {
-      if (confirm('¿Deseas borrar los datos guardados en el navegador?')) {
+      if (confirm('¿Deseas borrar los datos guardados?')) {
         localStorage.removeItem(STORAGE_KEY);
-        location.reload(); // Recarga la página para volver al estado inicial
+        location.reload();
       }
     }
   </script>
