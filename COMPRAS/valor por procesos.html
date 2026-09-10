@@ -244,10 +244,19 @@
         });
 
         // BÚSQUEDA AUTOMÁTICA EN EL REPOSOTORIO (Soporta .xlsx y .csv)
+// BÚSQUEDA AUTOMÁTICA CON DIAGNÓSTICO EN CONSOLA
 function fetchAutoCSV() {
-    // 1. Intentar cargar archivo Excel (.xlsx) automáticamente
-    fetch('COMPRAS/multimoneda.xlsx') // <--- Pon aquí el nombre exacto de tu archivo Excel en el repositorio
-        .then(res => res.ok ? res.arrayBuffer() : Promise.reject())
+    const fileName = 'github.xlsx'; // Asegúrate de que este sea el nombre exacto en GitHub
+
+    console.log(`[Diagnóstico] Intentando cargar archivo desde: ${window.location.origin}/${fileName}`);
+
+    fetch(fileName)
+        .then(res => {
+            if (!res.ok) {
+                throw new Error(`Estado del servidor: ${res.status} (${res.statusText})`);
+            }
+            return res.arrayBuffer();
+        })
         .then(buffer => {
             const data = new Uint8Array(buffer);
             const workbook = XLSX.read(data, { type: 'array' });
@@ -256,21 +265,26 @@ function fetchAutoCSV() {
             
             if (jsonData.length > 0) {
                 rawDataset = normalizeJsonData(jsonData);
-                updateBadge('Cargado automáticamente: github.xlsx');
+                updateBadge(`Cargado: ${fileName}`);
                 recalculateAndRender();
+                console.log("[Diagnóstico] ¡Archivo cargado y procesado con éxito!", jsonData);
+            } else {
+                throw new Error("El archivo existe pero está vacío o no tiene el formato esperado.");
             }
         })
-        .catch(() => {
-            // 2. Si no encuentra el .xlsx, intentar buscar un archivo .csv
+        .catch(err => {
+            console.warn(`[Diagnóstico] No se pudo cargar '${fileName}':`, err.message);
+            
+            // Intento secundario con .csv si el .xlsx falla
             fetch('github.csv')
                 .then(res => res.ok ? res.text() : Promise.reject())
                 .then(csvText => parseAndInit(csvText, 'github.csv'))
                 .catch(() => {
                     document.getElementById('data-status-badge').innerText = 'En espera de archivo manual';
+                    console.error("[Diagnóstico] Tampoco se encontró 'github.csv'. Usa el botón manual.");
                 });
         });
 }
-
         // 2. CARGA MANUAL DE ARCHIVO (RESPALDO EXCEL O CSV)
         function handleManualFile(e) {
             const file = e.target.files[0];
