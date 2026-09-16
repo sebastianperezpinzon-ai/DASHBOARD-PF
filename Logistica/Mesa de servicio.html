@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📦</text></svg>">
+    <title>Mesa de Servicio - Logística y Audiovisuales | ECO-S</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+    body {
+        background-image: url('../images/bg-pattern.png');
+        background-repeat: repeat;
+        background-size: 350px;
+        background-attachment: fixed;
+        background-color: #0B0F19;
+    }
+    </style>
+</head>
+<body class="text-white font-sans min-h-screen flex flex-col justify-between">
+
+    <!-- Navegación -->
+    <nav class="bg-[#111827] border-b border-gray-800 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="../index.html" class="flex items-center text-sm font-semibold text-gray-400 hover:text-[#00A859] transition duration-200">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Volver al Dashboard Principal
+            </a>
+            <span class="text-xs bg-[#00A859]/10 text-[#00A859] px-3 py-1 rounded-full border border-[#00A859]/30 font-mono">
+                Área: Logística y Audiovisuales | ECO-S
+            </span>
+        </div>
+    </nav>
+
+    <!-- Encabezado -->
+    <header class="py-10 px-6 text-center max-w-4xl mx-auto">
+        <h1 class="text-3xl font-extrabold tracking-tight md:text-5xl text-white mb-3">
+            Mesa de Servicio: Logística y Audiovisuales
+        </h1>
+        <p class="text-gray-400 text-base md:text-lg leading-relaxed">
+            Monitoreo analítico de casos asignados y atendidos durante el periodo <span class="text-emerald-400 font-semibold">Enero – Agosto</span>.
+        </p>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="max-w-7xl mx-auto px-6 mb-16 flex-grow w-full space-y-8">
+
+        <!-- METRICAS CLAVE / KPIS -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div class="bg-[#111827] rounded-xl border border-gray-800 p-5 shadow-xl flex items-center justify-between">
+                <div>
+                    <span class="text-xs text-gray-400 font-mono uppercase tracking-wider">Total Casos Registrados</span>
+                    <h3 class="text-3xl font-extrabold text-white mt-1">446</h3>
+                    <p class="text-xs text-emerald-400 mt-1">Enero – Agosto</p>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-[#00A859]/10 border border-[#00A859]/20 flex items-center justify-center text-[#00A859] text-2xl">
+                    📊
+                </div>
+            </div>
+
+            <div class="bg-[#111827] rounded-xl border border-gray-800 p-5 shadow-xl flex items-center justify-between border-l-4 border-l-[#00A859]">
+                <div>
+                    <span class="text-xs text-gray-400 font-mono uppercase tracking-wider">Cerrados a Tiempo</span>
+                    <h3 class="text-3xl font-extrabold text-[#00A859] mt-1">379</h3>
+                    <p class="text-xs text-gray-400 mt-1">84.98% de efectividad de respuesta</p>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-[#00A859]/10 border border-[#00A859]/20 flex items-center justify-center text-[#00A859] text-2xl">
+                    ✅
+                </div>
+            </div>
+
+            <div class="bg-[#111827] rounded-xl border border-gray-800 p-5 shadow-xl flex items-center justify-between">
+                <div>
+                    <span class="text-xs text-gray-400 font-mono uppercase tracking-wider">Servicios + Café</span>
+                    <h3 class="text-3xl font-extrabold text-white mt-1">361</h3>
+                    <p class="text-xs text-gray-400 mt-1">80.9% del total de solicitudes</p>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-2xl">
+                    ☕
+                </div>
+            </div>
+
+            <div class="bg-[#111827] rounded-xl border border-gray-800 p-5 shadow-xl flex items-center justify-between">
+                <div>
+                    <span class="text-xs text-gray-400 font-mono uppercase tracking-wider">Casos Activos / Pendientes</span>
+                    <h3 class="text-3xl font-extrabold text-sky-400 mt-1">12</h3>
+                    <p class="text-xs text-gray-400 mt-1">3 Abiertos | 9 Pausados</p>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 text-2xl">
+                    ⏳
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN DE GRÁFICAS Y TABLAS -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+            <!-- GRÁFICA 1: ESTADO ACTUAL DE LOS CASOS -->
+            <div class="bg-[#111827] rounded-xl border border-gray-800 p-6 shadow-xl flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-base font-bold text-white font-mono flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-[#00A859]"></span>
+                            1. Estado Actual de Casos Asignados
+                        </h2>
+                        <span class="text-xs font-mono text-gray-400 bg-gray-800 px-2 py-1 rounded">
+                            Total: 446
+                        </span>
+                    </div>
+
+                    <!-- Canvas del Gráfico -->
+                    <div class="relative h-64 w-full my-4 flex items-center justify-center">
+                        <canvas id="chartEstado"></canvas>
+                    </div>
+
+                    <!-- Tabla Resumen de Datos -->
+                    <div class="mt-6 overflow-x-auto">
+                        <table class="w-full text-left text-xs font-mono border-t border-gray-800">
+                            <thead>
+                                <tr class="text-gray-400 border-b border-gray-800">
+                                    <th class="py-2">Estado</th>
+                                    <th class="py-2 text-right">Cant.</th>
+                                    <th class="py-2 text-right">Proporción</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-800/50">
+                                <tr>
+                                    <td class="py-2 flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Cerrado a Tiempo
+                                    </td>
+                                    <td class="py-2 text-right font-bold text-emerald-400">379</td>
+                                    <td class="py-2 text-right text-gray-400">84.98%</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2 flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-rose-500"></span> Cancelado
+                                    </td>
+                                    <td class="py-2 text-right font-bold text-rose-400">54</td>
+                                    <td class="py-2 text-right text-gray-400">12.11%</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2 flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-amber-500"></span> Pausado
+                                    </td>
+                                    <td class="py-2 text-right font-bold text-amber-400">9</td>
+                                    <td class="py-2 text-right text-gray-400">2.02%</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2 flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-sky-400"></span> Abierto
+                                    </td>
+                                    <td class="py-2 text-right font-bold text-sky-400">3</td>
+                                    <td class="py-2 text-right text-gray-400">0.67%</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2 flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-red-700"></span> Cerrado con Vencimiento
+                                    </td>
+                                    <td class="py-2 text-right font-bold text-red-500">1</td>
+                                    <td class="py-2 text-right text-gray-400">0.22%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GRÁFICA 2: CLASIFICACIÓN DE CASOS -->
+            <div class="bg-[#111827] rounded-xl border border-gray-800 p-6 shadow-xl flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-base font-bold text-white font-mono flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                            2. Clasificación Interna del Servicio
+                        </h2>
+                        <span class="text-xs font-mono text-gray-400 bg-gray-800 px-2 py-1 rounded">
+                            10 Categorías
+                        </span>
+                    </div>
+
+                    <!-- Canvas del Gráfico -->
+                    <div class="relative h-72 w-full my-2">
+                        <canvas id="chartClasificacion"></canvas>
+                    </div>
+
+                    <!-- Tabla Resumen de Clasificación -->
+                    <div class="mt-4 overflow-y-auto max-h-48">
+                        <table class="w-full text-left text-xs font-mono border-t border-gray-800">
+                            <thead class="sticky top-0 bg-[#111827]">
+                                <tr class="text-gray-400 border-b border-gray-800">
+                                    <th class="py-2">Categoría / Clasificación</th>
+                                    <th class="py-2 text-right">Cant.</th>
+                                    <th class="py-2 text-right">% del Total</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-800/50">
+                                <tr><td class="py-1.5 text-gray-200">Servicios</td><td class="py-1.5 text-right font-bold text-emerald-400">257</td><td class="py-1.5 text-right text-gray-400">57.62%</td></tr>
+                                <tr><td class="py-1.5 text-gray-200">Estaciones de Café</td><td class="py-1.5 text-right font-bold text-emerald-400">104</td><td class="py-1.5 text-right text-gray-400">23.32%</td></tr>
+                                <tr><td class="py-1.5 text-gray-200">Adecuación espacio</td><td class="py-1.5 text-right font-bold text-emerald-400">33</td><td class="py-1.5 text-right text-gray-400">7.40%</td></tr>
+                                <tr><td class="py-1.5 text-gray-200">Préstamos de elementos</td><td class="py-1.5 text-right font-bold text-emerald-400">25</td><td class="py-1.5 text-right text-gray-400">5.61%</td></tr>
+                                <tr><td class="py-1.5 text-gray-200">Mobiliario</td><td class="py-1.5 text-right font-bold text-emerald-400">15</td><td class="py-1.5 text-right text-gray-400">3.36%</td></tr>
+                                <tr><td class="py-1.5 text-gray-200">Asignación activos</td><td class="py-1.5 text-right font-bold text-emerald-400">5</td><td class="py-1.5 text-right text-gray-400">1.12%</td></tr>
+                                <tr><td class="py-1.5 text-gray-200">Locativa</td><td class="py-1.5 text-right font-bold text-emerald-400">3</td><td class="py-1.5 text-right text-gray-400">0.67%</td></tr>
+                                <tr><td class="py-1.5 text-gray-200">Jardinería</td><td class="py-1.5 text-right font-bold text-emerald-400">2</td><td class="py-1.5 text-right text-gray-400">0.45%</td></tr>
+                                <tr><td class="py-1.5 text-gray-200">Eléctrico</td><td class="py-1.5 text-right font-bold text-emerald-400">1</td><td class="py-1.5 text-right text-gray-400">0.22%</td></tr>
+                                <tr><td class="py-1.5 text-gray-200">Préstamo de vehículo eléctrico</td><td class="py-1.5 text-right font-bold text-emerald-400">1</td><td class="py-1.5 text-right text-gray-400">0.22%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- LECTURA SENSORIAL Y OPERATIVA ECO-S -->
+        <div class="bg-[#111827] rounded-xl border border-gray-800 p-6 shadow-xl border-l-4 border-l-[#00A859] relative overflow-hidden">
+            <div class="flex items-start gap-4">
+                <div class="w-10 h-10 rounded-full bg-[#00A859]/20 border border-[#00A859]/40 flex items-center justify-center text-[#00A859] text-xl flex-shrink-0 mt-1">
+                    🌿
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-white font-mono uppercase tracking-wider">
+                        Interpretación Sensorial e Impacto ODS | ECO-S
+                    </h3>
+                    <p class="text-xs text-gray-300 mt-2 leading-relaxed">
+                        El <strong>84.98% de cierre oportuno</strong> en 446 solicitudes refleja un nivel óptimo de mantenimiento del soporte físico y audiovisual del campus. Cabe destacar que la suma de <span class="text-emerald-400">Servicios (257)</span> y <span class="text-emerald-400">Estaciones de Café (104)</span> representa más del <strong>80% de la carga operativa</strong>.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 pt-4 border-t border-gray-800/80 text-xs">
+                        <div class="flex items-start gap-2">
+                            <span class="text-[#00A859]">▪</span>
+                            <p class="text-gray-400">
+                                <strong class="text-gray-200">Bienestar y Convivencia (ODS 3):</strong> La alta demanda en estaciones de café consolida a estos puntos como auténticos "terceros espacios" de interacción social y descanso para la comunidad universitaria.
+                            </p>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="text-[#00A859]">▪</span>
+                            <p class="text-gray-400">
+                                <strong class="text-gray-200">Consumo y Eficiencia (ODS 12):</strong> Apenas 1 caso con vencimiento y un 12.1% de cancelaciones invitan a analizar los motivos de cancelación para evitar reprocesos y optimizar tiempo técnico.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Pie de página -->
+    <footer class="bg-[#0B0F19] text-center py-6 text-xs text-gray-500 border-t border-gray-800">
+        <p>Sistema de Gestión Interna de Planta Física | Logística y Audiovisuales — ECO-S</p>
+    </footer>
+
+    <!-- LOGICA DE GRÁFICOS CON CHART.JS -->
+    <script>
+        // Configuración Global de Chart.js para tema oscuro
+        Chart.defaults.color = '#9CA3AF';
+        Chart.defaults.font.family = 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto';
+
+        // 1. GRÁFICA DE DONA: ESTADO ACTUAL DE CASOS
+        const ctxEstado = document.getElementById('chartEstado').getContext('2d');
+        new Chart(ctxEstado, {
+            type: 'doughnut',
+            data: {
+                labels: ['Cerrado a Tiempo', 'Cancelado', 'Pausado', 'Abierto', 'Cerrado con Vencimiento'],
+                datasets: [{
+                    data: [379, 54, 9, 3, 1],
+                    backgroundColor: [
+                        '#00A859', // Verde principal
+                        '#EF4444', // Rojo Cancelado
+                        '#F59E0B', // Ámbar Pausado
+                        '#38BDF8', // Celeste Abierto
+                        '#991B1B'  // Rojo Oscuro Vencido
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#111827'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            boxWidth: 12,
+                            padding: 15,
+                            font: { size: 11 }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const total = 446;
+                                const val = context.raw;
+                                const pct = ((val / total) * 100).toFixed(2);
+                                return ` ${context.label}: ${val} (${pct}%)`;
+                            }
+                        }
+                    }
+                },
+                cutout: '68%'
+            }
+        });
+
+        // 2. GRÁFICA DE BARRAS HORIZONTALES: CLASIFICACIÓN DE CASOS
+        const ctxClasificacion = document.getElementById('chartClasificacion').getContext('2d');
+        new Chart(ctxClasificacion, {
+            type: 'bar',
+            data: {
+                labels: [
+                    'Servicios',
+                    'Estaciones de Café',
+                    'Adecuación espacio',
+                    'Prestamos de elementos',
+                    'Mobiliario',
+                    'Asignación activos',
+                    'Locativa',
+                    'Jardinería',
+                    'Eléctrico',
+                    'Préstamo veh. eléctrico'
+                ],
+                datasets: [{
+                    label: 'Cantidad de Casos',
+                    data: [257, 104, 33, 25, 15, 5, 3, 2, 1, 1],
+                    backgroundColor: '#00A859',
+                    hoverBackgroundColor: '#10B981',
+                    borderRadius: 4,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return ` Casos: ${context.raw}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        ticks: { font: { size: 10 } }
+                    },
+                    y: {
+                        grid: { display: false },
+                        ticks: { font: { size: 11 }, color: '#E5E7EB' }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
