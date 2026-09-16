@@ -3,348 +3,253 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📍</text></svg>">
-    <title>Ocupación de Espacios - Planta Física | ECO-S</title>
+    <title>ECO-S | Analítica de Ocupación Espacial</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <style>
-    body {
-        background-image: url('../images/bg-pattern.png');
-        background-repeat: repeat;
-        background-size: 350px;
-        background-attachment: fixed;
-        background-color: #0B0F19;
-    }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #334155; }
+        .badge-peak { background-color: #fef2f2; color: #991b1b; font-weight: 600; padding: 2px 8px; border-radius: 4px; border: 1px solid #fecaca; }
+        .badge-valley { background-color: #f0f9ff; color: #0369a1; font-weight: 600; padding: 2px 8px; border-radius: 4px; border: 1px solid #bae6fd; }
+        .badge-normal { background-color: #f1f5f9; color: #475569; font-weight: 500; padding: 2px 8px; border-radius: 4px; }
     </style>
 </head>
-<body class="text-white font-sans min-h-screen flex flex-col justify-between">
+<body class="p-4 md:p-8 max-w-7xl mx-auto space-y-6">
 
-    <div>
-        <!-- 1. BARRA DE NAVEGACIÓN SUPERIOR -->
-        <nav class="bg-[#111827] border-b border-gray-800 px-6 py-4 sticky top-0 z-50">
-            <div class="max-w-7xl mx-auto flex justify-between items-center">
-                <a href="../index.html" class="flex items-center text-sm font-semibold text-gray-400 hover:text-[#00A859] transition duration-200">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                    </svg>
-                    Volver al Dashboard Principal
-                </a>
-                <span class="text-xs bg-[#00A859]/10 text-[#00A859] px-3 py-1 rounded-full border border-[#00A859]/30 font-mono">
-                    Área: Análisis de Ocupación y Flujos
-                </span>
+    <!-- Header Banner -->
+    <header class="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white p-6 rounded-xl shadow-lg border-l-8 border-teal-500 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+            <div class="flex items-center space-x-3">
+                <span class="bg-teal-500 text-slate-900 font-extrabold text-xs px-2.5 py-1 rounded tracking-wider uppercase">Módulo IoT</span>
+                <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight">ECO-S</h1>
             </div>
-        </nav>
+            <p class="text-teal-400 font-medium text-xs md:text-sm tracking-widest uppercase mt-1">Ecosistema de Conexión y Optimización Sensorial</p>
+        </div>
+        <div class="text-left md:text-right text-xs text-slate-300 border-t md:border-t-0 border-slate-700 pt-3 md:pt-0 w-full md:w-auto">
+            <p class="font-semibold text-slate-100">Informe de Analítica de Ocupación Espacial</p>
+            <p>Monitoreo: Aulas vs. Salas de Cómputo</p>
+            <p class="text-teal-300">Actualizado: Septiembre 2026</p>
+        </div>
+    </header>
 
-        <!-- 2. CABECERA PRINCIPAL (HERO SECTION) -->
-        <header class="text-center py-10 px-6 relative z-10">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-3 tracking-tight drop-shadow-md">
-                Ocupación y Gestión de Espacios
-            </h1>
-            <p class="text-gray-400 text-base md:text-lg max-w-3xl mx-auto leading-relaxed">
-                Monitoreo en tiempo real e histórico de la densidad poblacional, distribución de afluencia e identificación de núcleos de abandono espacial en la Planta Física.
+    <!-- KPI Cards Grid -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm border-t-4 border-t-teal-500">
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Promedio Salas Cómputo</p>
+            <h2 class="text-3xl font-extrabold text-slate-900 mt-1">68.9%</h2>
+            <p class="text-xs text-teal-600 font-semibold mt-1">+14.7% respecto a Aulas</p>
+        </div>
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm border-t-4 border-t-blue-600">
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Promedio Aulas de Clase</p>
+            <h2 class="text-3xl font-extrabold text-slate-900 mt-1">54.2%</h2>
+            <p class="text-xs text-blue-600 font-semibold mt-1">Pico máx. 80% (10:00 AM)</p>
+        </div>
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm border-t-4 border-t-amber-500">
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Saturación Máxima</p>
+            <h2 class="text-3xl font-extrabold text-slate-900 mt-1">91%</h2>
+            <p class="text-xs text-amber-600 font-semibold mt-1">Salas Cómputo (C2 @ 10 AM)</p>
+        </div>
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm border-t-4 border-t-purple-600">
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Ocupación Sábados (8 AM)</p>
+            <h2 class="text-3xl font-extrabold text-slate-900 mt-1">65% / 36%</h2>
+            <p class="text-xs text-purple-600 font-semibold mt-1">Labs vs. Aulas Tradicionales</p>
+        </div>
+    </section>
+
+    <!-- Visualizations Section -->
+    <section class="space-y-6">
+        <!-- Main Line Chart -->
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <h3 class="text-lg font-bold text-slate-900 mb-1 border-l-4 border-teal-500 pl-3">Tendencia del Promedio de Ocupación Horaria</h3>
+            <p class="text-xs text-slate-500 mb-4 pl-3">Comparativa directa entre la densidad promedio de Aulas de Clase y Salas de Cómputo.</p>
+            <div class="h-72 md:h-96 relative">
+                <canvas id="trendChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Secondary Bar Chart -->
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <h3 class="text-lg font-bold text-slate-900 mb-1 border-l-4 border-blue-600 pl-3">Distribución por Ciclos Semestrales (C1, C2, C3)</h3>
+            <p class="text-xs text-slate-500 mb-4 pl-3">Comportamiento específico por franja horaria a lo largo de cada ciclo académico.</p>
+            <div class="h-72 md:h-96 relative">
+                <canvas id="cyclesChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- Data Tables Section -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- Table 1: Aulas de Clase -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="bg-slate-900 text-white p-4 flex justify-between items-center">
+                <h3 class="font-bold text-sm md:text-base">Aulas de Clase (%)</h3>
+                <span class="text-xs bg-blue-600 text-white px-2 py-0.5 rounded font-medium">9 Franjas Horarias</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-xs text-left border-collapse">
+                    <thead class="bg-slate-100 text-slate-700 uppercase font-semibold border-b border-slate-200">
+                        <tr>
+                            <th class="p-3">Franja</th>
+                            <th class="p-3 text-center">C1</th>
+                            <th class="p-3 text-center">C2</th>
+                            <th class="p-3 text-center">C3</th>
+                            <th class="p-3 text-center bg-emerald-50 text-emerald-900">Prom.</th>
+                            <th class="p-3">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        <tr class="hover:bg-slate-50"><td class="p-3 font-medium">6:00 a. m.</td><td class="text-center">29%</td><td class="text-center">26%</td><td class="text-center">33%</td><td class="text-center font-bold bg-emerald-50/50">29%</td><td><span class="badge-valley">Subutilizado</span></td></tr>
+                        <tr class="hover:bg-slate-50"><td class="p-3 font-medium">8:00 a. m.</td><td class="text-center">76%</td><td class="text-center">77%</td><td class="text-center">70%</td><td class="text-center font-bold bg-emerald-50/50">74%</td><td><span class="badge-normal">Alta Carga</span></td></tr>
+                        <tr class="hover:bg-slate-50 bg-red-50/30"><td class="p-3 font-medium text-red-900">10:00 a. m.</td><td class="text-center">85%</td><td class="text-center">84%</td><td class="text-center">70%</td><td class="text-center font-bold bg-red-100 text-red-900">80%</td><td><span class="badge-peak">Pico Crítico</span></td></tr>
+                        <tr class="hover:bg-slate-50"><td class="p-3 font-medium">12:00 m.</td><td class="text-center">61%</td><td class="text-center">64%</td><td class="text-center">66%</td><td class="text-center font-bold bg-emerald-50/50">64%</td><td><span class="badge-normal">Moderado</span></td></tr>
+                        <tr class="hover:bg-slate-50"><td class="p-3 font-medium">2:00 p. m.</td><td class="text-center">49%</td><td class="text-center">52%</td><td class="text-center">66%</td><td class="text-center font-bold bg-emerald-50/50">56%</td><td><span class="badge-normal">+17% en C3</span></td></tr>
+                        <tr class="hover:bg-slate-50 bg-sky-50/30"><td class="p-3 font-medium text-sky-900">4:00 p. m.</td><td class="text-center">31%</td><td class="text-center">29%</td><td class="text-center">41%</td><td class="text-center font-bold bg-sky-100 text-sky-900">34%</td><td><span class="badge-valley">Valle Crítico</span></td></tr>
+                        <tr class="hover:bg-slate-50"><td class="p-3 font-medium">6:00 p. m.</td><td class="text-center">53%</td><td class="text-center">58%</td><td class="text-center">55%</td><td class="text-center font-bold bg-emerald-50/50">55%</td><td><span class="badge-normal">Reactivación</span></td></tr>
+                        <tr class="hover:bg-slate-50"><td class="p-3 font-medium">8:00 p. m.</td><td class="text-center">31%</td><td class="text-center">32%</td><td class="text-center">27%</td><td class="text-center font-bold bg-emerald-50/50">30%</td><td><span class="badge-valley">Descenso</span></td></tr>
+                        <tr class="hover:bg-slate-50"><td class="p-3 font-medium">Sáb 8:00 am</td><td class="text-center">40%</td><td class="text-center">34%</td><td class="text-center">35%</td><td class="text-center font-bold bg-emerald-50/50">36%</td><td><span class="badge-normal">Fin de Semana</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Table 2: Salas de Cómputo -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="bg-slate-900 text-white p-4 flex justify-between items-center">
+                <h3 class="font-bold text-sm md:text-base">Salas de Cómputo (%)</h3>
+                <span class="text-xs bg-teal-600 text-white px-2 py-0.5 rounded font-medium">9 Franjas Horarias</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-xs text-left border-collapse">
+                    <thead class="bg-slate-100 text-slate-700 uppercase font-semibold border-b border-slate-200">
+                        <tr>
+                            <th class="p-3">Franja</th>
+                            <th class="p-3 text-center">C1</th>
+                            <th class="p-3 text-center">C2</th>
+                            <th class="p-3 text-center">C3</th>
+                            <th class="p-3 text-center bg-emerald-50 text-emerald-900">Prom.</th>
+                            <th class="p-3">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        <tr class="hover:bg-slate-50"><td class="p-3 font-medium">6:00 a. m.</td><td class="text-center">43%</td><td class="text-center">36%</td><td class="text-center">52%</td><td class="text-center font-bold bg-emerald-50/50">44%</td><td><span class="badge-normal">+15% vs Aulas</span></td></tr>
+                        <tr class="hover:bg-slate-50"><td class="p-3 font-medium">8:00 a. m.</td><td class="text-center">78%</td><td class="text-center">81%</td><td class="text-center">77%</td><td class="text-center font-bold bg-emerald-50/50">79%</td><td><span class="badge-normal">Demanda Alta</span></td></tr>
+                        <tr class="hover:bg-slate-50 bg-red-50/30"><td class="p-3 font-medium text-red-900">10:00 a. m.</td><td class="text-center">90%</td><td class="text-center">91%</td><td class="text-center">75%</td><td class="text-center font-bold bg-red-100 text-red-900">85%</td><td><span class="badge-peak">Saturación</span></td></tr>
+                        <tr class="hover:bg-slate-50"><td class="p-3 font-medium">12:00 m.</td><td class="text-center">80%</td><td class="text-center">83%</td><td class="text-center">72%</td><td class="text-center font-bold bg-emerald-50/50">78%</td><td><span class="badge-normal">Sostenido</span></td></tr>
+                        <tr class="hover:bg-slate-50 bg-amber-50/30"><td class="p-3 font-medium">2:00 p. m.</td><td class="text-center">64%</td><td class="text-center">69%</td><td class="text-center font-bold text-amber-600">90%</td><td class="text-center font-bold bg-emerald-50/50">74%</td><td><span class="badge-peak">Spike C3 (90%)</span></td></tr>
+                        <tr class="hover:bg-slate-50"><td class="p-3 font-medium">4:00 p. m.</td><td class="text-center">45%</td><td class="text-center">41%</td><td class="text-center">69%</td><td class="text-center font-bold bg-emerald-50/50">52%</td><td><span class="badge-normal">+18% vs Aulas</span></td></tr>
+                        <tr class="hover:bg-slate-50 bg-red-50/30"><td class="p-3 font-medium text-red-900">6:00 p. m.</td><td class="text-center">81%</td><td class="text-center">90%</td><td class="text-center">83%</td><td class="text-center font-bold bg-red-100 text-red-900">85%</td><td><span class="badge-peak">Pico Nocturno</span></td></tr>
+                        <tr class="hover:bg-slate-50"><td class="p-3 font-medium">8:00 p. m.</td><td class="text-center">70%</td><td class="text-center">60%</td><td class="text-center">48%</td><td class="text-center font-bold bg-emerald-50/50">59%</td><td><span class="badge-normal">Uso Nocturno</span></td></tr>
+                        <tr class="hover:bg-slate-50"><td class="p-3 font-medium">Sáb 8:00 am</td><td class="text-center">64%</td><td class="text-center">75%</td><td class="text-center">57%</td><td class="text-center font-bold bg-emerald-50/50">65%</td><td><span class="badge-peak">Preferencia Sáb.</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- ECO-S Insight & ODS Integration -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Socratic Questioning Card -->
+        <div class="bg-amber-50/80 border-l-4 border-amber-500 p-5 rounded-xl text-slate-800 text-xs md:text-sm shadow-sm space-y-2">
+            <div class="flex items-center space-x-2">
+                <span class="text-lg">❓</span>
+                <h4 class="font-bold text-amber-900">Reflexión Socrática Empática (ECO-S)</h4>
+            </div>
+            <p class="italic text-slate-700 leading-relaxed">
+                "¿Por qué la franja de las 4:00 p. m. presenta una caída abrupta al 34% en aulas mientras que las salas de cómputo mantienen un 52%? ¿Estamos presenciando una migración del estudiante desde la instrucción magistral pasiva hacia espacios de trabajo interactivo y conectividad para resolver entregables antes de las clases nocturnas?"
             </p>
-        </header>
+        </div>
 
-        <!-- 3. CONTENEDOR PRINCIPAL -->
-        <main class="w-full max-w-7xl mx-auto px-6 mb-12 space-y-8">
+        <!-- ODS Alignment Card -->
+        <div class="bg-emerald-50/80 border-l-4 border-emerald-600 p-5 rounded-xl text-slate-800 text-xs md:text-sm shadow-sm space-y-2">
+            <div class="flex items-center space-x-2">
+                <span class="bg-emerald-700 text-white font-extrabold text-[10px] px-2 py-0.5 rounded">ODS 12 & 4</span>
+                <h4 class="font-bold text-emerald-950">Acción de Optimización Insumo-Espacio</h4>
+            </div>
+            <p class="text-slate-700 leading-relaxed">
+                Reagrupar las cuadrillas de limpieza y climatización hacia las salas de cómputo previo al pico de las 6:00 p. m. (85%), desacoplando servicios energéticos en los bloques de aulas tradicionales durante el valle de las 4:00 p. m. (34%).
+            </p>
+        </div>
+    </section>
 
-            <!-- SECCIÓN: TARJETAS KPI DE RESUMEN SUPERIOR -->
-            <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- KPI 1: Tasa de Ocupación Promedio -->
-                <div class="bg-[#111827] border border-gray-800 rounded-xl p-5 shadow-xl relative overflow-hidden flex flex-col justify-between">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Ocupación Promedio Campus</span>
-                        <span class="p-2 bg-emerald-500/10 text-emerald-400 rounded-lg text-lg">👥</span>
-                    </div>
-                    <div>
-                        <div class="text-2xl md:text-3xl font-extrabold text-white tracking-tight flex items-center gap-2">
-                            73,4%
-                            <span class="text-xs font-normal text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">▲ +4,2% vs 2025</span>
-                        </div>
-                        <p class="text-[11px] text-gray-400 mt-1">Medición basada en conexiones AP y sensores Wi-Fi</p>
-                    </div>
-                </div>
-
-                <!-- KPI 2: Pico Máximo de Afluencia -->
-                <div class="bg-[#111827] border border-gray-800 rounded-xl p-5 shadow-xl relative overflow-hidden flex flex-col justify-between">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Hora Pico de Mayor Uso</span>
-                        <span class="p-2 bg-purple-500/10 text-purple-400 rounded-lg text-lg">⏱️</span>
-                    </div>
-                    <div>
-                        <div class="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
-                            11:00 AM - 1:00 PM
-                        </div>
-                        <p class="text-[11px] text-gray-400 mt-1">89,2% de densidad relativa en zonas comunes y cafeterías</p>
-                    </div>
-                </div>
-
-                <!-- KPI 3: Zonas de Abandono Espacial -->
-                <div class="bg-[#111827] border border-gray-800 rounded-xl p-5 shadow-xl relative overflow-hidden flex flex-col justify-between">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Espacios Subutilizados</span>
-                        <span class="p-2 bg-amber-500/10 text-amber-400 rounded-lg text-lg">🔕</span>
-                    </div>
-                    <div>
-                        <div class="text-2xl md:text-3xl font-extrabold text-amber-400 tracking-tight flex items-center gap-2">
-                            8 Zonas
-                            <span class="text-xs font-normal text-amber-400/80 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">&lt; 25% Uso</span>
-                        </div>
-                        <p class="text-[11px] text-gray-400 mt-1">Oportunidad de rediseño y recuperación (Terceros Espacios)</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- SECCIÓN: TABLA DETALLADA DE OCUPACIÓN POR EDIFICIO -->
-            <section class="w-full bg-[#111827] rounded-xl border border-gray-800 shadow-xl overflow-hidden p-6 flex flex-col justify-between">
-                <div>
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                            <span class="text-emerald-400">📍</span> Distribución de Ocupación por Edificio y Franja Horaria
-                        </h3>
-                    </div>
-
-                    <!-- CONTENEDOR CON SCROLL HORIZONTAL -->
-                    <div class="w-full min-w-0 overflow-x-auto mb-4">
-                        <table class="w-full text-left text-xs text-gray-300 min-w-[900px]">
-                            <thead class="bg-[#0B0F19] text-[#00A859] uppercase text-[10px] tracking-wider">
-                                <tr>
-                                    <th class="p-2.5 rounded-l sticky left-0 bg-[#0B0F19] z-10">Bloque / Edificio</th>
-                                    <th class="p-2.5 text-center">Capacidad Máx.</th>
-                                    <th class="p-2.5 text-right">Mañana (7-12)</th>
-                                    <th class="p-2.5 text-right">Tarde (12-18)</th>
-                                    <th class="p-2.5 text-right">Noche (18-22)</th>
-                                    <th class="p-2.5 text-right">Promedio Diario</th>
-                                    <th class="p-2.5 text-center rounded-r">Estado de Eficiencia</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-800/50">
-                                <tr class="hover:bg-gray-800/20 transition-colors">
-                                    <td class="p-2.5 font-medium text-white sticky left-0 bg-[#111827]">Edificio A (Aulas Generales)</td>
-                                    <td class="p-2.5 text-center">1.200 p.</td>
-                                    <td class="p-2.5 text-right">88,5%</td>
-                                    <td class="p-2.5 text-right">81,2%</td>
-                                    <td class="p-2.5 text-right">62,0%</td>
-                                    <td class="p-2.5 text-right font-semibold text-emerald-400">77,2%</td>
-                                    <td class="p-2.5 text-center"><span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Óptimo</span></td>
-                                </tr>
-                                <tr class="hover:bg-gray-800/20 transition-colors">
-                                    <td class="p-2.5 font-medium text-white sticky left-0 bg-[#111827]">Edificio B (Laboratorios & TI)</td>
-                                    <td class="p-2.5 text-center">650 p.</td>
-                                    <td class="p-2.5 text-right">92,1%</td>
-                                    <td class="p-2.5 text-right">89,4%</td>
-                                    <td class="p-2.5 text-right">45,3%</td>
-                                    <td class="p-2.5 text-right font-semibold text-emerald-400">75,6%</td>
-                                    <td class="p-2.5 text-center"><span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Óptimo</span></td>
-                                </tr>
-                                <tr class="hover:bg-gray-800/20 transition-colors">
-                                    <td class="p-2.5 font-medium text-white sticky left-0 bg-[#111827]">Biblioteca Central</td>
-                                    <td class="p-2.5 text-center">850 p.</td>
-                                    <td class="p-2.5 text-right">65,4%</td>
-                                    <td class="p-2.5 text-right">94,8%</td>
-                                    <td class="p-2.5 text-right">78,2%</td>
-                                    <td class="p-2.5 text-right font-semibold text-emerald-400">79,5%</td>
-                                    <td class="p-2.5 text-center"><span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Alta Demanda</span></td>
-                                </tr>
-                                <tr class="hover:bg-gray-800/20 transition-colors">
-                                    <td class="p-2.5 font-medium text-white sticky left-0 bg-[#111827]">Plazuela Central (Tercer Espacio)</td>
-                                    <td class="p-2.5 text-center">500 p.</td>
-                                    <td class="p-2.5 text-right">42,0%</td>
-                                    <td class="p-2.5 text-right">86,5%</td>
-                                    <td class="p-2.5 text-right">31,0%</td>
-                                    <td class="p-2.5 text-right font-semibold text-amber-400">53,2%</td>
-                                    <td class="p-2.5 text-center"><span class="px-2 py-0.5 rounded text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/20">Fluctuante</span></td>
-                                </tr>
-                                <tr class="hover:bg-gray-800/20 transition-colors">
-                                    <td class="p-2.5 font-medium text-white sticky left-0 bg-[#111827]">Edificio C (Talleres Postgrado)</td>
-                                    <td class="p-2.5 text-center">400 p.</td>
-                                    <td class="p-2.5 text-right">28,3%</td>
-                                    <td class="p-2.5 text-right">34,1%</td>
-                                    <td class="p-2.5 text-right">18,5%</td>
-                                    <td class="p-2.5 text-right font-semibold text-rose-400">26,9%</td>
-                                    <td class="p-2.5 text-center"><span class="px-2 py-0.5 rounded text-[10px] bg-rose-500/10 text-rose-400 border border-rose-500/20">Subutilizado</span></td>
-                                </tr>
-                                <tr class="hover:bg-gray-800/20 transition-colors bg-[#0B0F19]/60 font-bold">
-                                    <td class="p-2.5 text-white sticky left-0 bg-[#0B0F19]">PROMEDIO GENERAL</td>
-                                    <td class="p-2.5 text-center text-white">3.600 p.</td>
-                                    <td class="p-2.5 text-right text-emerald-400">63,2%</td>
-                                    <td class="p-2.5 text-right text-emerald-400">77,2%</td>
-                                    <td class="p-2.5 text-right text-emerald-400">47,0%</td>
-                                    <td class="p-2.5 text-right text-emerald-400">73,4%</td>
-                                    <td class="p-2.5 text-center text-gray-400">-</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="border-t border-gray-800/80 pt-4 mt-2">
-                    <p class="text-xs text-gray-400 leading-relaxed">
-                        <strong class="text-white">Tabla 1: Matriz de uso espacial por bloques.</strong> 
-                        Los datos revelan alta concentración en la Biblioteca y Edificios A y B durante las mañanas y tardes, contrastando con el Edificio C, identificado como candidato para intervenciones de dinamización espacial y optimización energética (ODS 11 & 12).
-                    </p>
-                </div>
-            </section>
-
-            <!-- SECCIÓN: GRID DE GRÁFICOS (2 COLUMNAS) -->
-            <section class="w-full grid grid-cols-1 xl:grid-cols-2 gap-6">
-
-                <!-- TARJETA 1: Gráfico de Ocupación por Edificio -->
-                <div class="w-full min-w-0 bg-[#111827] rounded-xl border border-gray-800 shadow-xl overflow-hidden p-6 flex flex-col justify-between">
-                    <div>
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                                <span class="text-purple-400">📊</span> Ocupación Promedio por Edificio (% Capacidad)
-                            </h3>
-                        </div>
-                        
-                        <div class="relative h-72 w-full mb-4">
-                            <canvas id="ocupacionEdificiosChart"></canvas>
-                        </div>
-                    </div>
-
-                    <div class="border-t border-gray-800/80 pt-4 mt-2">
-                        <p class="text-xs text-gray-400 leading-relaxed">
-                            <strong class="text-white">Gráfico 1: Porcentaje de uso por bloque.</strong> 
-                            Compara la capacidad instalada frente al uso efectivo. Muestra claramente la brecha de aprovechamiento entre las áreas académicas de pregrado y postgrado.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- TARJETA 2: Gráfico de Afluencia Horaria (Curva del Día) -->
-                <div class="w-full min-w-0 bg-[#111827] rounded-xl border border-gray-800 shadow-xl overflow-hidden p-6 flex flex-col justify-between">
-                    <div>
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                                <span class="text-[#00A859]">📈</span> Curva de Afluencia Poblacional Diaria (Lunes a Viernes)
-                            </h3>
-                        </div>
-                        
-                        <div class="relative h-72 w-full mb-4">
-                            <canvas id="afluenciaHorariaChart"></canvas>
-                        </div>
-                    </div>
-
-                    <div class="border-t border-gray-800/80 pt-4 mt-2">
-                        <p class="text-xs text-gray-400 leading-relaxed">
-                            <strong class="text-white">Gráfico 2: Comportamiento del flujo temporal.</strong> 
-                            Representa la variación del número estimado de estudiantes en campus a lo largo de la jornada, destacando el pico máximo entre las 11:00 AM y la 1:00 PM.
-                        </p>
-                    </div>
-                </div>
-
-            </section>
-        </main>
-    </div>
-
-    <!-- 4. PIE DE PÁGINA (FOOTER) -->
-    <footer class="bg-[#0B0F19] text-center py-6 text-xs text-gray-500 border-t border-gray-800">
-        <p>Sistema de Gestión Interna de Planta Física | ECO-S</p>
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 text-center text-xs py-4 rounded-xl border border-slate-800">
+        ECO-S &bull; Ecosistema de Conexión y Optimización Sensorial &bull; Plataforma de Infraestructura Humana y Sostenibilidad Universitaria
     </footer>
 
-    <!-- 5. SCRIPT DE CHART.JS -->
+    <!-- Chart.js Scripts -->
     <script>
-        // CONFIGURACIÓN Y FORMATO DE GRÁFICOS ECO-S
-        const formatPct = (val) => val !== null ? val + '%' : '-';
+        const labels = ['6:00 a. m.', '8:00 a. m.', '10:00 a. m.', '12:00 m.', '2:00 p. m.', '4:00 p. m.', '6:00 p. m.', '8:00 p. m.', 'Sáb 8:00 am'];
+        
+        // Data sets
+        const promedioAulas = [29, 74, 80, 64, 56, 34, 55, 30, 36];
+        const promedioLabs = [44, 79, 85, 78, 74, 52, 85, 59, 65];
 
-        // 1. GRÁFICO DE OCUPACIÓN POR EDIFICIO (BARRAS)
-        const ctxEdificios = document.getElementById('ocupacionEdificiosChart').getContext('2d');
-        new Chart(ctxEdificios, {
-            type: 'bar',
+        // 1. Trend Line Chart
+        const ctx1 = document.getElementById('trendChart').getContext('2d');
+        new Chart(ctx1, {
+            type: 'line',
             data: {
-                labels: ['Edificio A', 'Edificio B', 'Biblioteca', 'Plazuela', 'Edificio C'],
+                labels: labels,
                 datasets: [
                     {
-                        label: 'Ocupación Promedio (%)',
-                        data: [77.2, 75.6, 79.5, 53.2, 26.9],
-                        backgroundColor: [
-                            'rgba(0, 168, 89, 0.85)',
-                            'rgba(0, 168, 89, 0.85)',
-                            'rgba(139, 92, 246, 0.85)',
-                            'rgba(245, 158, 11, 0.85)',
-                            'rgba(244, 63, 94, 0.85)'
-                        ],
-                        borderRadius: 6
+                        label: 'Salas de Cómputo (Promedio)',
+                        data: promedioLabs,
+                        borderColor: '#0d9488',
+                        backgroundColor: 'rgba(13, 148, 136, 0.1)',
+                        fill: true,
+                        tension: 0.3,
+                        borderWidth: 3,
+                        pointRadius: 5,
+                        pointBackgroundColor: '#0d9488'
+                    },
+                    {
+                        label: 'Aulas de Clase (Promedio)',
+                        data: promedioAulas,
+                        borderColor: '#2563eb',
+                        backgroundColor: 'rgba(37, 99, 235, 0.08)',
+                        fill: true,
+                        tension: 0.3,
+                        borderWidth: 3,
+                        pointRadius: 5,
+                        pointBackgroundColor: '#2563eb'
                     }
                 ]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return ' Ocupación: ' + context.parsed.y + '%';
-                            }
-                        }
-                    }
-                },
                 scales: {
-                    x: {
-                        grid: { display: false },
-                        ticks: { color: '#9ca3af' }
-                    },
-                    y: {
-                        max: 100,
-                        grid: { color: '#1f2937' },
-                        ticks: {
-                            color: '#9ca3af',
-                            callback: function(value) { return value + '%'; }
-                        }
-                    }
+                    y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } }
+                },
+                plugins: {
+                    legend: { position: 'top' },
+                    tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.raw}%` } }
                 }
             }
         });
 
-        // 2. GRÁFICO DE AFLUENCIA HORARIA (LÍNEA / ÁREA RELLENA)
-        const ctxAfluencia = document.getElementById('afluenciaHorariaChart').getContext('2d');
-        new Chart(ctxAfluencia, {
-            type: 'line',
+        // 2. Cycles Bar Chart
+        const ctx2 = document.getElementById('cyclesChart').getContext('2d');
+        new Chart(ctx2, {
+            type: 'bar',
             data: {
-                labels: ['07:00', '09:00', '11:00', '13:00', '15:00', '17:00', '19:00', '21:00'],
+                labels: labels,
                 datasets: [
-                    {
-                        label: 'Estudiantes en Campus (Aforo est.)',
-                        data: [420, 1850, 3210, 2980, 2100, 1650, 1100, 350],
-                        borderColor: 'rgba(0, 168, 89, 1)',
-                        backgroundColor: 'rgba(0, 168, 89, 0.15)',
-                        fill: true,
-                        tension: 0.4,
-                        pointBackgroundColor: 'rgba(0, 168, 89, 1)',
-                        pointRadius: 4
-                    }
+                    { label: 'Aulas - Promedio', data: promedioAulas, backgroundColor: '#93c5fd' },
+                    { label: 'Labs - Promedio', data: promedioLabs, backgroundColor: '#14b8a6' }
                 ]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        labels: { color: '#9ca3af', boxWidth: 12 }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return ' Aforo: ' + context.parsed.y + ' personas';
-                            }
-                        }
-                    }
-                },
                 scales: {
-                    x: {
-                        grid: { color: '#1f2937' },
-                        ticks: { color: '#9ca3af' }
-                    },
-                    y: {
-                        grid: { color: '#1f2937' },
-                        ticks: {
-                            color: '#9ca3af',
-                            callback: function(value) { return value + ' p.'; }
-                        }
-                    }
+                    y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } }
+                },
+                plugins: {
+                    legend: { position: 'top' }
                 }
             }
         });
