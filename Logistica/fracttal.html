@@ -50,52 +50,52 @@
             </h1>
             
             <p class="text-slate-400 text-sm md:text-base max-w-2xl mx-auto">
-                Monitoreo analítico de casos asignados y atendidos durante el periodo <span class="text-emerald-400 font-semibold">Enero – Agosto 14</span>.
+                Monitoreo analítico de tareas y órdenes de trabajo atendidas por el equipo de técnicos durante el periodo <span class="text-emerald-400 font-semibold">Enero – Septiembre</span>.
             </p>
         </header>
 
         <!-- 3. MÉTRICAS RÁPIDAS (KPIs) -->
         <section class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div class="bg-slate-800/60 backdrop-blur-md border border-slate-700/50 p-5 rounded-xl border-l-4 border-l-emerald-500">
-                <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Tasa de Efectividad OT</p>
-                <h3 class="text-3xl font-extrabold text-emerald-400 mt-2">98.8%</h3>
-                <p class="text-xs text-slate-400 mt-1">2,162 Órdenes Finalizadas</p>
+                <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Tasa de Cierre OT</p>
+                <h3 class="text-3xl font-extrabold text-emerald-400 mt-2">98.5%</h3>
+                <p class="text-xs text-slate-400 mt-1">1,171 Órdenes Finalizadas</p>
             </div>
 
             <div class="bg-slate-800/60 backdrop-blur-md border border-slate-700/50 p-5 rounded-xl border-l-4 border-l-blue-500">
                 <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Total Tareas Realizadas</p>
-                <h3 class="text-3xl font-extrabold text-blue-400 mt-2">2,584</h3>
-                <p class="text-xs text-slate-400 mt-1">Soportes ejecutados por el equipo</p>
+                <h3 class="text-3xl font-extrabold text-blue-400 mt-2">1,270</h3>
+                <p class="text-xs text-slate-400 mt-1">Soportes acumulados en 9 meses</p>
             </div>
 
             <div class="bg-slate-800/60 backdrop-blur-md border border-slate-700/50 p-5 rounded-xl border-l-4 border-l-purple-500">
                 <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Total Órdenes Trabajo</p>
-                <h3 class="text-3xl font-extrabold text-purple-400 mt-2">2,189</h3>
+                <h3 class="text-3xl font-extrabold text-purple-400 mt-2">1,189</h3>
                 <p class="text-xs text-slate-400 mt-1">Casos registrados en Fracttal</p>
             </div>
 
             <div class="bg-slate-800/60 backdrop-blur-md border border-slate-700/50 p-5 rounded-xl border-l-4 border-l-amber-500">
-                <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">OTs Pendientes / Activas</p>
-                <h3 class="text-3xl font-extrabold text-amber-400 mt-2">18</h3>
-                <p class="text-xs text-slate-400 mt-1">17 En Revisión &bull; 1 En Proceso</p>
+                <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Mes de Mayor Demanda</p>
+                <h3 class="text-3xl font-extrabold text-amber-400 mt-2">Junio</h3>
+                <p class="text-xs text-slate-400 mt-1">Pico máximo con 346 tareas</p>
             </div>
         </section>
 
         <!-- 4. GRÁFICOS ANALÍTICOS -->
         <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Gráfico de Barras: Rendimiento Técnico -->
+            <!-- Gráfico Comparativo Mensual por Técnico -->
             <div class="lg:col-span-2 bg-slate-800/50 border border-slate-700/60 p-6 rounded-2xl shadow-xl flex flex-col justify-between">
-                <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
                     <div>
-                        <h2 class="text-lg font-semibold text-slate-100">Distribución de Tareas por Técnico</h2>
-                        <p class="text-xs text-slate-400">Volumen de soportes atendidos por el equipo audiovisual</p>
+                        <h2 class="text-lg font-semibold text-slate-100">Comparativo Mensual por Técnico</h2>
+                        <p class="text-xs text-slate-400">Evolución del número de tareas ejecutadas de Enero a Septiembre</p>
                     </div>
                     <span class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-md font-mono">
-                        2,584 Tareas
+                        1,270 Tareas Totales
                     </span>
                 </div>
-                <div class="relative h-[320px] w-full">
-                    <canvas id="techChart"></canvas>
+                <div class="relative h-[340px] w-full">
+                    <canvas id="monthlyTechChart"></canvas>
                 </div>
             </div>
 
@@ -103,71 +103,123 @@
             <div class="bg-slate-800/50 border border-slate-700/60 p-6 rounded-2xl shadow-xl flex flex-col justify-between">
                 <div class="mb-4">
                     <h2 class="text-lg font-semibold text-slate-100">Estado de Órdenes (OT)</h2>
-                    <p class="text-xs text-slate-400">Clasificación porcentual de tickets en Fracttal</p>
+                    <p class="text-xs text-slate-400">Distribución porcentual del total de tickets (1,189 OTs)</p>
                 </div>
-                <div class="relative h-[260px] w-full flex items-center justify-center">
+                <div class="relative h-[250px] w-full flex items-center justify-center">
                     <canvas id="otChart"></canvas>
                 </div>
                 <div class="mt-4 grid grid-cols-2 gap-2 text-xs text-slate-300 pt-3 border-t border-slate-700/50">
-                    <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Finalizadas (98.8%)</div>
-                    <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> En Revisión (0.8%)</div>
-                    <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> Canceladas (0.4%)</div>
-                    <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span> En Proceso (0.0%)</div>
+                    <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Finalizadas (98.5%)</div>
+                    <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> En Revisión (1.4%)</div>
+                    <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span> En Proceso (0.1%)</div>
+                    <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-slate-600"></span> Cancelado (0.0%)</div>
                 </div>
             </div>
         </section>
 
         <!-- 5. TABLAS DE DATOS DETALLADAS -->
-        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
-            <!-- Tabla 1: Desempeño por Técnico -->
-            <div class="bg-slate-800/50 rounded-2xl border border-slate-700/60 overflow-hidden shadow-xl">
+            <!-- Tabla 1: Matriz Mensual de Tareas por Técnico (Ocupa 2 Columnas) -->
+            <div class="lg:col-span-2 bg-slate-800/50 rounded-2xl border border-slate-700/60 overflow-hidden shadow-xl">
                 <div class="bg-slate-900/80 px-6 py-4 border-b border-slate-700/60 flex justify-between items-center">
-                    <h3 class="font-bold text-sm text-slate-100">Desempeño del Personal Técnico</h3>
-                    <span class="text-xs bg-slate-800 text-slate-400 px-2.5 py-1 rounded border border-slate-700">4 Integrantes</span>
+                    <h3 class="font-bold text-sm text-slate-100">Detalle Mensual de Tareas por Técnico</h3>
+                    <span class="text-xs bg-slate-800 text-slate-400 px-2.5 py-1 rounded border border-slate-700">Ene - Sep</span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-xs text-left">
                         <thead class="bg-slate-900/40 text-slate-400 uppercase tracking-wider border-b border-slate-800">
                             <tr>
-                                <th class="p-3.5">Técnico</th>
-                                <th class="p-3.5 text-center">Tareas</th>
-                                <th class="p-3.5 text-center">Porcentaje</th>
-                                <th class="p-3.5 text-right">Estado / Carga</th>
+                                <th class="p-3">Mes</th>
+                                <th class="p-3 text-center">Brayan R.</th>
+                                <th class="p-3 text-center">Helber D.</th>
+                                <th class="p-3 text-center">Jair R.</th>
+                                <th class="p-3 text-center">Luis Lotta</th>
+                                <th class="p-3 text-right font-bold text-slate-200">Total Mes</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-800 text-slate-300">
                             <tr class="hover:bg-slate-800/30 transition">
-                                <td class="p-3.5 font-semibold text-slate-100">Helber Daza Pinzón</td>
-                                <td class="p-3.5 text-center font-mono font-bold text-emerald-400">734</td>
-                                <td class="p-3.5 text-center font-mono">28.4%</td>
-                                <td class="p-3.5 text-right"><span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded text-[11px]">Alta Demanda</span></td>
+                                <td class="p-3 font-semibold text-slate-300">Enero</td>
+                                <td class="p-3 text-center font-mono text-slate-500">-</td>
+                                <td class="p-3 text-center font-mono font-semibold text-emerald-400">5</td>
+                                <td class="p-3 text-center font-mono text-slate-500">-</td>
+                                <td class="p-3 text-center font-mono text-slate-500">-</td>
+                                <td class="p-3 text-right font-mono font-bold text-slate-200">5</td>
                             </tr>
                             <tr class="hover:bg-slate-800/30 transition">
-                                <td class="p-3.5 font-semibold text-slate-100">Luis Ángel Lotta Pareja</td>
-                                <td class="p-3.5 text-center font-mono font-bold text-emerald-400">723</td>
-                                <td class="p-3.5 text-center font-mono">28.0%</td>
-                                <td class="p-3.5 text-right"><span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded text-[11px]">Constante</span></td>
+                                <td class="p-3 font-semibold text-slate-300">Febrero</td>
+                                <td class="p-3 text-center font-mono text-blue-400">3</td>
+                                <td class="p-3 text-center font-mono text-emerald-400">54</td>
+                                <td class="p-3 text-center font-mono text-slate-500">-</td>
+                                <td class="p-3 text-center font-mono text-purple-400">33</td>
+                                <td class="p-3 text-right font-mono font-bold text-slate-200">90</td>
                             </tr>
                             <tr class="hover:bg-slate-800/30 transition">
-                                <td class="p-3.5 font-semibold text-slate-100">Brayan Alexander Rodríguez C.</td>
-                                <td class="p-3.5 text-center font-mono font-bold text-emerald-400">712</td>
-                                <td class="p-3.5 text-center font-mono">27.6%</td>
-                                <td class="p-3.5 text-right"><span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded text-[11px]">Constante</span></td>
+                                <td class="p-3 font-semibold text-slate-300">Marzo</td>
+                                <td class="p-3 text-center font-mono text-blue-400">1</td>
+                                <td class="p-3 text-center font-mono text-emerald-400">28</td>
+                                <td class="p-3 text-center font-mono text-slate-500">-</td>
+                                <td class="p-3 text-center font-mono text-purple-400">41</td>
+                                <td class="p-3 text-right font-mono font-bold text-slate-200">70</td>
                             </tr>
                             <tr class="hover:bg-slate-800/30 transition">
-                                <td class="p-3.5 font-semibold text-slate-100">Jair Roa Calvo</td>
-                                <td class="p-3.5 text-center font-mono font-bold text-blue-400">415</td>
-                                <td class="p-3.5 text-center font-mono">16.1%</td>
-                                <td class="p-3.5 text-right"><span class="bg-blue-500/10 text-blue-400 border border-blue-500/30 px-2 py-0.5 rounded text-[11px]">Soporte General</span></td>
+                                <td class="p-3 font-semibold text-slate-300">Abril</td>
+                                <td class="p-3 text-center font-mono text-blue-400">43</td>
+                                <td class="p-3 text-center font-mono text-emerald-400">44</td>
+                                <td class="p-3 text-center font-mono text-slate-500">-</td>
+                                <td class="p-3 text-center font-mono text-purple-400">56</td>
+                                <td class="p-3 text-right font-mono font-bold text-slate-200">143</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="p-3 font-semibold text-slate-300">Mayo</td>
+                                <td class="p-3 text-center font-mono text-blue-400">40</td>
+                                <td class="p-3 text-center font-mono text-emerald-400">53</td>
+                                <td class="p-3 text-center font-mono text-slate-500">-</td>
+                                <td class="p-3 text-center font-mono text-purple-400">32</td>
+                                <td class="p-3 text-right font-mono font-bold text-slate-200">125</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/30 transition bg-amber-500/5">
+                                <td class="p-3 font-semibold text-amber-300">Junio (Pico)</td>
+                                <td class="p-3 text-center font-mono text-blue-400">88</td>
+                                <td class="p-3 text-center font-mono text-emerald-400">112</td>
+                                <td class="p-3 text-center font-mono text-slate-500">-</td>
+                                <td class="p-3 text-center font-mono text-purple-400 font-bold">146</td>
+                                <td class="p-3 text-right font-mono font-bold text-amber-400">346</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="p-3 font-semibold text-slate-300">Julio</td>
+                                <td class="p-3 text-center font-mono text-blue-400">16</td>
+                                <td class="p-3 text-center font-mono text-emerald-400">36</td>
+                                <td class="p-3 text-center font-mono text-slate-500">-</td>
+                                <td class="p-3 text-center font-mono text-purple-400">54</td>
+                                <td class="p-3 text-right font-mono font-bold text-slate-200">106</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="p-3 font-semibold text-slate-300">Agosto</td>
+                                <td class="p-3 text-center font-mono text-blue-400">22</td>
+                                <td class="p-3 text-center font-mono text-emerald-400">44</td>
+                                <td class="p-3 text-center font-mono text-slate-500">-</td>
+                                <td class="p-3 text-center font-mono text-purple-400">53</td>
+                                <td class="p-3 text-right font-mono font-bold text-slate-200">119</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="p-3 font-semibold text-slate-300">Septiembre</td>
+                                <td class="p-3 text-center font-mono text-blue-400 font-bold">117</td>
+                                <td class="p-3 text-center font-mono text-emerald-400">78</td>
+                                <td class="p-3 text-center font-mono text-amber-400">5</td>
+                                <td class="p-3 text-center font-mono text-purple-400">66</td>
+                                <td class="p-3 text-right font-mono font-bold text-slate-200">266</td>
                             </tr>
                         </tbody>
                         <tfoot class="bg-slate-900/80 font-bold border-t border-slate-700">
                             <tr>
-                                <td class="p-3.5 text-slate-200">TOTAL</td>
-                                <td class="p-3.5 text-center text-emerald-400 font-mono">2,584</td>
-                                <td class="p-3.5 text-center text-slate-200 font-mono">100%</td>
-                                <td class="p-3.5 text-right text-slate-400">100% Cumplido</td>
+                                <td class="p-3 text-slate-200">TOTALES</td>
+                                <td class="p-3 text-center text-blue-400 font-mono">330 (26.0%)</td>
+                                <td class="p-3 text-center text-emerald-400 font-mono">454 (35.7%)</td>
+                                <td class="p-3 text-center text-amber-400 font-mono">5 (0.4%)</td>
+                                <td class="p-3 text-center text-purple-400 font-mono">481 (37.9%)</td>
+                                <td class="p-3 text-right text-emerald-400 font-mono">1,270</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -175,56 +227,64 @@
             </div>
 
             <!-- Tabla 2: Clasificación de OT por Tipo -->
-            <div class="bg-slate-800/50 rounded-2xl border border-slate-700/60 overflow-hidden shadow-xl">
-                <div class="bg-slate-900/80 px-6 py-4 border-b border-slate-700/60 flex justify-between items-center">
-                    <h3 class="font-bold text-sm text-slate-100">Órdenes de Trabajo (OT) por Tipo</h3>
-                    <span class="text-xs bg-slate-800 text-slate-400 px-2.5 py-1 rounded border border-slate-700">2,189 Registros</span>
+            <div class="bg-slate-800/50 rounded-2xl border border-slate-700/60 overflow-hidden shadow-xl flex flex-col justify-between">
+                <div>
+                    <div class="bg-slate-900/80 px-6 py-4 border-b border-slate-700/60 flex justify-between items-center">
+                        <h3 class="font-bold text-sm text-slate-100">Órdenes de Trabajo por Tipo</h3>
+                        <span class="text-xs bg-slate-800 text-slate-400 px-2.5 py-1 rounded border border-slate-700">1,189 OTs</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-xs text-left">
+                            <thead class="bg-slate-900/40 text-slate-400 uppercase tracking-wider border-b border-slate-800">
+                                <tr>
+                                    <th class="p-3.5">Estado OT</th>
+                                    <th class="p-3.5 text-center">Tareas</th>
+                                    <th class="p-3.5 text-center">Porcentaje</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800 text-slate-300">
+                                <tr class="hover:bg-slate-800/30 transition">
+                                    <td class="p-3.5 font-semibold text-slate-100 flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Finalizadas
+                                    </td>
+                                    <td class="p-3.5 text-center font-mono font-bold text-emerald-400">1,171</td>
+                                    <td class="p-3.5 text-center font-mono">98,5%</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/30 transition">
+                                    <td class="p-3.5 font-semibold text-slate-100 flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-amber-500"></span> En Revisión
+                                    </td>
+                                    <td class="p-3.5 text-center font-mono font-bold text-amber-400">17</td>
+                                    <td class="p-3.5 text-center font-mono">1,4%</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/30 transition">
+                                    <td class="p-3.5 font-semibold text-slate-100 flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-blue-500"></span> En Proceso
+                                    </td>
+                                    <td class="p-3.5 text-center font-mono font-bold text-blue-400">1</td>
+                                    <td class="p-3.5 text-center font-mono">0,1%</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/30 transition">
+                                    <td class="p-3.5 font-semibold text-slate-100 flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-slate-600"></span> Cancelado
+                                    </td>
+                                    <td class="p-3.5 text-center font-mono font-bold text-slate-400">0</td>
+                                    <td class="p-3.5 text-center font-mono">0,0%</td>
+                                </tr>
+                            </tbody>
+                            <tfoot class="bg-slate-900/80 font-bold border-t border-slate-700">
+                                <tr>
+                                    <td class="p-3.5 text-slate-200">TOTAL</td>
+                                    <td class="p-3.5 text-center text-emerald-400 font-mono">1,189</td>
+                                    <td class="p-3.5 text-center text-slate-200 font-mono">100%</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-xs text-left">
-                        <thead class="bg-slate-900/40 text-slate-400 uppercase tracking-wider border-b border-slate-800">
-                            <tr>
-                                <th class="p-3.5">Estado OT</th>
-                                <th class="p-3.5 text-center">Cantidad</th>
-                                <th class="p-3.5 text-center">Porcentaje</th>
-                                <th class="p-3.5 text-right">Indicador</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-800 text-slate-300">
-                            <tr class="hover:bg-slate-800/30 transition">
-                                <td class="p-3.5 font-semibold text-slate-100">Finalizadas</td>
-                                <td class="p-3.5 text-center font-mono font-bold text-emerald-400">2,162</td>
-                                <td class="p-3.5 text-center font-mono">98.8%</td>
-                                <td class="p-3.5 text-right"><span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded text-[11px]">Óptimo</span></td>
-                            </tr>
-                            <tr class="hover:bg-slate-800/30 transition">
-                                <td class="p-3.5 font-semibold text-slate-100">En Revisión</td>
-                                <td class="p-3.5 text-center font-mono font-bold text-amber-400">17</td>
-                                <td class="p-3.5 text-center font-mono">0.8%</td>
-                                <td class="p-3.5 text-right"><span class="bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded text-[11px]">Pendiente</span></td>
-                            </tr>
-                            <tr class="hover:bg-slate-800/30 transition">
-                                <td class="p-3.5 font-semibold text-slate-100">Cancelado</td>
-                                <td class="p-3.5 text-center font-mono font-bold text-rose-400">9</td>
-                                <td class="p-3.5 text-center font-mono">0.4%</td>
-                                <td class="p-3.5 text-right"><span class="bg-rose-500/10 text-rose-400 border border-rose-500/30 px-2 py-0.5 rounded text-[11px]">Desestimado</span></td>
-                            </tr>
-                            <tr class="hover:bg-slate-800/30 transition">
-                                <td class="p-3.5 font-semibold text-slate-100">En Proceso</td>
-                                <td class="p-3.5 text-center font-mono font-bold text-blue-400">1</td>
-                                <td class="p-3.5 text-center font-mono">0.0%</td>
-                                <td class="p-3.5 text-right"><span class="bg-blue-500/10 text-blue-400 border border-blue-500/30 px-2 py-0.5 rounded text-[11px]">En Atención</span></td>
-                            </tr>
-                        </tbody>
-                        <tfoot class="bg-slate-900/80 font-bold border-t border-slate-700">
-                            <tr>
-                                <td class="p-3.5 text-slate-200">TOTAL</td>
-                                <td class="p-3.5 text-center text-emerald-400 font-mono">2,189</td>
-                                <td class="p-3.5 text-center text-slate-200 font-mono">100%</td>
-                                <td class="p-3.5 text-right text-slate-400">Total Casos</td>
-                            </tr>
-                        </tfoot>
-                    </table>
+
+                <div class="p-4 bg-slate-900/40 border-t border-slate-800 text-[11px] text-slate-400">
+                    <p>💡 <span class="text-slate-300 font-semibold">Tasa de Efectividad:</span> El 98.5% de los casos cerrados demuestra una alta capacidad de respuesta ante las solicitudes del campus.</p>
                 </div>
             </div>
         </section>
@@ -237,7 +297,7 @@
                     <h4 class="font-bold text-amber-400">Reflexión Socrática Empática (ECO-S)</h4>
                 </div>
                 <p class="italic text-slate-300 leading-relaxed">
-                    "Con un índice de cierre del 98.8%, el equipo técnico demuestra una respuesta operativa altamente eficaz. ¿Cómo podemos aprovechar los periodos de baja demanda para equilibrar las cargas entre los técnicos y coordinar mantenimientos preventivos en los espacios de mayor flujo estudiantil?"
+                    "Al observar los picos pronunciados de tareas en junio (346) y septiembre (266), coincide con los cierres de ciclo e inicios lectivos. ¿Cómo podemos estructurar la logística preventiva en mayo y agosto para suavizar la carga operativa del equipo técnico durante estos periodos críticos?"
                 </p>
             </div>
 
@@ -247,7 +307,7 @@
                     <h4 class="font-bold text-emerald-400">Optimización de Trabajo Decente y Recursos</h4>
                 </div>
                 <p class="text-slate-300 leading-relaxed">
-                    Un balance equitativo en la asignación de tareas operativas promueve el bienestar del talento humano y reduce el desgaste de equipos tecnológicos mediante atenciones oportunas en campo.
+                    El seguimiento de la distribución mensual permite equilibrar el desgaste del personal técnico y planificar las intervenciones en equipos audiovisuales antes de que ocurran fallas que interrumpan la jornada académica.
                 </p>
             </div>
         </section>
@@ -261,55 +321,87 @@
 
     <!-- 8. SCRIPTS DE GRAFICACIÓN (CHART.JS) -->
     <script>
-        // Data de Técnicos
-        const techLabels = ['Helber Daza P.', 'Luis Ángel Lotta', 'Brayan Rodríguez', 'Jair Roa C.'];
-        const techTasks = [734, 723, 712, 415];
+        // Datos Mensuales por Técnico
+        const monthLabels = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep'];
 
-        // Chart 1: Rendimiento por Técnico (Bar Chart)
-        const ctxTech = document.getElementById('techChart').getContext('2d');
-        new Chart(ctxTech, {
+        const dataBrayan = [0, 3, 1, 43, 40, 88, 16, 22, 117];
+        const dataHelber = [5, 54, 28, 44, 53, 112, 36, 44, 78];
+        const dataJair = [0, 0, 0, 0, 0, 0, 0, 0, 5];
+        const dataLuis = [0, 33, 41, 56, 32, 146, 54, 53, 66];
+
+        // Chart 1: Comparativo Mensual (Grouped / Stacked Bar)
+        const ctxMonthly = document.getElementById('monthlyTechChart').getContext('2d');
+        new Chart(ctxMonthly, {
             type: 'bar',
             data: {
-                labels: techLabels,
-                datasets: [{
-                    label: 'Tareas Realizadas',
-                    data: techTasks,
-                    backgroundColor: [
-                        'rgba(16, 185, 129, 0.75)',
-                        'rgba(20, 184, 166, 0.75)',
-                        'rgba(59, 130, 246, 0.75)',
-                        'rgba(168, 85, 247, 0.75)'
-                    ],
-                    borderColor: [
-                        '#10b981',
-                        '#14b8a6',
-                        '#3b82f6',
-                        '#a855f7'
-                    ],
-                    borderWidth: 1.5,
-                    borderRadius: 8
-                }]
+                labels: monthLabels,
+                datasets: [
+                    {
+                        label: 'Luis Ángel Lotta',
+                        data: dataLuis,
+                        backgroundColor: 'rgba(168, 85, 247, 0.85)',
+                        borderColor: '#a855f7',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    },
+                    {
+                        label: 'Helber Daza P.',
+                        data: dataHelber,
+                        backgroundColor: 'rgba(16, 185, 129, 0.85)',
+                        borderColor: '#10b981',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    },
+                    {
+                        label: 'Brayan Rodríguez',
+                        data: dataBrayan,
+                        backgroundColor: 'rgba(59, 130, 246, 0.85)',
+                        borderColor: '#3b82f6',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    },
+                    {
+                        label: 'Jair Roa C.',
+                        data: dataJair,
+                        backgroundColor: 'rgba(245, 158, 11, 0.85)',
+                        borderColor: '#f59e0b',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }
+                ]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: { display: false },
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: { color: '#cbd5e1', font: { size: 11 } }
+                    },
                     tooltip: {
+                        mode: 'index',
+                        intersect: false,
                         callbacks: {
-                            label: (ctx) => ` ${ctx.raw} Tareas (${((ctx.raw/2584)*100).toFixed(1)}%)`
+                            footer: (tooltipItems) => {
+                                let total = 0;
+                                tooltipItems.forEach(item => { total += item.raw; });
+                                return 'Total Mes: ' + total + ' tareas';
+                            }
                         }
                     }
                 },
                 scales: {
+                    x: {
+                        stacked: true,
+                        ticks: { color: '#cbd5e1', font: { weight: '500' } },
+                        grid: { display: false }
+                    },
                     y: {
+                        stacked: true,
                         beginAtZero: true,
                         ticks: { color: '#94a3b8' },
                         grid: { color: 'rgba(51, 65, 85, 0.4)' }
-                    },
-                    x: {
-                        ticks: { color: '#cbd5e1', font: { weight: '500' } },
-                        grid: { display: false }
                     }
                 }
             }
@@ -320,14 +412,14 @@
         new Chart(ctxOT, {
             type: 'doughnut',
             data: {
-                labels: ['Finalizadas', 'En Revisión', 'Cancelado', 'En Proceso'],
+                labels: ['Finalizadas', 'En Revisión', 'En Proceso', 'Cancelado'],
                 datasets: [{
-                    data: [2162, 17, 9, 1],
+                    data: [1171, 17, 1, 0],
                     backgroundColor: [
                         '#10b981', // Finalizadas
                         '#f59e0b', // En Revisión
-                        '#f43f5e', // Cancelado
-                        '#3b82f6'  // En Proceso
+                        '#3b82f6', // En Proceso
+                        '#475569'  // Cancelado
                     ],
                     borderWidth: 2,
                     borderColor: '#1e293b'
@@ -341,7 +433,7 @@
                     legend: { display: false },
                     tooltip: {
                         callbacks: {
-                            label: (ctx) => ` ${ctx.label}: ${ctx.raw} (${((ctx.raw/2189)*100).toFixed(1)}%)`
+                            label: (ctx) => ` ${ctx.label}: ${ctx.raw} (${((ctx.raw/1189)*100).toFixed(1)}%)`
                         }
                     }
                 }
