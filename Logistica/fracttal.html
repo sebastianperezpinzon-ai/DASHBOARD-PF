@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛠️</text></svg>">
+    <title>Mesa de Servicio - Fracttal | ECO-S</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+    body {
+        background-image: url('../images/bg-pattern.png');
+        background-repeat: repeat;
+        background-size: 350px;
+        background-attachment: fixed;
+        background-color: #0B0F19;
+    }
+    </style>
+</head>
+<body class="text-white font-sans min-h-screen flex flex-col justify-between">
+
+    <!-- 1. BARRA DE NAVEGACIÓN SUPERIOR -->
+    <nav class="bg-[#111827] border-b border-gray-800 px-6 py-4 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="../index.html" class="flex items-center text-sm font-semibold text-gray-400 hover:text-[#00A859] transition duration-200">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Volver al Dashboard Principal
+            </a>
+            <span class="text-xs bg-[#00A859]/10 text-[#00A859] px-3.5 py-1.5 rounded-full border border-[#00A859]/30 font-mono font-medium">
+                Área: Logística y Audiovisuales | ECO-S
+            </span>
+        </div>
+    </nav>
+
+    <!-- CONTENEDOR PRINCIPAL CENTRADO (MAIN) -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 pt-10 pb-12 flex-grow w-full space-y-8">
+
+        <!-- 2. CABECERA PRINCIPAL CENTRADA (HERO SECTION) -->
+        <header class="text-center py-6 md:py-10 border-b border-slate-800/80">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-4">
+                <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="text-xs font-medium text-emerald-400">Sistema Mantenimiento Fracttal</span>
+            </div>
+            
+            <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight text-white mb-3">
+                Mesa de Servicio: Logística y Audiovisuales
+            </h1>
+            
+            <p class="text-slate-400 text-sm md:text-base max-w-2xl mx-auto">
+                Monitoreo analítico de casos asignados y atendidos durante el periodo <span class="text-emerald-400 font-semibold">Enero – Agosto 14</span>.
+            </p>
+        </header>
+
+        <!-- 3. MÉTRICAS RÁPIDAS (KPIs) -->
+        <section class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="bg-slate-800/60 backdrop-blur-md border border-slate-700/50 p-5 rounded-xl border-l-4 border-l-emerald-500">
+                <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Tasa de Efectividad OT</p>
+                <h3 class="text-3xl font-extrabold text-emerald-400 mt-2">98.8%</h3>
+                <p class="text-xs text-slate-400 mt-1">2,162 Órdenes Finalizadas</p>
+            </div>
+
+            <div class="bg-slate-800/60 backdrop-blur-md border border-slate-700/50 p-5 rounded-xl border-l-4 border-l-blue-500">
+                <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Total Tareas Realizadas</p>
+                <h3 class="text-3xl font-extrabold text-blue-400 mt-2">2,584</h3>
+                <p class="text-xs text-slate-400 mt-1">Soportes ejecutados por el equipo</p>
+            </div>
+
+            <div class="bg-slate-800/60 backdrop-blur-md border border-slate-700/50 p-5 rounded-xl border-l-4 border-l-purple-500">
+                <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Total Órdenes Trabajo</p>
+                <h3 class="text-3xl font-extrabold text-purple-400 mt-2">2,189</h3>
+                <p class="text-xs text-slate-400 mt-1">Casos registrados en Fracttal</p>
+            </div>
+
+            <div class="bg-slate-800/60 backdrop-blur-md border border-slate-700/50 p-5 rounded-xl border-l-4 border-l-amber-500">
+                <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">OTs Pendientes / Activas</p>
+                <h3 class="text-3xl font-extrabold text-amber-400 mt-2">18</h3>
+                <p class="text-xs text-slate-400 mt-1">17 En Revisión &bull; 1 En Proceso</p>
+            </div>
+        </section>
+
+        <!-- 4. GRÁFICOS ANALÍTICOS -->
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Gráfico de Barras: Rendimiento Técnico -->
+            <div class="lg:col-span-2 bg-slate-800/50 border border-slate-700/60 p-6 rounded-2xl shadow-xl flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h2 class="text-lg font-semibold text-slate-100">Distribución de Tareas por Técnico</h2>
+                        <p class="text-xs text-slate-400">Volumen de soportes atendidos por el equipo audiovisual</p>
+                    </div>
+                    <span class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-md font-mono">
+                        2,584 Tareas
+                    </span>
+                </div>
+                <div class="relative h-[320px] w-full">
+                    <canvas id="techChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Gráfico Circular: Clasificación OT -->
+            <div class="bg-slate-800/50 border border-slate-700/60 p-6 rounded-2xl shadow-xl flex flex-col justify-between">
+                <div class="mb-4">
+                    <h2 class="text-lg font-semibold text-slate-100">Estado de Órdenes (OT)</h2>
+                    <p class="text-xs text-slate-400">Clasificación porcentual de tickets en Fracttal</p>
+                </div>
+                <div class="relative h-[260px] w-full flex items-center justify-center">
+                    <canvas id="otChart"></canvas>
+                </div>
+                <div class="mt-4 grid grid-cols-2 gap-2 text-xs text-slate-300 pt-3 border-t border-slate-700/50">
+                    <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Finalizadas (98.8%)</div>
+                    <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> En Revisión (0.8%)</div>
+                    <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> Canceladas (0.4%)</div>
+                    <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span> En Proceso (0.0%)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. TABLAS DE DATOS DETALLADAS -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- Tabla 1: Desempeño por Técnico -->
+            <div class="bg-slate-800/50 rounded-2xl border border-slate-700/60 overflow-hidden shadow-xl">
+                <div class="bg-slate-900/80 px-6 py-4 border-b border-slate-700/60 flex justify-between items-center">
+                    <h3 class="font-bold text-sm text-slate-100">Desempeño del Personal Técnico</h3>
+                    <span class="text-xs bg-slate-800 text-slate-400 px-2.5 py-1 rounded border border-slate-700">4 Integrantes</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-xs text-left">
+                        <thead class="bg-slate-900/40 text-slate-400 uppercase tracking-wider border-b border-slate-800">
+                            <tr>
+                                <th class="p-3.5">Técnico</th>
+                                <th class="p-3.5 text-center">Tareas</th>
+                                <th class="p-3.5 text-center">Porcentaje</th>
+                                <th class="p-3.5 text-right">Estado / Carga</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800 text-slate-300">
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="p-3.5 font-semibold text-slate-100">Helber Daza Pinzón</td>
+                                <td class="p-3.5 text-center font-mono font-bold text-emerald-400">734</td>
+                                <td class="p-3.5 text-center font-mono">28.4%</td>
+                                <td class="p-3.5 text-right"><span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded text-[11px]">Alta Demanda</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="p-3.5 font-semibold text-slate-100">Luis Ángel Lotta Pareja</td>
+                                <td class="p-3.5 text-center font-mono font-bold text-emerald-400">723</td>
+                                <td class="p-3.5 text-center font-mono">28.0%</td>
+                                <td class="p-3.5 text-right"><span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded text-[11px]">Constante</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="p-3.5 font-semibold text-slate-100">Brayan Alexander Rodríguez C.</td>
+                                <td class="p-3.5 text-center font-mono font-bold text-emerald-400">712</td>
+                                <td class="p-3.5 text-center font-mono">27.6%</td>
+                                <td class="p-3.5 text-right"><span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded text-[11px]">Constante</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="p-3.5 font-semibold text-slate-100">Jair Roa Calvo</td>
+                                <td class="p-3.5 text-center font-mono font-bold text-blue-400">415</td>
+                                <td class="p-3.5 text-center font-mono">16.1%</td>
+                                <td class="p-3.5 text-right"><span class="bg-blue-500/10 text-blue-400 border border-blue-500/30 px-2 py-0.5 rounded text-[11px]">Soporte General</span></td>
+                            </tr>
+                        </tbody>
+                        <tfoot class="bg-slate-900/80 font-bold border-t border-slate-700">
+                            <tr>
+                                <td class="p-3.5 text-slate-200">TOTAL</td>
+                                <td class="p-3.5 text-center text-emerald-400 font-mono">2,584</td>
+                                <td class="p-3.5 text-center text-slate-200 font-mono">100%</td>
+                                <td class="p-3.5 text-right text-slate-400">100% Cumplido</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tabla 2: Clasificación de OT por Tipo -->
+            <div class="bg-slate-800/50 rounded-2xl border border-slate-700/60 overflow-hidden shadow-xl">
+                <div class="bg-slate-900/80 px-6 py-4 border-b border-slate-700/60 flex justify-between items-center">
+                    <h3 class="font-bold text-sm text-slate-100">Órdenes de Trabajo (OT) por Tipo</h3>
+                    <span class="text-xs bg-slate-800 text-slate-400 px-2.5 py-1 rounded border border-slate-700">2,189 Registros</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-xs text-left">
+                        <thead class="bg-slate-900/40 text-slate-400 uppercase tracking-wider border-b border-slate-800">
+                            <tr>
+                                <th class="p-3.5">Estado OT</th>
+                                <th class="p-3.5 text-center">Cantidad</th>
+                                <th class="p-3.5 text-center">Porcentaje</th>
+                                <th class="p-3.5 text-right">Indicador</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800 text-slate-300">
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="p-3.5 font-semibold text-slate-100">Finalizadas</td>
+                                <td class="p-3.5 text-center font-mono font-bold text-emerald-400">2,162</td>
+                                <td class="p-3.5 text-center font-mono">98.8%</td>
+                                <td class="p-3.5 text-right"><span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded text-[11px]">Óptimo</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="p-3.5 font-semibold text-slate-100">En Revisión</td>
+                                <td class="p-3.5 text-center font-mono font-bold text-amber-400">17</td>
+                                <td class="p-3.5 text-center font-mono">0.8%</td>
+                                <td class="p-3.5 text-right"><span class="bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded text-[11px]">Pendiente</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="p-3.5 font-semibold text-slate-100">Cancelado</td>
+                                <td class="p-3.5 text-center font-mono font-bold text-rose-400">9</td>
+                                <td class="p-3.5 text-center font-mono">0.4%</td>
+                                <td class="p-3.5 text-right"><span class="bg-rose-500/10 text-rose-400 border border-rose-500/30 px-2 py-0.5 rounded text-[11px]">Desestimado</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/30 transition">
+                                <td class="p-3.5 font-semibold text-slate-100">En Proceso</td>
+                                <td class="p-3.5 text-center font-mono font-bold text-blue-400">1</td>
+                                <td class="p-3.5 text-center font-mono">0.0%</td>
+                                <td class="p-3.5 text-right"><span class="bg-blue-500/10 text-blue-400 border border-blue-500/30 px-2 py-0.5 rounded text-[11px]">En Atención</span></td>
+                            </tr>
+                        </tbody>
+                        <tfoot class="bg-slate-900/80 font-bold border-t border-slate-700">
+                            <tr>
+                                <td class="p-3.5 text-slate-200">TOTAL</td>
+                                <td class="p-3.5 text-center text-emerald-400 font-mono">2,189</td>
+                                <td class="p-3.5 text-center text-slate-200 font-mono">100%</td>
+                                <td class="p-3.5 text-right text-slate-400">Total Casos</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. REFLEXIÓN SOCRÁTICA Y ALINEACIÓN ODS (ECO-S) -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-amber-500/10 border-l-4 border-amber-500 p-5 rounded-xl text-slate-300 text-xs md:text-sm shadow-md space-y-2">
+                <div class="flex items-center space-x-2">
+                    <span class="text-lg">❓</span>
+                    <h4 class="font-bold text-amber-400">Reflexión Socrática Empática (ECO-S)</h4>
+                </div>
+                <p class="italic text-slate-300 leading-relaxed">
+                    "Con un índice de cierre del 98.8%, el equipo técnico demuestra una respuesta operativa altamente eficaz. ¿Cómo podemos aprovechar los periodos de baja demanda para equilibrar las cargas entre los técnicos y coordinar mantenimientos preventivos en los espacios de mayor flujo estudiantil?"
+                </p>
+            </div>
+
+            <div class="bg-emerald-500/10 border-l-4 border-emerald-500 p-5 rounded-xl text-slate-300 text-xs md:text-sm shadow-md space-y-2">
+                <div class="flex items-center space-x-2">
+                    <span class="bg-emerald-500 text-slate-950 font-extrabold text-[10px] px-2 py-0.5 rounded">ODS 8 & 12</span>
+                    <h4 class="font-bold text-emerald-400">Optimización de Trabajo Decente y Recursos</h4>
+                </div>
+                <p class="text-slate-300 leading-relaxed">
+                    Un balance equitativo en la asignación de tareas operativas promueve el bienestar del talento humano y reduce el desgaste de equipos tecnológicos mediante atenciones oportunas en campo.
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 7. FOOTER -->
+    <footer class="border-t border-slate-800/80 text-center py-4 text-xs text-slate-500">
+        ECO-S &bull; Ecosistema de Conexión y Optimización Sensorial
+    </footer>
+
+    <!-- 8. SCRIPTS DE GRAFICACIÓN (CHART.JS) -->
+    <script>
+        // Data de Técnicos
+        const techLabels = ['Helber Daza P.', 'Luis Ángel Lotta', 'Brayan Rodríguez', 'Jair Roa C.'];
+        const techTasks = [734, 723, 712, 415];
+
+        // Chart 1: Rendimiento por Técnico (Bar Chart)
+        const ctxTech = document.getElementById('techChart').getContext('2d');
+        new Chart(ctxTech, {
+            type: 'bar',
+            data: {
+                labels: techLabels,
+                datasets: [{
+                    label: 'Tareas Realizadas',
+                    data: techTasks,
+                    backgroundColor: [
+                        'rgba(16, 185, 129, 0.75)',
+                        'rgba(20, 184, 166, 0.75)',
+                        'rgba(59, 130, 246, 0.75)',
+                        'rgba(168, 85, 247, 0.75)'
+                    ],
+                    borderColor: [
+                        '#10b981',
+                        '#14b8a6',
+                        '#3b82f6',
+                        '#a855f7'
+                    ],
+                    borderWidth: 1.5,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: (ctx) => ` ${ctx.raw} Tareas (${((ctx.raw/2584)*100).toFixed(1)}%)`
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { color: '#94a3b8' },
+                        grid: { color: 'rgba(51, 65, 85, 0.4)' }
+                    },
+                    x: {
+                        ticks: { color: '#cbd5e1', font: { weight: '500' } },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // Chart 2: Estado de OT (Doughnut Chart)
+        const ctxOT = document.getElementById('otChart').getContext('2d');
+        new Chart(ctxOT, {
+            type: 'doughnut',
+            data: {
+                labels: ['Finalizadas', 'En Revisión', 'Cancelado', 'En Proceso'],
+                datasets: [{
+                    data: [2162, 17, 9, 1],
+                    backgroundColor: [
+                        '#10b981', // Finalizadas
+                        '#f59e0b', // En Revisión
+                        '#f43f5e', // Cancelado
+                        '#3b82f6'  // En Proceso
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#1e293b'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '72%',
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: (ctx) => ` ${ctx.label}: ${ctx.raw} (${((ctx.raw/2189)*100).toFixed(1)}%)`
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
