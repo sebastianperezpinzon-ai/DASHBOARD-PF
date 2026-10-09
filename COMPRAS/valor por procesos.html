@@ -5,17 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏷️</text></svg>">
     <title>Clasificación de Compras - Analítica Multimoneda</title>
-    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <!-- Librería SheetJS para lectura dinámica opcional de Excel -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
     <style>
     body {
-        background-color: #0B0F19;
-        background-image: radial-gradient(circle at top right, #1f2937, transparent 40%), radial-gradient(circle at bottom left, #1f2937, transparent 40%);
+        background-image: url('../images/bg-pattern.png');
+        background-repeat: repeat;
+        background-size: 350px;
         background-attachment: fixed;
+        background-color: #0B0F19;
     }
     .currency-btn-active {
         background-color: #8B5CF6 !important;
@@ -27,51 +28,32 @@
 <body class="text-white font-sans min-h-screen flex flex-col justify-between">
 
     <div>
+        <!-- 1. BARRA DE NAVEGACIÓN SUPERIOR -->
         <nav class="bg-[#111827] border-b border-gray-800 px-6 py-4 sticky top-0 z-50">
-            <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="max-w-7xl mx-auto flex justify-between items-center">
                 <a href="../index.html?tab=compras" class="flex items-center text-sm font-semibold text-gray-400 hover:text-purple-400 transition duration-200">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
                     Volver al Dashboard Principal
                 </a>
-                
-                <div class="flex items-center gap-3">
-                    <span id="data-status-badge" class="text-xs bg-purple-500/10 text-purple-400 px-3 py-1 rounded-full border border-purple-500/30 font-mono">
-                        Cargando datos...
-                    </span>
-                    <label class="cursor-pointer text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-1 rounded-md border border-gray-700 transition">
-                        📁 Cargar CSV/Excel
-                        <input type="file" id="manualFileInput" accept=".csv, .xlsx, .xls" class="hidden" onchange="handleManualFile(event)">
-                    </label>
-                </div>
+                <span class="text-xs bg-purple-500/10 text-purple-400 px-3 py-1 rounded-full border border-purple-500/30 font-mono">
+                    Módulo: Clasificación y Distribución del Gasto
+                </span>
             </div>
         </nav>
 
+        <!-- 2. CABECERA PRINCIPAL -->
         <header class="text-center py-8 px-6 relative z-10">
             <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-3 tracking-tight drop-shadow-md">
                 Clasificación Multimoneda de Compras
             </h1>
             <p class="text-gray-400 text-base md:text-lg max-w-3xl mx-auto leading-relaxed">
-                Distribución del presupuesto por Procesos Institucionales y Tipos de Compra (Enero - Agosto). Análisis nominal independiente por divisa.
+                Distribución del presupuesto por Procesos Institucionales (Col. E) y Tipos de Compra (Col. H). Análisis nominal independiente por divisa (Col. D).
             </p>
-
-            <div class="mt-6 flex justify-center items-center gap-3">
-                <span class="text-sm font-semibold text-gray-300">Periodo de Análisis:</span>
-                <select id="monthSelect" onchange="onMonthChange()" class="bg-[#111827] text-purple-300 border border-purple-500/40 text-sm rounded-lg px-4 py-2 font-bold focus:ring-2 focus:ring-purple-500 outline-none cursor-pointer">
-                    <option value="ALL">📊 Acumulado General (Ene - Ago)</option>
-                    <option value="enero">Enero</option>
-                    <option value="febrero">Febrero</option>
-                    <option value="marzo">Marzo</option>
-                    <option value="abril">Abril</option>
-                    <option value="mayo">Mayo</option>
-                    <option value="junio">Junio</option>
-                    <option value="julio">Julio</option>
-                    <option value="agosto">Agosto</option>
-                </select>
-            </div>
         </header>
 
+        <!-- 3. RESUMEN DE INDICADORES CLAVE (KPI CARDS) -->
         <section class="w-full max-w-7xl mx-auto px-6 mb-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div class="bg-[#111827] p-5 rounded-xl border border-gray-800 shadow-lg">
@@ -79,45 +61,44 @@
                         <span>Gasto Ejecutado COP</span>
                         <span class="text-purple-400 font-bold">COP</span>
                     </p>
-                    <p id="kpi-cop" class="text-2xl font-extrabold text-purple-400 mt-2">$ 0</p>
-                    <p class="text-[11px] text-gray-500 mt-1">Gasto total en moneda nacional</p>
+                    <p class="text-2xl font-extrabold text-purple-400 mt-2">$ 28.823.115.005</p>
+                    <p class="text-[11px] text-gray-500 mt-1">Acumulado en moneda nacional</p>
                 </div>
-
                 <div class="bg-[#111827] p-5 rounded-xl border border-gray-800 shadow-lg">
                     <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold flex justify-between">
                         <span>Gasto Ejecutado USD</span>
                         <span class="text-emerald-400 font-bold">USD</span>
                     </p>
-                    <p id="kpi-usd" class="text-2xl font-extrabold text-emerald-400 mt-2">$ 0</p>
-                    <p class="text-[11px] text-gray-500 mt-1">Licencias, Software y Servicios IT</p>
+                    <p class="text-2xl font-extrabold text-emerald-400 mt-2">$ 897.837</p>
+                    <p class="text-[11px] text-gray-500 mt-1">Servicios profesionales y software</p>
                 </div>
-
                 <div class="bg-[#111827] p-5 rounded-xl border border-gray-800 shadow-lg">
                     <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold flex justify-between">
                         <span>Gasto Ejecutado EUR</span>
                         <span class="text-amber-400 font-bold">EUR</span>
                     </p>
-                    <p id="kpi-eur" class="text-2xl font-extrabold text-amber-400 mt-2">€ 0</p>
-                    <p class="text-[11px] text-gray-500 mt-1">Investigación y Desarrollo Integral</p>
+                    <p class="text-2xl font-extrabold text-amber-400 mt-2">€ 29.484</p>
+                    <p class="text-[11px] text-gray-500 mt-1">Investigación y suscripciones</p>
                 </div>
-
                 <div class="bg-[#111827] p-5 rounded-xl border border-gray-800 shadow-lg">
                     <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold">Proceso Mayor Gasto</p>
-                    <p id="kpi-top-proceso" class="text-lg font-bold text-gray-200 mt-2 truncate">-</p>
-                    <p id="kpi-top-val" class="text-[11px] text-purple-400 mt-1">$ 0 COP (0%)</p>
+                    <p class="text-lg font-bold text-gray-200 mt-2 truncate">PROYECTO HUMANISE</p>
+                    <p class="text-[11px] text-purple-400 mt-1">$ 7.570.240.108 COP (26.3%)</p>
                 </div>
             </div>
         </section>
 
+        <!-- 4. CONTENEDOR PRINCIPAL: GRÁFICAS Y TABLAS -->
         <main class="w-full max-w-7xl mx-auto px-6 mb-12 space-y-10">
 
+            <!-- SECCIÓN 1: GASTO POR PROCESO -->
             <section class="bg-[#111827] rounded-xl border border-gray-800 shadow-xl p-6">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                     <div>
                         <h2 class="text-xl font-bold text-white flex items-center gap-2">
-                            <span class="text-purple-400">🏢</span> 1. Gasto por Proceso o Área
+                            <span class="text-purple-400">🏢</span> 1. Gasto por Proceso o Área (Columna E)
                         </h2>
-                        <p class="text-xs text-gray-400 mt-1">Selecciona la divisa para adaptar la escala del gráfico sin alterar valores reales.</p>
+                        <p class="text-xs text-gray-400 mt-1">Selecciona la divisa para adaptar la escala del gráfico.</p>
                     </div>
 
                     <div class="flex items-center bg-[#0B0F19] p-1 rounded-lg border border-gray-800 text-xs">
@@ -155,20 +136,20 @@
                                     <th class="p-3 text-right rounded-r">Gasto EUR</th>
                                 </tr>
                             </thead>
-                            <tbody id="tablaProcesosBody" class="divide-y divide-gray-800/50">
-                                </tbody>
+                            <tbody id="tablaProcesosBody" class="divide-y divide-gray-800/50"></tbody>
                         </table>
                     </div>
                 </details>
             </section>
 
+            <!-- SECCIÓN 2: GASTO SEGÚN TIPO DE COMPRA -->
             <section class="bg-[#111827] rounded-xl border border-gray-800 shadow-xl p-6">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                     <div>
                         <h2 class="text-xl font-bold text-white flex items-center gap-2">
-                            <span class="text-emerald-400">📦</span> 2. Gasto según Tipo de Compra
+                            <span class="text-emerald-400">📦</span> 2. Gasto según Tipo de Compra (Columna H)
                         </h2>
-                        <p class="text-xs text-gray-400 mt-1">Clasificación temática de adquisiciones y distribución por categoría de rubro.</p>
+                        <p class="text-xs text-gray-400 mt-1">Clasificación por Denominación de Grupo de Compra.</p>
                     </div>
 
                     <div class="flex items-center bg-[#0B0F19] p-1 rounded-lg border border-gray-800 text-xs">
@@ -206,8 +187,7 @@
                                     <th class="p-3 text-right rounded-r">Gasto EUR</th>
                                 </tr>
                             </thead>
-                            <tbody id="tablaTiposBody" class="divide-y divide-gray-800/50">
-                                </tbody>
+                            <tbody id="tablaTiposBody" class="divide-y divide-gray-800/50"></tbody>
                         </table>
                     </div>
                 </details>
@@ -216,219 +196,70 @@
         </main>
     </div>
 
+    <!-- 5. PIE DE PÁGINA -->
     <footer class="bg-[#0B0F19] text-center py-6 text-xs text-gray-500 border-t border-gray-800">
         <p>Dirección de Gestión Administrativa • Control Presupuestal y Analítica de Compras</p>
     </footer>
 
+    <!-- 6. SCRIPTS DE LÓGICA Y RENDERIZADO -->
     <script>
-        // ESTADO GLOBAL
-        let rawDataset = [];
-        let currentProcesoCurrency = 'COP';
-        let currentTipoCurrency = 'COP';
+        // DATOS CONSOLIDADOS DESDE FUENTE.XLSX (COLUMNAS D A I)
+        const rawProcesos = [
+            { nombre: "PROYECTO HUMANISE", cop: 7570240108, usd: 189504.4, eur: 0 },
+            { nombre: "GESTIÓN DE INFRAESTRUCTURA Y PLANTA FÍSICA", cop: 3869237384, usd: 0, eur: 0 },
+            { nombre: "SEGURIDAD INFORMÁTICA", cop: 2927498532, usd: 3594, eur: 0 },
+            { nombre: "GESTIÓN DE COMUNICACIONES Y PUBLICIDAD", cop: 1881459157, usd: 67017.87, eur: 0 },
+            { nombre: "RECTORÍA", cop: 1665893154, usd: 0, eur: 0 },
+            { nombre: "GERENCIA DE PROYECCIÓN Y CRECIMIENTO", cop: 1227092688, usd: 250, eur: 0 },
+            { nombre: "GERENCIA DE INTERNACIONALIZACIÓN Y RELACIONES INSTITUCIONALES", cop: 1215160410, usd: 25610, eur: 0 },
+            { nombre: "VICERRECTORÍA ADMINISTRATIVA Y FINANCIERA", cop: 987747805, usd: 25000, eur: 0 },
+            { nombre: "LABORATORIOS DE INGENIERÍA", cop: 809462615, usd: 0, eur: 0 },
+            { nombre: "SELECCIÓN DEL TALENTO Y CALIDAD DE VIDA", cop: 698188179, usd: 1040, eur: 0 },
+            { nombre: "DIRECCIÓN DE INVESTIGACIONES", cop: 493531175, usd: 18133.25, eur: 2479 },
+            { nombre: "SISTEMAS DE INFORMACIÓN", cop: 442188448, usd: 147820, eur: 0 },
+            { nombre: "CONTRATACIÓN PÚBLICA", cop: 407136347, usd: 0, eur: 0 },
+            { nombre: "CONSULTORIA PRIVADA", cop: 383584925, usd: 13117.21, eur: 0 },
+            { nombre: "BIENESTAR UNIVERSITARIO", cop: 361360652, usd: 0, eur: 400 },
+            { nombre: "BIBLIOTECA", cop: 247277952, usd: 147459, eur: 0 },
+            { nombre: "DIRECCIÓN DE CONTABILIDAD", cop: 243879924, usd: 0, eur: 0 },
+            { nombre: "POSGRADO", cop: 211051515, usd: 0, eur: 0 },
+            { nombre: "SALA GENERAL", cop: 151532156, usd: 0, eur: 0 },
+            { nombre: "CONSULTORÍA ESPECIALIZADA", cop: 134866810, usd: 500, eur: 5000 }
+        ];
+
+        const rawTipos = [
+            { nombre: "SERVICIOS PROFESIO", cop: 15270084531, usd: 468073.72, eur: 5900 },
+            { nombre: "HARDWARE", cop: 2830317867, usd: 0, eur: 0 },
+            { nombre: "LICENCIAS Y SUBSCR", cop: 2028956171, usd: 253223.14, eur: 9345.81 },
+            { nombre: "INSTITUCIONALES", cop: 1272455052, usd: 20505, eur: 0 },
+            { nombre: "SRV MTTO INFRAESTR", cop: 1181895501, usd: 0, eur: 0 },
+            { nombre: "ALIMENTACION Y REF", cop: 774563124, usd: 0, eur: 0 },
+            { nombre: "ACTIVOS Y/O EQUIPO", cop: 508930514, usd: 10852.05, eur: 0 },
+            { nombre: "IMPRESOS", cop: 502252621, usd: 0, eur: 0 },
+            { nombre: "PUBLICIDAD Y MATER", cop: 421257448, usd: 53570, eur: 0 },
+            { nombre: "ASEO Y CAFETERIA", cop: 369397022, usd: 0, eur: 0 },
+            { nombre: "DOTACIÓN Y ELEM. D", cop: 334504312, usd: 0, eur: 0 },
+            { nombre: "BONOS", cop: 298295821, usd: 10569.4, eur: 0 },
+            { nombre: "TRANSPORTE", cop: 257790341, usd: 0, eur: 0 },
+            { nombre: "ELEM. LABORATORIO", cop: 198138120, usd: 2555.35, eur: 0 },
+            { nombre: "GRADOS Y EVENTOS", cop: 193550210, usd: 0, eur: 0 }
+        ];
+
         let chartProceso = null;
         let chartTipo = null;
 
-        // FORMATO MONEDA INSTITUCIONAL
         const formatMoney = (val, currency) => {
             if (!val || val === 0) return '-';
-            const formatted = new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(val);
+            const formatted = new Intl.NumberFormat('es-CO').format(val);
             if (currency === 'COP') return `$ ${formatted}`;
             if (currency === 'USD') return `$ ${formatted} USD`;
             if (currency === 'EUR') return `€ ${formatted} EUR`;
             return formatted;
         };
 
-        // AL CARGAR LA PÁGINA
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchAutoCSV();
-        });
-
-        // BÚSQUEDA AUTOMÁTICA EN EL REPOSOTORIO (Soporta .xlsx y .csv)
-// BÚSQUEDA AUTOMÁTICA CON DIAGNÓSTICO EN CONSOLA
-function fetchAutoCSV() {
-    const fileName = 'github.xlsx'; // Asegúrate de que este sea el nombre exacto en GitHub
-
-    console.log(`[Diagnóstico] Intentando cargar archivo desde: ${window.location.origin}/${fileName}`);
-
-    fetch(fileName)
-        .then(res => {
-            if (!res.ok) {
-                throw new Error(`Estado del servidor: ${res.status} (${res.statusText})`);
-            }
-            return res.arrayBuffer();
-        })
-        .then(buffer => {
-            const data = new Uint8Array(buffer);
-            const workbook = XLSX.read(data, { type: 'array' });
-            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-            const jsonData = XLSX.utils.sheet_to_json(firstSheet);
-            
-            if (jsonData.length > 0) {
-                rawDataset = normalizeJsonData(jsonData);
-                updateBadge(`Cargado: ${fileName}`);
-                recalculateAndRender();
-                console.log("[Diagnóstico] ¡Archivo cargado y procesado con éxito!", jsonData);
-            } else {
-                throw new Error("El archivo existe pero está vacío o no tiene el formato esperado.");
-            }
-        })
-        .catch(err => {
-            console.warn(`[Diagnóstico] No se pudo cargar '${fileName}':`, err.message);
-            
-            // Intento secundario con .csv si el .xlsx falla
-            fetch('github.csv')
-                .then(res => res.ok ? res.text() : Promise.reject())
-                .then(csvText => parseAndInit(csvText, 'github.csv'))
-                .catch(() => {
-                    document.getElementById('data-status-badge').innerText = 'En espera de archivo manual';
-                    console.error("[Diagnóstico] Tampoco se encontró 'github.csv'. Usa el botón manual.");
-                });
-        });
-}
-        // 2. CARGA MANUAL DE ARCHIVO (RESPALDO EXCEL O CSV)
-        function handleManualFile(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(evt) {
-                try {
-                    const data = new Uint8Array(evt.target.result);
-                    const workbook = XLSX.read(data, { type: 'array' });
-                    const jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
-                    
-                    if (jsonData.length > 0) {
-                        rawDataset = normalizeJsonData(jsonData);
-                        updateBadge('Archivo cargado exitosamente');
-                        recalculateAndRender();
-                    }
-                } catch (err) {
-                    alert('Error al leer el archivo. Verifica el formato.');
-                }
-            };
-            reader.readAsArrayBuffer(file);
-        }
-
-        function parseAndInit(csvText, sourceName) {
-            Papa.parse(csvText, {
-                header: true,
-                skipEmptyLines: true,
-                complete: function(results) {
-                    rawDataset = normalizeJsonData(results.data);
-                    updateBadge(`Cargado: ${sourceName}`);
-                    recalculateAndRender();
-                }
-            });
-        }
-
-        function updateBadge(text) {
-            const badge = document.getElementById('data-status-badge');
-            badge.innerText = text;
-            badge.className = 'text-xs bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/30 font-mono';
-        }
-
-        // NORMALIZAR ESTRUCTURA DEL CSV/EXCEL
-        function normalizeJsonData(data) {
-            return data.map(row => {
-                const mes = (row['MES'] || row['Mes'] || row['Fecha de solicitud'] || '').toString().toLowerCase().trim();
-                const moneda = (row['Moneda'] || row['MONEDA'] || 'COP').toString().toUpperCase().trim();
-                const area = (row['Nombre área solicitante'] || row['Nombre área'] || row['Área'] || 'SIN ÁREA').toString().toUpperCase().trim();
-                const tipo = (row['Denominación GrpComp'] || row['Tipo de compra'] || 'SIN CLASIFICAR').toString().toUpperCase().trim();
-                
-                let valRaw = (row['Valor total Pedido'] || row['Valor Total'] || row['Valor'] || '0').toString();
-                valRaw = valRaw.replace(/[^0-9.-]+/g, ""); // Limpiar formato monetario
-                const valor = parseFloat(valRaw) || 0;
-
-                return { mes, moneda, area, tipo, valor };
-            });
-        }
-
-        // EVENTO DE CAMBIO DE MES
-        function onMonthChange() {
-            recalculateAndRender();
-        }
-
-       // RECALCULAR Y RENDERIZAR TODO
-function recalculateAndRender() {
-    const selectedMonth = document.getElementById('monthSelect').value.toLowerCase();
-
-    // Filtrar dataset por mes
-    const filtered = rawDataset.filter(item => {
-        if (selectedMonth === 'all') return true;
-        return item.mes.includes(selectedMonth);
-    });
-
-    const procesosMap = {};
-    const tiposMap = {};
-    let totalCOP = 0, totalUSD = 0, totalEUR = 0;
-
-    filtered.forEach(item => {
-        // KPIs Moneda
-        if (item.moneda === 'COP') totalCOP += item.valor;
-        else if (item.moneda === 'USD') totalUSD += item.valor;
-        else if (item.moneda === 'EUR') totalEUR += item.valor;
-
-        // Agrupar Proceso (Tabla 1)
-        if (!procesosMap[item.area]) procesosMap[item.area] = { nombre: item.area, cop: 0, usd: 0, eur: 0 };
-        if (['COP', 'USD', 'EUR'].includes(item.moneda)) {
-            procesosMap[item.area][item.moneda.toLowerCase()] += item.valor;
-        }
-
-        // Agrupar Tipo de Compra + Desglose de Áreas (Tabla 2 multinivel)
-        if (!tiposMap[item.tipo]) {
-            tiposMap[item.tipo] = { nombre: item.tipo, cop: 0, usd: 0, eur: 0, procesos: {} };
-        }
-        if (['COP', 'USD', 'EUR'].includes(item.moneda)) {
-            const monKey = item.moneda.toLowerCase();
-            tiposMap[item.tipo][monKey] += item.valor;
-
-            // Rastrear el área específica dentro de este tipo de compra
-            if (!tiposMap[item.tipo].procesos[item.area]) {
-                tiposMap[item.tipo].procesos[item.area] = { nombre: item.area, cop: 0, usd: 0, eur: 0 };
-            }
-            tiposMap[item.tipo].procesos[item.area][monKey] += item.valor;
-        }
-    });
-
-    const procesosArray = Object.values(procesosMap);
-    const tiposArray = Object.values(tiposMap);
-
-    // 1. Renderizar KPIs
-    document.getElementById('kpi-cop').innerText = formatMoney(totalCOP, 'COP');
-    document.getElementById('kpi-usd').innerText = formatMoney(totalUSD, 'USD');
-    document.getElementById('kpi-eur').innerText = formatMoney(totalEUR, 'EUR');
-
-    // Top Proceso
-    let topProceso = { nombre: '-', cop: 0 };
-    procesosArray.forEach(p => { if (p.cop > topProceso.cop) topProceso = p; });
-    document.getElementById('kpi-top-proceso').innerText = topProceso.nombre;
-    if (totalCOP > 0 && topProceso.cop > 0) {
-        const pct = ((topProceso.cop / totalCOP) * 100).toFixed(1);
-        document.getElementById('kpi-top-val').innerText = `${formatMoney(topProceso.cop, 'COP')} (${pct}%)`;
-    } else {
-        document.getElementById('kpi-top-val').innerText = '$ 0 (0%)';
-    }
-
-    // 2. Renderizar Tabla 1 (Sencilla) y Tabla 2 (Multinivel desplegable)
-    renderTabla(procesosArray, 'tablaProcesosBody');
-    renderTablaTiposMultinivel(tiposArray);
-
-    // 3. Renderizar Gráficas
-    renderChartProceso(procesosArray);
-    renderChartTipo(tiposArray);
-}
-
-        // RENDERIZAR TABLAS
-        function renderTabla(datosArray, tbodyId) {
-            datosArray.sort((a, b) => b.cop - a.cop);
-
-            const tbody = document.getElementById(tbodyId);
-            if (datosArray.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500">No hay registros para el periodo seleccionado.</td></tr>`;
-                return;
-            }
-
-            tbody.innerHTML = datosArray.map(item => `
+        function renderTablaProcesos() {
+            const tbody = document.getElementById('tablaProcesosBody');
+            tbody.innerHTML = rawProcesos.map(item => `
                 <tr class="hover:bg-gray-800/30 transition-colors">
                     <td class="p-3 font-medium text-white">${item.nombre}</td>
                     <td class="p-3 text-right font-mono ${item.cop > 0 ? 'text-purple-300 font-bold' : 'text-gray-600'}">${formatMoney(item.cop, 'COP')}</td>
@@ -438,101 +269,32 @@ function recalculateAndRender() {
             `).join('');
         }
 
-        // RENDERIZAR TABLA 2 CON DESPLEGABLE POR ÁREA/PROCESO
-function renderTablaTiposMultinivel(tiposArray) {
-    tiposArray.sort((a, b) => b.cop - a.cop);
-    const tbody = document.getElementById('tablaTiposBody');
+        function renderTablaTipos() {
+            const tbody = document.getElementById('tablaTiposBody');
+            tbody.innerHTML = rawTipos.map(item => `
+                <tr class="hover:bg-gray-800/30 transition-colors">
+                    <td class="p-3 font-medium text-white">${item.nombre}</td>
+                    <td class="p-3 text-right font-mono ${item.cop > 0 ? 'text-purple-300 font-bold' : 'text-gray-600'}">${formatMoney(item.cop, 'COP')}</td>
+                    <td class="p-3 text-right font-mono ${item.usd > 0 ? 'text-emerald-400 font-bold' : 'text-gray-600'}">${formatMoney(item.usd, 'USD')}</td>
+                    <td class="p-3 text-right font-mono ${item.eur > 0 ? 'text-amber-400 font-bold' : 'text-gray-600'}">${formatMoney(item.eur, 'EUR')}</td>
+                </tr>
+            `).join('');
+        }
 
-    if (tiposArray.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500">No hay registros para el periodo seleccionado.</td></tr>`;
-        return;
-    }
+        function renderChartProceso(currency = 'COP') {
+            const key = currency.toLowerCase();
+            const filtered = rawProcesos
+                .filter(item => item[key] > 0)
+                .sort((a, b) => b[key] - a[key])
+                .slice(0, 10);
 
-    let html = '';
-    tiposArray.forEach((item, index) => {
-        const rowId = `tipo-subrow-${index}`;
-        const iconId = `tipo-icon-${index}`;
-        
-        // Ordenar las áreas dentro de este tipo de compra de mayor a menor gasto COP
-        const procesosList = Object.values(item.procesos).sort((a, b) => b.cop - a.cop);
+            const labels = filtered.map(item => item.nombre.length > 28 ? item.nombre.substring(0, 26) + '...' : item.nombre);
+            const values = filtered.map(item => item[key]);
 
-        // Fila Principal del Tipo de Compra
-        html += `
-        <tr class="hover:bg-gray-800/40 cursor-pointer transition-colors border-b border-gray-800/40" onclick="toggleSubRow('${rowId}', '${iconId}')">
-            <td class="p-3 font-medium text-white flex items-center justify-between">
-                <span class="flex items-center gap-2">
-                    <span id="${iconId}" class="text-emerald-400 font-bold transition-transform duration-200 inline-block text-xs">▶</span>
-                    <span>${item.nombre}</span>
-                </span>
-                <span class="text-[10px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20 font-mono">
-                    ${procesosList.length} área(s)
-                </span>
-            </td>
-            <td class="p-3 text-right font-mono ${item.cop > 0 ? 'text-purple-300 font-bold' : 'text-gray-600'}">${formatMoney(item.cop, 'COP')}</td>
-            <td class="p-3 text-right font-mono ${item.usd > 0 ? 'text-emerald-400 font-bold' : 'text-gray-600'}">${formatMoney(item.usd, 'USD')}</td>
-            <td class="p-3 text-right font-mono ${item.eur > 0 ? 'text-amber-400 font-bold' : 'text-gray-600'}">${formatMoney(item.eur, 'EUR')}</td>
-        </tr>
-
-        <!-- Subfila Desplegable (Detalle por Áreas) -->
-        <tr id="${rowId}" class="hidden bg-[#080C14] border-b border-gray-800">
-            <td colspan="4" class="p-4 pl-8">
-                <div class="bg-[#0D1322] p-4 rounded-lg border border-gray-800 shadow-inner">
-                    <p class="text-[11px] font-bold text-emerald-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-                        <span>🏢 Áreas/Procesos solicitantes en "${item.nombre}":</span>
-                    </p>
-                    <table class="w-full text-left text-xs">
-                        <thead class="text-gray-400 text-[10px] uppercase border-b border-gray-800/80">
-                            <tr>
-                                <th class="py-2">Área o Proceso</th>
-                                <th class="py-2 text-right">Gasto COP</th>
-                                <th class="py-2 text-right">Gasto USD</th>
-                                <th class="py-2 text-right">Gasto EUR</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-800/30">
-                            ${procesosList.map(p => `
-                                <tr class="hover:bg-gray-800/20">
-                                    <td class="py-2 text-gray-300 font-medium">${p.nombre}</td>
-                                    <td class="py-2 text-right font-mono ${p.cop > 0 ? 'text-purple-300 font-semibold' : 'text-gray-600'}">${formatMoney(p.cop, 'COP')}</td>
-                                    <td class="py-2 text-right font-mono ${p.usd > 0 ? 'text-emerald-400 font-semibold' : 'text-gray-600'}">${formatMoney(p.usd, 'USD')}</td>
-                                    <td class="py-2 text-right font-mono ${p.eur > 0 ? 'text-amber-400 font-semibold' : 'text-gray-600'}">${formatMoney(p.eur, 'EUR')}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            </td>
-        </tr>
-        `;
-    });
-
-    tbody.innerHTML = html;
-}
-
-// FUNCIÓN PARA EXPANDIR / COLAPSAR FILAS ANIDADAS
-function toggleSubRow(rowId, iconId) {
-    const row = document.getElementById(rowId);
-    const icon = document.getElementById(iconId);
-    if (row.classList.contains('hidden')) {
-        row.classList.remove('hidden');
-        icon.style.transform = 'rotate(90deg)';
-    } else {
-        row.classList.add('hidden');
-        icon.style.transform = 'rotate(0deg)';
-    }
-}
-
-        // RENDERIZAR GRÁFICA PROCESOS
-        function renderChartProceso(dataArray) {
-            const key = currentProcesoCurrency.toLowerCase();
-            const filtered = dataArray.filter(i => i[key] > 0).sort((a, b) => b[key] - a[key]).slice(0, 10);
-
-            const labels = filtered.map(i => i.nombre.length > 28 ? i.nombre.substring(0, 26) + '...' : i.nombre);
-            const values = filtered.map(i => i[key]);
-
-            let barColor = 'rgba(139, 92, 246, 0.85)', borderColor = '#8B5CF6';
-            if (currentProcesoCurrency === 'USD') { barColor = 'rgba(16, 185, 129, 0.85)'; borderColor = '#10B981'; }
-            if (currentProcesoCurrency === 'EUR') { barColor = 'rgba(245, 158, 11, 0.85)'; borderColor = '#F59E0B'; }
+            let barColor = 'rgba(139, 92, 246, 0.85)';
+            let borderColor = '#8B5CF6';
+            if (currency === 'USD') { barColor = 'rgba(16, 185, 129, 0.85)'; borderColor = '#10B981'; }
+            if (currency === 'EUR') { barColor = 'rgba(245, 158, 11, 0.85)'; borderColor = '#F59E0B'; }
 
             const ctx = document.getElementById('procesoChart').getContext('2d');
             if (chartProceso) chartProceso.destroy();
@@ -542,7 +304,7 @@ function toggleSubRow(rowId, iconId) {
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: `Monto (${currentProcesoCurrency})`,
+                        label: `Monto (${currency})`,
                         data: values,
                         backgroundColor: barColor,
                         borderColor: borderColor,
@@ -556,7 +318,9 @@ function toggleSubRow(rowId, iconId) {
                     plugins: {
                         legend: { display: false },
                         tooltip: {
-                            callbacks: { label: (ctx) => ` Gasto: ${formatMoney(ctx.parsed.y, currentProcesoCurrency)}` }
+                            callbacks: {
+                                label: (ctx) => ` Gasto: ${formatMoney(ctx.parsed.y, currency)}`
+                            }
                         }
                     },
                     scales: {
@@ -567,17 +331,20 @@ function toggleSubRow(rowId, iconId) {
             });
         }
 
-        // RENDERIZAR GRÁFICA TIPOS DE COMPRA
-        function renderChartTipo(dataArray) {
-            const key = currentTipoCurrency.toLowerCase();
-            const filtered = dataArray.filter(i => i[key] > 0).sort((a, b) => b[key] - a[key]).slice(0, 10);
+        function renderChartTipo(currency = 'COP') {
+            const key = currency.toLowerCase();
+            const filtered = rawTipos
+                .filter(item => item[key] > 0)
+                .sort((a, b) => b[key] - a[key])
+                .slice(0, 10);
 
-            const labels = filtered.map(i => i.nombre.length > 28 ? i.nombre.substring(0, 26) + '...' : i.nombre);
-            const values = filtered.map(i => i[key]);
+            const labels = filtered.map(item => item.nombre.length > 28 ? item.nombre.substring(0, 26) + '...' : item.nombre);
+            const values = filtered.map(item => item[key]);
 
-            let barColor = 'rgba(139, 92, 246, 0.85)', borderColor = '#8B5CF6';
-            if (currentTipoCurrency === 'USD') { barColor = 'rgba(16, 185, 129, 0.85)'; borderColor = '#10B981'; }
-            if (currentTipoCurrency === 'EUR') { barColor = 'rgba(245, 158, 11, 0.85)'; borderColor = '#F59E0B'; }
+            let barColor = 'rgba(139, 92, 246, 0.85)';
+            let borderColor = '#8B5CF6';
+            if (currency === 'USD') { barColor = 'rgba(16, 185, 129, 0.85)'; borderColor = '#10B981'; }
+            if (currency === 'EUR') { barColor = 'rgba(245, 158, 11, 0.85)'; borderColor = '#F59E0B'; }
 
             const ctx = document.getElementById('tipoChart').getContext('2d');
             if (chartTipo) chartTipo.destroy();
@@ -587,7 +354,7 @@ function toggleSubRow(rowId, iconId) {
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: `Monto (${currentTipoCurrency})`,
+                        label: `Monto (${currency})`,
                         data: values,
                         backgroundColor: barColor,
                         borderColor: borderColor,
@@ -601,7 +368,9 @@ function toggleSubRow(rowId, iconId) {
                     plugins: {
                         legend: { display: false },
                         tooltip: {
-                            callbacks: { label: (ctx) => ` Gasto: ${formatMoney(ctx.parsed.y, currentTipoCurrency)}` }
+                            callbacks: {
+                                label: (ctx) => ` Gasto: ${formatMoney(ctx.parsed.y, currency)}`
+                            }
                         }
                     },
                     scales: {
@@ -612,26 +381,71 @@ function toggleSubRow(rowId, iconId) {
             });
         }
 
-        // CONTROLADORES DE CAMBIO DE MONEDA EN BOTONES
         function changeProcesoCurrency(curr) {
-            currentProcesoCurrency = curr;
             ['cop', 'usd', 'eur'].forEach(c => {
                 document.getElementById(`btn-proc-${c}`).classList.remove('currency-btn-active', 'text-white');
                 document.getElementById(`btn-proc-${c}`).classList.add('text-gray-400');
             });
             document.getElementById(`btn-proc-${curr.toLowerCase()}`).classList.add('currency-btn-active', 'text-white');
-            recalculateAndRender();
+            renderChartProceso(curr);
         }
 
         function changeTipoCurrency(curr) {
-            currentTipoCurrency = curr;
             ['cop', 'usd', 'eur'].forEach(c => {
                 document.getElementById(`btn-tipo-${c}`).classList.remove('currency-btn-active', 'text-white');
                 document.getElementById(`btn-tipo-${c}`).classList.add('text-gray-400');
             });
             document.getElementById(`btn-tipo-${curr.toLowerCase()}`).classList.add('currency-btn-active', 'text-white');
-            recalculateAndRender();
+            renderChartTipo(curr);
         }
+
+        // LECTURA DINÁMICA DE EXCEL SI SE REQUIERE CARGA DIRECTA
+        function parseExcelData(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                const rows = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+
+                // Procesar desde fila 1 omitiendo cabeceras (Columnas D:3, E:4, H:7, I:8)
+                const procesosMap = {};
+                const tiposMap = {};
+
+                rows.slice(1).forEach(row => {
+                    const moneda = (row[3] || '').toString().trim();
+                    const area = (row[4] || '').toString().trim();
+                    const tipo = (row[7] || '').toString().trim();
+                    const valor = parseFloat(row[8]) || 0;
+
+                    if (!moneda || !valor) return;
+
+                    // Agrupar Proceso
+                    if (area) {
+                        if (!procesosMap[area]) procesosMap[area] = { nombre: area, cop: 0, usd: 0, eur: 0 };
+                        const key = moneda.toLowerCase();
+                        if (key in procesosMap[area]) procesosMap[area][key] += valor;
+                    }
+
+                    // Agrupar Tipo
+                    if (tipo) {
+                        if (!tiposMap[tipo]) tiposMap[tipo] = { nombre: tipo, cop: 0, usd: 0, eur: 0 };
+                        const key = moneda.toLowerCase();
+                        if (key in tiposMap[tipo]) tiposMap[tipo][key] += valor;
+                    }
+                });
+
+                console.log("Procesos parseados dinámicamente:", Object.values(procesosMap));
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTablaProcesos();
+            renderTablaTipos();
+            renderChartProceso('COP');
+            renderChartTipo('COP');
+        });
     </script>
 </body>
 </html>
