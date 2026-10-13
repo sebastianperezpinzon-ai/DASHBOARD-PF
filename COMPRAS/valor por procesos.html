@@ -4,11 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏷️</text></svg>">
-    <title>Clasificación de Compras - Analítica Multimoneda</title>
+    <title>Clasificación Multimoneda de Compras | ECO-S</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Librería SheetJS para lectura dinámica opcional de Excel -->
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
     <style>
     body {
@@ -22,6 +20,12 @@
         background-color: #8B5CF6 !important;
         color: #ffffff !important;
         border-color: #A78BFA !important;
+    }
+    .month-btn-active {
+        background-color: #10B981 !important;
+        color: #ffffff !important;
+        border-color: #34D399 !important;
+        font-weight: 700 !important;
     }
     </style>
 </head>
@@ -49,46 +53,84 @@
                 Clasificación Multimoneda de Compras
             </h1>
             <p class="text-gray-400 text-base md:text-lg max-w-3xl mx-auto leading-relaxed">
-                Distribución del presupuesto por Procesos Institucionales (Col. E) y Tipos de Compra (Col. H). Análisis nominal independiente por divisa (Col. D).
+                Distribución del presupuesto por Procesos Institucionales (Col. E) y Tipos de Compra (Col. H). Filtración dinámica por meses y evaluación multimoneda (Col. D - I).
             </p>
         </header>
 
-        <!-- 3. RESUMEN DE INDICADORES CLAVE (KPI CARDS) -->
+        <!-- 3. BARRA DE FILTRO TEMPORAL POR MESES -->
+        <section class="w-full max-w-7xl mx-auto px-6 mb-8">
+            <div class="bg-[#111827] p-4 rounded-xl border border-gray-800 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-2">
+                    <span class="p-2 bg-emerald-500/10 text-emerald-400 rounded-lg text-lg">📅</span>
+                    <div>
+                        <h3 class="text-sm font-bold text-white">Filtrar Periodo Temporal</h3>
+                        <p class="text-[11px] text-gray-400">Selecciona un mes específico o la vista total acumulada</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-1.5 overflow-x-auto max-w-full py-1">
+                    <button onclick="selectMonth('TODOS')" id="mbtn-TODOS" class="month-btn-active px-3 py-1.5 rounded-lg text-xs border border-gray-700 bg-[#0B0F19] text-gray-300 hover:text-white transition">🌟 Total Acumulado</button>
+                    <button onclick="selectMonth('ene')" id="mbtn-ene" class="px-3 py-1.5 rounded-lg text-xs border border-gray-700 bg-[#0B0F19] text-gray-300 hover:text-white transition">Ene</button>
+                    <button onclick="selectMonth('feb')" id="mbtn-feb" class="px-3 py-1.5 rounded-lg text-xs border border-gray-700 bg-[#0B0F19] text-gray-300 hover:text-white transition">Feb</button>
+                    <button onclick="selectMonth('mar')" id="mbtn-mar" class="px-3 py-1.5 rounded-lg text-xs border border-gray-700 bg-[#0B0F19] text-gray-300 hover:text-white transition">Mar</button>
+                    <button onclick="selectMonth('abr')" id="mbtn-abr" class="px-3 py-1.5 rounded-lg text-xs border border-gray-700 bg-[#0B0F19] text-gray-300 hover:text-white transition">Abr</button>
+                    <button onclick="selectMonth('may')" id="mbtn-may" class="px-3 py-1.5 rounded-lg text-xs border border-gray-700 bg-[#0B0F19] text-gray-300 hover:text-white transition">May</button>
+                    <button onclick="selectMonth('jun')" id="mbtn-jun" class="px-3 py-1.5 rounded-lg text-xs border border-gray-700 bg-[#0B0F19] text-gray-300 hover:text-white transition">Jun</button>
+                    <button onclick="selectMonth('jul')" id="mbtn-jul" class="px-3 py-1.5 rounded-lg text-xs border border-gray-700 bg-[#0B0F19] text-gray-300 hover:text-white transition">Jul</button>
+                    <button onclick="selectMonth('ago')" id="mbtn-ago" class="px-3 py-1.5 rounded-lg text-xs border border-gray-700 bg-[#0B0F19] text-gray-300 hover:text-white transition">Ago</button>
+                    <button onclick="selectMonth('sep')" id="mbtn-sep" class="px-3 py-1.5 rounded-lg text-xs border border-gray-700 bg-[#0B0F19] text-gray-300 hover:text-white transition">Sep</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. RESUMEN DE INDICADORES CLAVE (KPI CARDS POR MONEDA Y MES DE MAYOR GASTO) -->
         <section class="w-full max-w-7xl mx-auto px-6 mb-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                
+                <!-- KPI COP -->
                 <div class="bg-[#111827] p-5 rounded-xl border border-gray-800 shadow-lg">
                     <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold flex justify-between">
                         <span>Gasto Ejecutado COP</span>
                         <span class="text-purple-400 font-bold">COP</span>
                     </p>
-                    <p class="text-2xl font-extrabold text-purple-400 mt-2">$ 28.823.115.005</p>
-                    <p class="text-[11px] text-gray-500 mt-1">Acumulado en moneda nacional</p>
+                    <p id="kpi-cop" class="text-2xl font-extrabold text-purple-400 mt-2">$ 28.823.115.005</p>
+                    <p id="kpi-cop-sub" class="text-[11px] text-gray-500 mt-1">Total en moneda nacional</p>
                 </div>
+
+                <!-- KPI USD -->
                 <div class="bg-[#111827] p-5 rounded-xl border border-gray-800 shadow-lg">
                     <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold flex justify-between">
                         <span>Gasto Ejecutado USD</span>
                         <span class="text-emerald-400 font-bold">USD</span>
                     </p>
-                    <p class="text-2xl font-extrabold text-emerald-400 mt-2">$ 897.837</p>
-                    <p class="text-[11px] text-gray-500 mt-1">Servicios profesionales y software</p>
+                    <p id="kpi-usd" class="text-2xl font-extrabold text-emerald-400 mt-2">$ 897.837</p>
+                    <p id="kpi-usd-sub" class="text-[11px] text-gray-500 mt-1">Servicios IT y Licencias</p>
                 </div>
+
+                <!-- KPI EUR -->
                 <div class="bg-[#111827] p-5 rounded-xl border border-gray-800 shadow-lg">
                     <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold flex justify-between">
                         <span>Gasto Ejecutado EUR</span>
                         <span class="text-amber-400 font-bold">EUR</span>
                     </p>
-                    <p class="text-2xl font-extrabold text-amber-400 mt-2">€ 29.484</p>
-                    <p class="text-[11px] text-gray-500 mt-1">Investigación y suscripciones</p>
+                    <p id="kpi-eur" class="text-2xl font-extrabold text-amber-400 mt-2">€ 29.484</p>
+                    <p id="kpi-eur-sub" class="text-[11px] text-gray-500 mt-1">Investigación y Publicaciones</p>
                 </div>
-                <div class="bg-[#111827] p-5 rounded-xl border border-gray-800 shadow-lg">
-                    <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold">Proceso Mayor Gasto</p>
-                    <p class="text-lg font-bold text-gray-200 mt-2 truncate">PROYECTO HUMANISE</p>
-                    <p class="text-[11px] text-purple-400 mt-1">$ 7.570.240.108 COP (26.3%)</p>
+
+                <!-- KPI MES DE MAYOR GASTO -->
+                <div class="bg-[#111827] p-5 rounded-xl border border-gray-800 shadow-lg relative overflow-hidden">
+                    <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold flex justify-between">
+                        <span id="kpi-peak-title">Mes de Mayor Gasto</span>
+                        <span class="text-yellow-400 font-bold">🔥</span>
+                    </p>
+                    <p id="kpi-peak-val" class="text-xl font-bold text-yellow-400 mt-2 truncate">Abril (COP)</p>
+                    <p id="kpi-peak-sub" class="text-[11px] text-gray-400 mt-1">$ 7.610.042.064 COP (26.4%)</p>
                 </div>
+
             </div>
         </section>
 
-        <!-- 4. CONTENEDOR PRINCIPAL: GRÁFICAS Y TABLAS -->
+        <!-- 5. CONTENEDOR PRINCIPAL: GRÁFICAS Y TABLAS -->
         <main class="w-full max-w-7xl mx-auto px-6 mb-12 space-y-10">
 
             <!-- SECCIÓN 1: GASTO POR PROCESO -->
@@ -98,9 +140,10 @@
                         <h2 class="text-xl font-bold text-white flex items-center gap-2">
                             <span class="text-purple-400">🏢</span> 1. Gasto por Proceso o Área (Columna E)
                         </h2>
-                        <p class="text-xs text-gray-400 mt-1">Selecciona la divisa para adaptar la escala del gráfico.</p>
+                        <p class="text-xs text-gray-400 mt-1">Top áreas solicitantes para el periodo y divisa seleccionados.</p>
                     </div>
 
+                    <!-- Botones de Selección de Moneda -->
                     <div class="flex items-center bg-[#0B0F19] p-1 rounded-lg border border-gray-800 text-xs">
                         <span class="text-gray-500 px-2 font-semibold">Divisa:</span>
                         <button onclick="changeProcesoCurrency('COP')" id="btn-proc-cop" class="currency-btn-active px-3 py-1.5 rounded-md font-bold transition">COP ($)</button>
@@ -109,10 +152,12 @@
                     </div>
                 </div>
 
+                <!-- Gráfica Proceso -->
                 <div class="relative h-80 w-full mb-6">
                     <canvas id="procesoChart"></canvas>
                 </div>
 
+                <!-- Tabla Proceso (Desplegable) -->
                 <details class="group border-t border-gray-800/80 pt-4">
                     <summary class="flex justify-between items-center cursor-pointer bg-[#0B0F19] hover:bg-gray-800/50 p-3.5 rounded-lg border border-gray-800 text-xs font-semibold text-gray-300 hover:text-purple-400 transition select-none">
                         <span class="flex items-center gap-2">
@@ -149,9 +194,10 @@
                         <h2 class="text-xl font-bold text-white flex items-center gap-2">
                             <span class="text-emerald-400">📦</span> 2. Gasto según Tipo de Compra (Columna H)
                         </h2>
-                        <p class="text-xs text-gray-400 mt-1">Clasificación por Denominación de Grupo de Compra.</p>
+                        <p class="text-xs text-gray-400 mt-1">Clasificación por Denominación de Grupo de Compra para el periodo activo.</p>
                     </div>
 
+                    <!-- Botones de Selección de Moneda -->
                     <div class="flex items-center bg-[#0B0F19] p-1 rounded-lg border border-gray-800 text-xs">
                         <span class="text-gray-500 px-2 font-semibold">Divisa:</span>
                         <button onclick="changeTipoCurrency('COP')" id="btn-tipo-cop" class="currency-btn-active px-3 py-1.5 rounded-md font-bold transition">COP ($)</button>
@@ -160,10 +206,12 @@
                     </div>
                 </div>
 
+                <!-- Gráfica Tipo de Compra -->
                 <div class="relative h-80 w-full mb-6">
                     <canvas id="tipoChart"></canvas>
                 </div>
 
+                <!-- Tabla Tipo de Compra (Desplegable) -->
                 <details class="group border-t border-gray-800/80 pt-4">
                     <summary class="flex justify-between items-center cursor-pointer bg-[#0B0F19] hover:bg-gray-800/50 p-3.5 rounded-lg border border-gray-800 text-xs font-semibold text-gray-300 hover:text-emerald-400 transition select-none">
                         <span class="flex items-center gap-2">
@@ -196,58 +244,88 @@
         </main>
     </div>
 
-    <!-- 5. PIE DE PÁGINA -->
+    <!-- 6. PIE DE PÁGINA -->
     <footer class="bg-[#0B0F19] text-center py-6 text-xs text-gray-500 border-t border-gray-800">
-        <p>Dirección de Gestión Administrativa • Control Presupuestal y Analítica de Compras</p>
+        <p>Dirección de Gestión Administrativa • Control Presupuestal y Analítica de Compras | ECO-S</p>
     </footer>
 
-    <!-- 6. SCRIPTS DE LÓGICA Y RENDERIZADO -->
+    <!-- 7. LÓGICA REACTIVA DE DATOS Y RENDERIZADO (CHARTS & TABLES) -->
     <script>
-        // DATOS CONSOLIDADOS DESDE FUENTE.XLSX (COLUMNAS D A I)
-        const rawProcesos = [
-            { nombre: "PROYECTO HUMANISE", cop: 7570240108, usd: 189504.4, eur: 0 },
-            { nombre: "GESTIÓN DE INFRAESTRUCTURA Y PLANTA FÍSICA", cop: 3869237384, usd: 0, eur: 0 },
-            { nombre: "SEGURIDAD INFORMÁTICA", cop: 2927498532, usd: 3594, eur: 0 },
-            { nombre: "GESTIÓN DE COMUNICACIONES Y PUBLICIDAD", cop: 1881459157, usd: 67017.87, eur: 0 },
-            { nombre: "RECTORÍA", cop: 1665893154, usd: 0, eur: 0 },
-            { nombre: "GERENCIA DE PROYECCIÓN Y CRECIMIENTO", cop: 1227092688, usd: 250, eur: 0 },
-            { nombre: "GERENCIA DE INTERNACIONALIZACIÓN Y RELACIONES INSTITUCIONALES", cop: 1215160410, usd: 25610, eur: 0 },
-            { nombre: "VICERRECTORÍA ADMINISTRATIVA Y FINANCIERA", cop: 987747805, usd: 25000, eur: 0 },
-            { nombre: "LABORATORIOS DE INGENIERÍA", cop: 809462615, usd: 0, eur: 0 },
-            { nombre: "SELECCIÓN DEL TALENTO Y CALIDAD DE VIDA", cop: 698188179, usd: 1040, eur: 0 },
-            { nombre: "DIRECCIÓN DE INVESTIGACIONES", cop: 493531175, usd: 18133.25, eur: 2479 },
-            { nombre: "SISTEMAS DE INFORMACIÓN", cop: 442188448, usd: 147820, eur: 0 },
-            { nombre: "CONTRATACIÓN PÚBLICA", cop: 407136347, usd: 0, eur: 0 },
-            { nombre: "CONSULTORIA PRIVADA", cop: 383584925, usd: 13117.21, eur: 0 },
-            { nombre: "BIENESTAR UNIVERSITARIO", cop: 361360652, usd: 0, eur: 400 },
-            { nombre: "BIBLIOTECA", cop: 247277952, usd: 147459, eur: 0 },
-            { nombre: "DIRECCIÓN DE CONTABILIDAD", cop: 243879924, usd: 0, eur: 0 },
-            { nombre: "POSGRADO", cop: 211051515, usd: 0, eur: 0 },
-            { nombre: "SALA GENERAL", cop: 151532156, usd: 0, eur: 0 },
-            { nombre: "CONSULTORÍA ESPECIALIZADA", cop: 134866810, usd: 500, eur: 5000 }
+        // MAPEO DE MESES DE LA COLUMNA G
+        const monthNames = {
+            'ene': 'Enero', 'feb': 'Febrero', 'mar': 'Marzo',
+            'abr': 'Abril', 'may': 'Mayo', 'jun': 'Junio',
+            'jul': 'Julio', 'ago': 'Agosto', 'sep': 'Septiembre'
+        };
+
+        // MATRIZ DE DATOS AGREGADA (PROCESOS - COLUMNA E)
+        const procData = [
+            {"m": "abr", "a": "BIBLIOTECA", "cop": 37154740, "usd": 0, "eur": 0},
+            {"m": "abr", "a": "BIENESTAR UNIVERSITARIO", "cop": 9128816, "usd": 0, "eur": 0},
+            {"m": "abr", "a": "CONSULTORIA PRIVADA", "cop": 87584000, "usd": 0, "eur": 0},
+            {"m": "abr", "a": "DIRECCIÓN DE INVESTIGACIONES", "cop": 113337482, "usd": 1500, "eur": 1699},
+            {"m": "abr", "a": "GESTIÓN DE COMUNICACIONES Y PUBLICIDAD", "cop": 3540000, "usd": 0, "eur": 0},
+            {"m": "abr", "a": "GESTIÓN DE INFRAESTRUCTURA Y PLANTA FÍSICA", "cop": 1421473215, "usd": 0, "eur": 0},
+            {"m": "abr", "a": "PROYECTO HUMANISE", "cop": 5580624000, "usd": 0, "eur": 0},
+            {"m": "abr", "a": "PUBLICIDAD", "cop": 254250000, "usd": 83005.08, "eur": 0},
+            {"m": "abr", "a": "RECTORÍA", "cop": 15500000, "usd": 0, "eur": 0},
+            {"m": "ago", "a": "BIBLIOTECA", "cop": 13950000, "usd": 147459, "eur": 0},
+            {"m": "ago", "a": "DIRECCIÓN DE INVESTIGACIONES", "cop": 15309315, "usd": 16633.25, "eur": 1800},
+            {"m": "ago", "a": "GESTIÓN DE COMUNICACIONES Y PUBLICIDAD", "cop": 1332766352, "usd": 26713, "eur": 0},
+            {"m": "ago", "a": "GESTIÓN DE INFRAESTRUCTURA Y PLANTA FÍSICA", "cop": 204369792, "usd": 0, "eur": 0},
+            {"m": "ago", "a": "PROYECTO HUMANISE", "cop": 189000000, "usd": 0, "eur": 0},
+            {"m": "ene", "a": "CONSULTORÍA ESPECIALIZADA", "cop": 2850000, "usd": 0, "eur": 0},
+            {"m": "ene", "a": "GESTIÓN DE INFRAESTRUCTURA Y PLANTA FÍSICA", "cop": 757966, "usd": 0, "eur": 0},
+            {"m": "ene", "a": "SISTEMAS DE INFORMACIÓN", "cop": 442188448, "usd": 63994.86, "eur": 0},
+            {"m": "feb", "a": "CONSULTORIA PRIVADA", "cop": 13583200, "usd": 13117.21, "eur": 0},
+            {"m": "feb", "a": "DIRECCIÓN DE CONTABILIDAD", "cop": 243879924, "usd": 0, "eur": 0},
+            {"m": "feb", "a": "DIRECCIÓN EAN X", "cop": 0, "usd": 60000, "eur": 0},
+            {"m": "feb", "a": "LABORATORIOS DE INGENIERÍA", "cop": 320967390, "usd": 0, "eur": 0},
+            {"m": "feb", "a": "PROYECTO HUMANISE", "cop": 1242561708, "usd": 104269.98, "eur": 0},
+            {"m": "feb", "a": "REGIONES", "cop": 89796415, "usd": 0, "eur": 0},
+            {"m": "jul", "a": "GESTIÓN DE INFRAESTRUCTURA Y PLANTA FÍSICA", "cop": 1137021312, "usd": 0, "eur": 0},
+            {"m": "jul", "a": "VICERRECTORÍA ADMINISTRATIVA Y FINANCIERA", "cop": 987747805, "usd": 25000, "eur": 0},
+            {"m": "jun", "a": "GERENCIA DE INTERNACIONALIZACIÓN Y RELACIONES INSTITUCIONALES", "cop": 1215160410, "usd": 25610, "eur": 0},
+            {"m": "jun", "a": "PROYECTO HUMANISE", "cop": 558062400, "usd": 0, "eur": 0},
+            {"m": "mar", "a": "GERENCIA DE PROYECCIÓN Y CRECIMIENTO", "cop": 1227092688, "usd": 0, "eur": 0},
+            {"m": "mar", "a": "RECTORÍA", "cop": 218528154, "usd": 0, "eur": 0},
+            {"m": "may", "a": "CONTRATACIÓN PÚBLICA", "cop": 407136347, "usd": 0, "eur": 0},
+            {"m": "may", "a": "SEGURIDAD INFORMÁTICA", "cop": 2927498532, "usd": 3594, "eur": 0},
+            {"m": "sep", "a": "BIENESTAR UNIVERSITARIO", "cop": 352231836, "usd": 0, "eur": 400}
         ];
 
-        const rawTipos = [
-            { nombre: "SERVICIOS PROFESIO", cop: 15270084531, usd: 468073.72, eur: 5900 },
-            { nombre: "HARDWARE", cop: 2830317867, usd: 0, eur: 0 },
-            { nombre: "LICENCIAS Y SUBSCR", cop: 2028956171, usd: 253223.14, eur: 9345.81 },
-            { nombre: "INSTITUCIONALES", cop: 1272455052, usd: 20505, eur: 0 },
-            { nombre: "SRV MTTO INFRAESTR", cop: 1181895501, usd: 0, eur: 0 },
-            { nombre: "ALIMENTACION Y REF", cop: 774563124, usd: 0, eur: 0 },
-            { nombre: "ACTIVOS Y/O EQUIPO", cop: 508930514, usd: 10852.05, eur: 0 },
-            { nombre: "IMPRESOS", cop: 502252621, usd: 0, eur: 0 },
-            { nombre: "PUBLICIDAD Y MATER", cop: 421257448, usd: 53570, eur: 0 },
-            { nombre: "ASEO Y CAFETERIA", cop: 369397022, usd: 0, eur: 0 },
-            { nombre: "DOTACIÓN Y ELEM. D", cop: 334504312, usd: 0, eur: 0 },
-            { nombre: "BONOS", cop: 298295821, usd: 10569.4, eur: 0 },
-            { nombre: "TRANSPORTE", cop: 257790341, usd: 0, eur: 0 },
-            { nombre: "ELEM. LABORATORIO", cop: 198138120, usd: 2555.35, eur: 0 },
-            { nombre: "GRADOS Y EVENTOS", cop: 193550210, usd: 0, eur: 0 }
+        // MATRIZ DE DATOS AGREGADA (TIPOS DE COMPRA - COLUMNA H)
+        const tipoData = [
+            {"m": "abr", "t": "ACTIVOS Y/O EQUIPO", "cop": 29686823, "usd": 180.78, "eur": 0},
+            {"m": "abr", "t": "ALIMENTACION Y REF", "cop": 119572599, "usd": 0, "eur": 0},
+            {"m": "abr", "t": "HARDWARE", "cop": 1391500000, "usd": 0, "eur": 0},
+            {"m": "abr", "t": "PUBLICIDAD Y MATER", "cop": 254250000, "usd": 84324.3, "eur": 0},
+            {"m": "abr", "t": "SERVICIOS PROFESIO", "cop": 5797372642, "usd": 0, "eur": 1699},
+            {"m": "ago", "t": "GESTIÓN DOCUMENTAL", "cop": 28500000, "usd": 147459, "eur": 0},
+            {"m": "ago", "t": "PUBLICIDAD Y MATER", "cop": 1332766352, "usd": 26713, "eur": 0},
+            {"m": "ago", "t": "SERVICIOS PROFESIO", "cop": 235310702, "usd": 16633.26, "eur": 1800},
+            {"m": "ene", "t": "ARRENDAMIEN Y ALQU", "cop": 2500000, "usd": 0, "eur": 0},
+            {"m": "ene", "t": "LICENCIAS Y SUBSCR", "cop": 442188448, "usd": 63994.86, "eur": 0},
+            {"m": "ene", "t": "TRANSPORTE", "cop": 1107966, "usd": 0, "eur": 0},
+            {"m": "feb", "t": "ELEM. LABORATORIO", "cop": 198138120, "usd": 0, "eur": 0},
+            {"m": "feb", "t": "SERVICIOS PROFESIO", "cop": 1656821885, "usd": 177386.19, "eur": 13283.13},
+            {"m": "jul", "t": "SRV MTTO INFRAESTR", "cop": 1137021312, "usd": 0, "eur": 0},
+            {"m": "jun", "t": "INSTITUCIONALES", "cop": 1215160410, "usd": 25610, "eur": 0},
+            {"m": "mar", "t": "SERVICIOS PROFESIO", "cop": 1445620842, "usd": 52054.43, "eur": 644.94},
+            {"m": "may", "t": "HARDWARE", "cop": 1438817867, "usd": 0, "eur": 0},
+            {"m": "may", "t": "LICENCIAS Y SUBSCR", "cop": 1586767723, "usd": 38951.5, "eur": 6413.98},
+            {"m": "sep", "t": "SERVICIOS PROFESIO", "cop": 352231836, "usd": 179461, "eur": 4967.81}
         ];
+
+        // ESTADOS GLOBALES DE FILTRACIÓN
+        let currentMonth = 'TODOS';
+        let currentProcesoCurr = 'COP';
+        let currentTipoCurr = 'COP';
 
         let chartProceso = null;
         let chartTipo = null;
 
+        // FORMATO DE MONEDAS
         const formatMoney = (val, currency) => {
             if (!val || val === 0) return '-';
             const formatted = new Intl.NumberFormat('es-CO').format(val);
@@ -257,9 +335,87 @@
             return formatted;
         };
 
-        function renderTablaProcesos() {
+        // EVENTO: SELECCIÓN DE MES
+        function selectMonth(m) {
+            currentMonth = m;
+            
+            // Actualizar clases de botones
+            const allMonths = ['TODOS', 'ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep'];
+            allMonths.forEach(id => {
+                const btn = document.getElementById(`mbtn-${id}`);
+                if (btn) {
+                    btn.classList.remove('month-btn-active');
+                    btn.classList.add('bg-[#0B0F19]', 'text-gray-300');
+                }
+            });
+
+            const activeBtn = document.getElementById(`mbtn-${m}`);
+            if (activeBtn) {
+                activeBtn.classList.add('month-btn-active');
+                activeBtn.classList.remove('bg-[#0B0F19]', 'text-gray-300');
+            }
+
+            updateDashboard();
+        }
+
+        // RECONSTRUCCIÓN DEL DASHBOARD REACTIVO
+        function updateDashboard() {
+            // 1. Filtrar registros por mes
+            const filteredProcs = currentMonth === 'TODOS' ? procData : procData.filter(r => r.m === currentMonth);
+            const filteredTipos = currentMonth === 'TODOS' ? tipoData : tipoData.filter(r => r.m === currentMonth);
+
+            // 2. Calcular totales por moneda
+            const totCOP = filteredProcs.reduce((acc, r) => acc + r.cop, 0);
+            const totUSD = filteredProcs.reduce((acc, r) => acc + r.usd, 0);
+            const totEUR = filteredProcs.reduce((acc, r) => acc + r.eur, 0);
+
+            document.getElementById('kpi-cop').innerText = formatMoney(totCOP, 'COP');
+            document.getElementById('kpi-usd').innerText = formatMoney(totUSD, 'USD');
+            document.getElementById('kpi-eur').innerText = formatMoney(totEUR, 'EUR');
+
+            document.getElementById('kpi-cop-sub').innerText = currentMonth === 'TODOS' ? 'Acumulado Total' : `Ejecución en ${monthNames[currentMonth]}`;
+            document.getElementById('kpi-usd-sub').innerText = currentMonth === 'TODOS' ? 'Acumulado Total' : `Ejecución en ${monthNames[currentMonth]}`;
+            document.getElementById('kpi-eur-sub').innerText = currentMonth === 'TODOS' ? 'Acumulado Total' : `Ejecución en ${monthNames[currentMonth]}`;
+
+            // 3. Evaluar "Mes de Mayor Gasto"
+            if (currentMonth === 'TODOS') {
+                document.getElementById('kpi-peak-title').innerText = "Mes de Mayor Gasto";
+                document.getElementById('kpi-peak-val').innerText = "Abril (COP)";
+                document.getElementById('kpi-peak-sub').innerText = "$ 7.610.042.064 COP (26.4%)";
+            } else {
+                // Si hay mes específico seleccionado, evaluamos el proceso líder de ese mes
+                const topProc = [...filteredProcs].sort((a,b) => b.cop - a.cop)[0];
+                document.getElementById('kpi-peak-title').innerText = `Líder ${monthNames[currentMonth]}`;
+                if (topProc) {
+                    document.getElementById('kpi-peak-val').innerText = topProc.a.length > 20 ? topProc.a.substring(0,18)+'...' : topProc.a;
+                    const pct = totCOP > 0 ? ((topProc.cop / totCOP)*100).toFixed(1) : 0;
+                    document.getElementById('kpi-peak-sub').innerText = `${formatMoney(topProc.cop, 'COP')} (${pct}%)`;
+                } else {
+                    document.getElementById('kpi-peak-val').innerText = "Sin registros";
+                    document.getElementById('kpi-peak-sub').innerText = "-";
+                }
+            }
+
+            // 4. Renderizar Gráficas y Tablas
+            renderProcesoSection(filteredProcs);
+            renderTipoSection(filteredTipos);
+        }
+
+        // RENDER SECCIÓN PROCESOS
+        function renderProcesoSection(dataset) {
+            const aggregated = {};
+            dataset.forEach(r => {
+                if (!aggregated[r.a]) aggregated[r.a] = { nombre: r.a, cop: 0, usd: 0, eur: 0 };
+                aggregated[r.a].cop += r.cop;
+                aggregated[r.a].usd += r.usd;
+                aggregated[r.a].eur += r.eur;
+            });
+
+            const list = Object.values(aggregated).sort((a,b) => b[currentProcesoCurr.toLowerCase()] - a[currentProcesoCurr.toLowerCase()]);
+
+            // Tabla
             const tbody = document.getElementById('tablaProcesosBody');
-            tbody.innerHTML = rawProcesos.map(item => `
+            tbody.innerHTML = list.map(item => `
                 <tr class="hover:bg-gray-800/30 transition-colors">
                     <td class="p-3 font-medium text-white">${item.nombre}</td>
                     <td class="p-3 text-right font-mono ${item.cop > 0 ? 'text-purple-300 font-bold' : 'text-gray-600'}">${formatMoney(item.cop, 'COP')}</td>
@@ -267,34 +423,17 @@
                     <td class="p-3 text-right font-mono ${item.eur > 0 ? 'text-amber-400 font-bold' : 'text-gray-600'}">${formatMoney(item.eur, 'EUR')}</td>
                 </tr>
             `).join('');
-        }
 
-        function renderTablaTipos() {
-            const tbody = document.getElementById('tablaTiposBody');
-            tbody.innerHTML = rawTipos.map(item => `
-                <tr class="hover:bg-gray-800/30 transition-colors">
-                    <td class="p-3 font-medium text-white">${item.nombre}</td>
-                    <td class="p-3 text-right font-mono ${item.cop > 0 ? 'text-purple-300 font-bold' : 'text-gray-600'}">${formatMoney(item.cop, 'COP')}</td>
-                    <td class="p-3 text-right font-mono ${item.usd > 0 ? 'text-emerald-400 font-bold' : 'text-gray-600'}">${formatMoney(item.usd, 'USD')}</td>
-                    <td class="p-3 text-right font-mono ${item.eur > 0 ? 'text-amber-400 font-bold' : 'text-gray-600'}">${formatMoney(item.eur, 'EUR')}</td>
-                </tr>
-            `).join('');
-        }
+            // Gráfica
+            const key = currentProcesoCurr.toLowerCase();
+            const top10 = list.filter(i => i[key] > 0).slice(0, 10);
 
-        function renderChartProceso(currency = 'COP') {
-            const key = currency.toLowerCase();
-            const filtered = rawProcesos
-                .filter(item => item[key] > 0)
-                .sort((a, b) => b[key] - a[key])
-                .slice(0, 10);
+            const labels = top10.map(i => i.nombre.length > 28 ? i.nombre.substring(0, 26) + '...' : i.nombre);
+            const values = top10.map(i => i[key]);
 
-            const labels = filtered.map(item => item.nombre.length > 28 ? item.nombre.substring(0, 26) + '...' : item.nombre);
-            const values = filtered.map(item => item[key]);
-
-            let barColor = 'rgba(139, 92, 246, 0.85)';
-            let borderColor = '#8B5CF6';
-            if (currency === 'USD') { barColor = 'rgba(16, 185, 129, 0.85)'; borderColor = '#10B981'; }
-            if (currency === 'EUR') { barColor = 'rgba(245, 158, 11, 0.85)'; borderColor = '#F59E0B'; }
+            let barColor = 'rgba(139, 92, 246, 0.85)', borderColor = '#8B5CF6';
+            if (currentProcesoCurr === 'USD') { barColor = 'rgba(16, 185, 129, 0.85)'; borderColor = '#10B981'; }
+            if (currentProcesoCurr === 'EUR') { barColor = 'rgba(245, 158, 11, 0.85)'; borderColor = '#F59E0B'; }
 
             const ctx = document.getElementById('procesoChart').getContext('2d');
             if (chartProceso) chartProceso.destroy();
@@ -304,7 +443,7 @@
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: `Monto (${currency})`,
+                        label: `Gasto (${currentProcesoCurr})`,
                         data: values,
                         backgroundColor: barColor,
                         borderColor: borderColor,
@@ -317,11 +456,7 @@
                     maintainAspectRatio: false,
                     plugins: {
                         legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: (ctx) => ` Gasto: ${formatMoney(ctx.parsed.y, currency)}`
-                            }
-                        }
+                        tooltip: { callbacks: { label: (c) => ` Gasto: ${formatMoney(c.parsed.y, currentProcesoCurr)}` } }
                     },
                     scales: {
                         x: { grid: { display: false }, ticks: { color: '#9ca3af', font: { size: 10 } } },
@@ -331,20 +466,39 @@
             });
         }
 
-        function renderChartTipo(currency = 'COP') {
-            const key = currency.toLowerCase();
-            const filtered = rawTipos
-                .filter(item => item[key] > 0)
-                .sort((a, b) => b[key] - a[key])
-                .slice(0, 10);
+        // RENDER SECCIÓN TIPO DE COMPRA
+        function renderTipoSection(dataset) {
+            const aggregated = {};
+            dataset.forEach(r => {
+                if (!aggregated[r.t]) aggregated[r.t] = { nombre: r.t, cop: 0, usd: 0, eur: 0 };
+                aggregated[r.t].cop += r.cop;
+                aggregated[r.t].usd += r.usd;
+                aggregated[r.t].eur += r.eur;
+            });
 
-            const labels = filtered.map(item => item.nombre.length > 28 ? item.nombre.substring(0, 26) + '...' : item.nombre);
-            const values = filtered.map(item => item[key]);
+            const list = Object.values(aggregated).sort((a,b) => b[currentTipoCurr.toLowerCase()] - a[currentTipoCurr.toLowerCase()]);
 
-            let barColor = 'rgba(139, 92, 246, 0.85)';
-            let borderColor = '#8B5CF6';
-            if (currency === 'USD') { barColor = 'rgba(16, 185, 129, 0.85)'; borderColor = '#10B981'; }
-            if (currency === 'EUR') { barColor = 'rgba(245, 158, 11, 0.85)'; borderColor = '#F59E0B'; }
+            // Tabla
+            const tbody = document.getElementById('tablaTiposBody');
+            tbody.innerHTML = list.map(item => `
+                <tr class="hover:bg-gray-800/30 transition-colors">
+                    <td class="p-3 font-medium text-white">${item.nombre}</td>
+                    <td class="p-3 text-right font-mono ${item.cop > 0 ? 'text-purple-300 font-bold' : 'text-gray-600'}">${formatMoney(item.cop, 'COP')}</td>
+                    <td class="p-3 text-right font-mono ${item.usd > 0 ? 'text-emerald-400 font-bold' : 'text-gray-600'}">${formatMoney(item.usd, 'USD')}</td>
+                    <td class="p-3 text-right font-mono ${item.eur > 0 ? 'text-amber-400 font-bold' : 'text-gray-600'}">${formatMoney(item.eur, 'EUR')}</td>
+                </tr>
+            `).join('');
+
+            // Gráfica
+            const key = currentTipoCurr.toLowerCase();
+            const top10 = list.filter(i => i[key] > 0).slice(0, 10);
+
+            const labels = top10.map(i => i.nombre.length > 28 ? i.nombre.substring(0, 26) + '...' : i.nombre);
+            const values = top10.map(i => i[key]);
+
+            let barColor = 'rgba(139, 92, 246, 0.85)', borderColor = '#8B5CF6';
+            if (currentTipoCurr === 'USD') { barColor = 'rgba(16, 185, 129, 0.85)'; borderColor = '#10B981'; }
+            if (currentTipoCurr === 'EUR') { barColor = 'rgba(245, 158, 11, 0.85)'; borderColor = '#F59E0B'; }
 
             const ctx = document.getElementById('tipoChart').getContext('2d');
             if (chartTipo) chartTipo.destroy();
@@ -354,7 +508,7 @@
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: `Monto (${currency})`,
+                        label: `Gasto (${currentTipoCurr})`,
                         data: values,
                         backgroundColor: barColor,
                         borderColor: borderColor,
@@ -367,11 +521,7 @@
                     maintainAspectRatio: false,
                     plugins: {
                         legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: (ctx) => ` Gasto: ${formatMoney(ctx.parsed.y, currency)}`
-                            }
-                        }
+                        tooltip: { callbacks: { label: (c) => ` Gasto: ${formatMoney(c.parsed.y, currentTipoCurr)}` } }
                     },
                     scales: {
                         x: { grid: { display: false }, ticks: { color: '#9ca3af', font: { size: 10 } } },
@@ -381,70 +531,30 @@
             });
         }
 
+        // CAMBIO DE DIVISA INTERACTIVO
         function changeProcesoCurrency(curr) {
+            currentProcesoCurr = curr;
             ['cop', 'usd', 'eur'].forEach(c => {
                 document.getElementById(`btn-proc-${c}`).classList.remove('currency-btn-active', 'text-white');
                 document.getElementById(`btn-proc-${c}`).classList.add('text-gray-400');
             });
             document.getElementById(`btn-proc-${curr.toLowerCase()}`).classList.add('currency-btn-active', 'text-white');
-            renderChartProceso(curr);
+            updateDashboard();
         }
 
         function changeTipoCurrency(curr) {
+            currentTipoCurr = curr;
             ['cop', 'usd', 'eur'].forEach(c => {
                 document.getElementById(`btn-tipo-${c}`).classList.remove('currency-btn-active', 'text-white');
                 document.getElementById(`btn-tipo-${c}`).classList.add('text-gray-400');
             });
             document.getElementById(`btn-tipo-${curr.toLowerCase()}`).classList.add('currency-btn-active', 'text-white');
-            renderChartTipo(curr);
+            updateDashboard();
         }
 
-        // LECTURA DINÁMICA DE EXCEL SI SE REQUIERE CARGA DIRECTA
-        function parseExcelData(file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const data = new Uint8Array(e.target.result);
-                const workbook = XLSX.read(data, { type: 'array' });
-                const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                const rows = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
-
-                // Procesar desde fila 1 omitiendo cabeceras (Columnas D:3, E:4, H:7, I:8)
-                const procesosMap = {};
-                const tiposMap = {};
-
-                rows.slice(1).forEach(row => {
-                    const moneda = (row[3] || '').toString().trim();
-                    const area = (row[4] || '').toString().trim();
-                    const tipo = (row[7] || '').toString().trim();
-                    const valor = parseFloat(row[8]) || 0;
-
-                    if (!moneda || !valor) return;
-
-                    // Agrupar Proceso
-                    if (area) {
-                        if (!procesosMap[area]) procesosMap[area] = { nombre: area, cop: 0, usd: 0, eur: 0 };
-                        const key = moneda.toLowerCase();
-                        if (key in procesosMap[area]) procesosMap[area][key] += valor;
-                    }
-
-                    // Agrupar Tipo
-                    if (tipo) {
-                        if (!tiposMap[tipo]) tiposMap[tipo] = { nombre: tipo, cop: 0, usd: 0, eur: 0 };
-                        const key = moneda.toLowerCase();
-                        if (key in tiposMap[tipo]) tiposMap[tipo][key] += valor;
-                    }
-                });
-
-                console.log("Procesos parseados dinámicamente:", Object.values(procesosMap));
-            };
-            reader.readAsArrayBuffer(file);
-        }
-
+        // INICIALIZACIÓN
         document.addEventListener('DOMContentLoaded', () => {
-            renderTablaProcesos();
-            renderTablaTipos();
-            renderChartProceso('COP');
-            renderChartTipo('COP');
+            updateDashboard();
         });
     </script>
 </body>
