@@ -7,6 +7,8 @@
     <title>Clasificación Multimoneda de Compras | ECO-S</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- SheetJS para lectura dinámica directamente del archivo Excel del repositorio -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
     <style>
     body {
@@ -42,10 +44,25 @@
                     Volver al Dashboard Principal
                 </a>
                 <span class="text-xs bg-purple-500/10 text-purple-400 px-3 py-1 rounded-full border border-purple-500/30 font-mono">
-                    Módulo: Clasificación y Distribución del Gasto
+                    Módulo: Clasificación y Distribución del Gasto | ECO-S
                 </span>
             </div>
         </nav>
+
+        <!-- BARRA ESTADO DE CARGA / CONEXIÓN A FUENTE.XLSX -->
+        <div id="data-status-banner" class="bg-[#111827]/80 border-b border-gray-800 px-6 py-2 text-xs text-gray-400 flex flex-wrap justify-between items-center max-w-7xl mx-auto">
+            <div class="flex items-center gap-2">
+                <span id="status-indicator" class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></span>
+                <span id="status-text">Cargando datos desde <code class="text-purple-300 font-mono">Fuente.xlsx</code> en el repositorio...</span>
+            </div>
+            <div class="flex items-center gap-2 mt-1 sm:mt-0">
+                <span class="text-gray-500">¿Cargar otro archivo local?</span>
+                <input type="file" id="excelFileInput" accept=".xlsx, .xls" class="hidden" onchange="handleManualFile(event)">
+                <button onclick="document.getElementById('excelFileInput').click()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-2.5 py-1 rounded border border-gray-700 transition">
+                    📁 Seleccionar Excel
+                </button>
+            </div>
+        </div>
 
         <!-- 2. CABECERA PRINCIPAL -->
         <header class="text-center py-8 px-6 relative z-10">
@@ -53,11 +70,11 @@
                 Clasificación Multimoneda de Compras
             </h1>
             <p class="text-gray-400 text-base md:text-lg max-w-3xl mx-auto leading-relaxed">
-                Distribución del presupuesto por Procesos Institucionales (Col. E) y Tipos de Compra (Col. H). Filtración dinámica por meses y evaluación multimoneda (Col. D - I).
+                Distribución del presupuesto por Procesos Institucionales y Tipos de Compra. Lectura dinámica en tiempo real desde el archivo fuente del repositorio (Columnas D a I).
             </p>
         </header>
 
-        <!-- 3. BARRA DE FILTRO TEMPORAL POR MESES -->
+        <!-- 3. FILTRO TEMPORAL POR MESES -->
         <section class="w-full max-w-7xl mx-auto px-6 mb-8">
             <div class="bg-[#111827] p-4 rounded-xl border border-gray-800 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
                 <div class="flex items-center gap-2">
@@ -83,7 +100,7 @@
             </div>
         </section>
 
-        <!-- 4. RESUMEN DE INDICADORES CLAVE (KPI CARDS POR MONEDA Y MES DE MAYOR GASTO) -->
+        <!-- 4. RESUMEN DE INDICADORES CLAVE (KPI CARDS) -->
         <section class="w-full max-w-7xl mx-auto px-6 mb-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 
@@ -93,7 +110,7 @@
                         <span>Gasto Ejecutado COP</span>
                         <span class="text-purple-400 font-bold">COP</span>
                     </p>
-                    <p id="kpi-cop" class="text-2xl font-extrabold text-purple-400 mt-2">$ 28.823.115.005</p>
+                    <p id="kpi-cop" class="text-2xl font-extrabold text-purple-400 mt-2">$ 0</p>
                     <p id="kpi-cop-sub" class="text-[11px] text-gray-500 mt-1">Total en moneda nacional</p>
                 </div>
 
@@ -103,8 +120,8 @@
                         <span>Gasto Ejecutado USD</span>
                         <span class="text-emerald-400 font-bold">USD</span>
                     </p>
-                    <p id="kpi-usd" class="text-2xl font-extrabold text-emerald-400 mt-2">$ 897.837</p>
-                    <p id="kpi-usd-sub" class="text-[11px] text-gray-500 mt-1">Servicios IT y Licencias</p>
+                    <p id="kpi-usd" class="text-2xl font-extrabold text-emerald-400 mt-2">$ 0</p>
+                    <p id="kpi-usd-sub" class="text-[11px] text-gray-500 mt-1">Licencias y Servicios IT</p>
                 </div>
 
                 <!-- KPI EUR -->
@@ -113,18 +130,18 @@
                         <span>Gasto Ejecutado EUR</span>
                         <span class="text-amber-400 font-bold">EUR</span>
                     </p>
-                    <p id="kpi-eur" class="text-2xl font-extrabold text-amber-400 mt-2">€ 29.484</p>
+                    <p id="kpi-eur" class="text-2xl font-extrabold text-amber-400 mt-2">€ 0</p>
                     <p id="kpi-eur-sub" class="text-[11px] text-gray-500 mt-1">Investigación y Publicaciones</p>
                 </div>
 
-                <!-- KPI MES DE MAYOR GASTO -->
+                <!-- KPI MES DE MAYOR GASTO / LÍDER -->
                 <div class="bg-[#111827] p-5 rounded-xl border border-gray-800 shadow-lg relative overflow-hidden">
                     <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold flex justify-between">
                         <span id="kpi-peak-title">Mes de Mayor Gasto</span>
                         <span class="text-yellow-400 font-bold">🔥</span>
                     </p>
-                    <p id="kpi-peak-val" class="text-xl font-bold text-yellow-400 mt-2 truncate">Abril (COP)</p>
-                    <p id="kpi-peak-sub" class="text-[11px] text-gray-400 mt-1">$ 7.610.042.064 COP (26.4%)</p>
+                    <p id="kpi-peak-val" class="text-xl font-bold text-yellow-400 mt-2 truncate">Cargando...</p>
+                    <p id="kpi-peak-sub" class="text-[11px] text-gray-400 mt-1">-</p>
                 </div>
 
             </div>
@@ -140,10 +157,9 @@
                         <h2 class="text-xl font-bold text-white flex items-center gap-2">
                             <span class="text-purple-400">🏢</span> 1. Gasto por Proceso o Área (Columna E)
                         </h2>
-                        <p class="text-xs text-gray-400 mt-1">Top áreas solicitantes para el periodo y divisa seleccionados.</p>
+                        <p id="proceso-subtitle" class="text-xs text-gray-400 mt-1">Top áreas solicitantes en la divisa seleccionada.</p>
                     </div>
 
-                    <!-- Botones de Selección de Moneda -->
                     <div class="flex items-center bg-[#0B0F19] p-1 rounded-lg border border-gray-800 text-xs">
                         <span class="text-gray-500 px-2 font-semibold">Divisa:</span>
                         <button onclick="changeProcesoCurrency('COP')" id="btn-proc-cop" class="currency-btn-active px-3 py-1.5 rounded-md font-bold transition">COP ($)</button>
@@ -152,19 +168,17 @@
                     </div>
                 </div>
 
-                <!-- Gráfica Proceso -->
                 <div class="relative h-80 w-full mb-6">
                     <canvas id="procesoChart"></canvas>
                 </div>
 
-                <!-- Tabla Proceso (Desplegable) -->
                 <details class="group border-t border-gray-800/80 pt-4">
                     <summary class="flex justify-between items-center cursor-pointer bg-[#0B0F19] hover:bg-gray-800/50 p-3.5 rounded-lg border border-gray-800 text-xs font-semibold text-gray-300 hover:text-purple-400 transition select-none">
                         <span class="flex items-center gap-2">
                             <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18M3 18h18M3 6h18"/>
                             </svg>
-                            Ver / Ocultar Tabla Detallada por Proceso
+                            Ver / Ocultar Tabla Detallada por Proceso (<span id="proc-count">0</span> áreas)
                         </span>
                         <svg class="w-4 h-4 text-gray-400 transform group-open:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -194,10 +208,9 @@
                         <h2 class="text-xl font-bold text-white flex items-center gap-2">
                             <span class="text-emerald-400">📦</span> 2. Gasto según Tipo de Compra (Columna H)
                         </h2>
-                        <p class="text-xs text-gray-400 mt-1">Clasificación por Denominación de Grupo de Compra para el periodo activo.</p>
+                        <p id="tipo-subtitle" class="text-xs text-gray-400 mt-1">Clasificación por Denominación de Grupo de Compra.</p>
                     </div>
 
-                    <!-- Botones de Selección de Moneda -->
                     <div class="flex items-center bg-[#0B0F19] p-1 rounded-lg border border-gray-800 text-xs">
                         <span class="text-gray-500 px-2 font-semibold">Divisa:</span>
                         <button onclick="changeTipoCurrency('COP')" id="btn-tipo-cop" class="currency-btn-active px-3 py-1.5 rounded-md font-bold transition">COP ($)</button>
@@ -206,19 +219,17 @@
                     </div>
                 </div>
 
-                <!-- Gráfica Tipo de Compra -->
                 <div class="relative h-80 w-full mb-6">
                     <canvas id="tipoChart"></canvas>
                 </div>
 
-                <!-- Tabla Tipo de Compra (Desplegable) -->
                 <details class="group border-t border-gray-800/80 pt-4">
                     <summary class="flex justify-between items-center cursor-pointer bg-[#0B0F19] hover:bg-gray-800/50 p-3.5 rounded-lg border border-gray-800 text-xs font-semibold text-gray-300 hover:text-emerald-400 transition select-none">
                         <span class="flex items-center gap-2">
                             <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18M3 18h18M3 6h18"/>
                             </svg>
-                            Ver / Ocultar Tabla Detallada por Tipo de Compra
+                            Ver / Ocultar Tabla Detallada por Tipo de Compra (<span id="tipo-count">0</span> tipos)
                         </span>
                         <svg class="w-4 h-4 text-gray-400 transform group-open:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -249,75 +260,20 @@
         <p>Dirección de Gestión Administrativa • Control Presupuestal y Analítica de Compras | ECO-S</p>
     </footer>
 
-    <!-- 7. LÓGICA REACTIVA DE DATOS Y RENDERIZADO (CHARTS & TABLES) -->
+    <!-- 7. LÓGICA DE EXTRACCIÓN DINÁMICA DE EXCEL Y RENDERIZADO (SHEETJS + CHART.JS) -->
     <script>
-        // MAPEO DE MESES DE LA COLUMNA G
+        // MAPEO DE MESES (COLUMNA G)
         const monthNames = {
             'ene': 'Enero', 'feb': 'Febrero', 'mar': 'Marzo',
             'abr': 'Abril', 'may': 'Mayo', 'jun': 'Junio',
-            'jul': 'Julio', 'ago': 'Agosto', 'sep': 'Septiembre'
+            'jul': 'Julio', 'ago': 'Agosto', 'sep': 'Septiembre',
+            'oct': 'Octubre', 'nov': 'Noviembre', 'dic': 'Diciembre'
         };
 
-        // MATRIZ DE DATOS AGREGADA (PROCESOS - COLUMNA E)
-        const procData = [
-            {"m": "abr", "a": "BIBLIOTECA", "cop": 37154740, "usd": 0, "eur": 0},
-            {"m": "abr", "a": "BIENESTAR UNIVERSITARIO", "cop": 9128816, "usd": 0, "eur": 0},
-            {"m": "abr", "a": "CONSULTORIA PRIVADA", "cop": 87584000, "usd": 0, "eur": 0},
-            {"m": "abr", "a": "DIRECCIÓN DE INVESTIGACIONES", "cop": 113337482, "usd": 1500, "eur": 1699},
-            {"m": "abr", "a": "GESTIÓN DE COMUNICACIONES Y PUBLICIDAD", "cop": 3540000, "usd": 0, "eur": 0},
-            {"m": "abr", "a": "GESTIÓN DE INFRAESTRUCTURA Y PLANTA FÍSICA", "cop": 1421473215, "usd": 0, "eur": 0},
-            {"m": "abr", "a": "PROYECTO HUMANISE", "cop": 5580624000, "usd": 0, "eur": 0},
-            {"m": "abr", "a": "PUBLICIDAD", "cop": 254250000, "usd": 83005.08, "eur": 0},
-            {"m": "abr", "a": "RECTORÍA", "cop": 15500000, "usd": 0, "eur": 0},
-            {"m": "ago", "a": "BIBLIOTECA", "cop": 13950000, "usd": 147459, "eur": 0},
-            {"m": "ago", "a": "DIRECCIÓN DE INVESTIGACIONES", "cop": 15309315, "usd": 16633.25, "eur": 1800},
-            {"m": "ago", "a": "GESTIÓN DE COMUNICACIONES Y PUBLICIDAD", "cop": 1332766352, "usd": 26713, "eur": 0},
-            {"m": "ago", "a": "GESTIÓN DE INFRAESTRUCTURA Y PLANTA FÍSICA", "cop": 204369792, "usd": 0, "eur": 0},
-            {"m": "ago", "a": "PROYECTO HUMANISE", "cop": 189000000, "usd": 0, "eur": 0},
-            {"m": "ene", "a": "CONSULTORÍA ESPECIALIZADA", "cop": 2850000, "usd": 0, "eur": 0},
-            {"m": "ene", "a": "GESTIÓN DE INFRAESTRUCTURA Y PLANTA FÍSICA", "cop": 757966, "usd": 0, "eur": 0},
-            {"m": "ene", "a": "SISTEMAS DE INFORMACIÓN", "cop": 442188448, "usd": 63994.86, "eur": 0},
-            {"m": "feb", "a": "CONSULTORIA PRIVADA", "cop": 13583200, "usd": 13117.21, "eur": 0},
-            {"m": "feb", "a": "DIRECCIÓN DE CONTABILIDAD", "cop": 243879924, "usd": 0, "eur": 0},
-            {"m": "feb", "a": "DIRECCIÓN EAN X", "cop": 0, "usd": 60000, "eur": 0},
-            {"m": "feb", "a": "LABORATORIOS DE INGENIERÍA", "cop": 320967390, "usd": 0, "eur": 0},
-            {"m": "feb", "a": "PROYECTO HUMANISE", "cop": 1242561708, "usd": 104269.98, "eur": 0},
-            {"m": "feb", "a": "REGIONES", "cop": 89796415, "usd": 0, "eur": 0},
-            {"m": "jul", "a": "GESTIÓN DE INFRAESTRUCTURA Y PLANTA FÍSICA", "cop": 1137021312, "usd": 0, "eur": 0},
-            {"m": "jul", "a": "VICERRECTORÍA ADMINISTRATIVA Y FINANCIERA", "cop": 987747805, "usd": 25000, "eur": 0},
-            {"m": "jun", "a": "GERENCIA DE INTERNACIONALIZACIÓN Y RELACIONES INSTITUCIONALES", "cop": 1215160410, "usd": 25610, "eur": 0},
-            {"m": "jun", "a": "PROYECTO HUMANISE", "cop": 558062400, "usd": 0, "eur": 0},
-            {"m": "mar", "a": "GERENCIA DE PROYECCIÓN Y CRECIMIENTO", "cop": 1227092688, "usd": 0, "eur": 0},
-            {"m": "mar", "a": "RECTORÍA", "cop": 218528154, "usd": 0, "eur": 0},
-            {"m": "may", "a": "CONTRATACIÓN PÚBLICA", "cop": 407136347, "usd": 0, "eur": 0},
-            {"m": "may", "a": "SEGURIDAD INFORMÁTICA", "cop": 2927498532, "usd": 3594, "eur": 0},
-            {"m": "sep", "a": "BIENESTAR UNIVERSITARIO", "cop": 352231836, "usd": 0, "eur": 400}
-        ];
+        // ALMACENAMIENTO DE REGISTROS EXTRAÍDOS
+        let rawRecords = [];
 
-        // MATRIZ DE DATOS AGREGADA (TIPOS DE COMPRA - COLUMNA H)
-        const tipoData = [
-            {"m": "abr", "t": "ACTIVOS Y/O EQUIPO", "cop": 29686823, "usd": 180.78, "eur": 0},
-            {"m": "abr", "t": "ALIMENTACION Y REF", "cop": 119572599, "usd": 0, "eur": 0},
-            {"m": "abr", "t": "HARDWARE", "cop": 1391500000, "usd": 0, "eur": 0},
-            {"m": "abr", "t": "PUBLICIDAD Y MATER", "cop": 254250000, "usd": 84324.3, "eur": 0},
-            {"m": "abr", "t": "SERVICIOS PROFESIO", "cop": 5797372642, "usd": 0, "eur": 1699},
-            {"m": "ago", "t": "GESTIÓN DOCUMENTAL", "cop": 28500000, "usd": 147459, "eur": 0},
-            {"m": "ago", "t": "PUBLICIDAD Y MATER", "cop": 1332766352, "usd": 26713, "eur": 0},
-            {"m": "ago", "t": "SERVICIOS PROFESIO", "cop": 235310702, "usd": 16633.26, "eur": 1800},
-            {"m": "ene", "t": "ARRENDAMIEN Y ALQU", "cop": 2500000, "usd": 0, "eur": 0},
-            {"m": "ene", "t": "LICENCIAS Y SUBSCR", "cop": 442188448, "usd": 63994.86, "eur": 0},
-            {"m": "ene", "t": "TRANSPORTE", "cop": 1107966, "usd": 0, "eur": 0},
-            {"m": "feb", "t": "ELEM. LABORATORIO", "cop": 198138120, "usd": 0, "eur": 0},
-            {"m": "feb", "t": "SERVICIOS PROFESIO", "cop": 1656821885, "usd": 177386.19, "eur": 13283.13},
-            {"m": "jul", "t": "SRV MTTO INFRAESTR", "cop": 1137021312, "usd": 0, "eur": 0},
-            {"m": "jun", "t": "INSTITUCIONALES", "cop": 1215160410, "usd": 25610, "eur": 0},
-            {"m": "mar", "t": "SERVICIOS PROFESIO", "cop": 1445620842, "usd": 52054.43, "eur": 644.94},
-            {"m": "may", "t": "HARDWARE", "cop": 1438817867, "usd": 0, "eur": 0},
-            {"m": "may", "t": "LICENCIAS Y SUBSCR", "cop": 1586767723, "usd": 38951.5, "eur": 6413.98},
-            {"m": "sep", "t": "SERVICIOS PROFESIO", "cop": 352231836, "usd": 179461, "eur": 4967.81}
-        ];
-
-        // ESTADOS GLOBALES DE FILTRACIÓN
+        // ESTADOS DE FILTRADO
         let currentMonth = 'TODOS';
         let currentProcesoCurr = 'COP';
         let currentTipoCurr = 'COP';
@@ -325,7 +281,7 @@
         let chartProceso = null;
         let chartTipo = null;
 
-        // FORMATO DE MONEDAS
+        // FORMATO DE MONEDA
         const formatMoney = (val, currency) => {
             if (!val || val === 0) return '-';
             const formatted = new Intl.NumberFormat('es-CO').format(val);
@@ -335,11 +291,86 @@
             return formatted;
         };
 
-        // EVENTO: SELECCIÓN DE MES
+        // 1. LECTURA AUTOMÁTICA DE FUENTE.XLSX EN EL REPOSITORIO
+        async function loadRepositoryExcel() {
+            const statusIndicator = document.getElementById('status-indicator');
+            const statusText = document.getElementById('status-text');
+
+            try {
+                // Modifica esta ruta relativa según la ubicación exacta en tu repositorio si es necesario
+                const sourceUrl = './Fuente.xlsx'; 
+                const response = await fetch(sourceUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP status ${response.status}`);
+                }
+
+                const arrayBuffer = await response.arrayBuffer();
+                parseExcelBuffer(arrayBuffer);
+
+                statusIndicator.className = "w-2 h-2 rounded-full bg-emerald-500";
+                statusText.innerHTML = `Datos sincronizados correctamente desde <code class="text-emerald-400 font-mono">Fuente.xlsx</code> (${rawRecords.length.toLocaleString()} registros).`;
+            } catch (err) {
+                console.warn("Carga automática por fetch falló o se ejecuta en entorno file://:", err);
+                statusIndicator.className = "w-2 h-2 rounded-full bg-amber-500";
+                statusText.innerHTML = `⚠️ No se pudo autocargar <code class="text-amber-300 font-mono">Fuente.xlsx</code> por políticas de CORS/servidor local. Puedes seleccionar el archivo manualmente a la derecha.`;
+            }
+        }
+
+        // 2. MANEJO DE ARCHIVO MANUAL (FALLBACK)
+        function handleManualFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                parseExcelBuffer(e.target.result);
+                document.getElementById('status-indicator').className = "w-2 h-2 rounded-full bg-emerald-500";
+                document.getElementById('status-text').innerHTML = `Archivo cargado exitosamente: <code class="text-emerald-400 font-mono">${file.name}</code> (${rawRecords.length.toLocaleString()} registros).`;
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        // 3. PROCESAMIENTO DINÁMICO DE FILAS DEL EXCEL (COLUMNAS D A I)
+        function parseExcelBuffer(buffer) {
+            const workbook = XLSX.read(buffer, { type: 'array' });
+            const firstSheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[firstSheetName];
+
+            // Convertir a matriz de arreglos
+            const rows = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+            rawRecords = [];
+
+            // Omitir fila de encabezados (fila 0)
+            for (let i = 1; i < rows.length; i++) {
+                const r = rows[i];
+                if (!r || r.length === 0) continue;
+
+                const moneda = (r[3] || '').toString().trim().toUpperCase(); // Col D
+                const area = (r[4] || '').toString().trim();                  // Col E
+                const mes = (r[6] || '').toString().trim().toLowerCase();     // Col G
+                const tipo = (r[7] || '').toString().trim();                 // Col H
+                const valor = parseFloat(r[8]) || 0;                          // Col I
+
+                if (moneda && valor > 0) {
+                    rawRecords.push({
+                        moneda: moneda,
+                        area: area || 'SIN ESPECIFICAR',
+                        mes: mes || 'sin_mes',
+                        tipo: tipo || 'OTROS',
+                        valor: valor
+                    });
+                }
+            }
+
+            updateDashboard();
+        }
+
+        // 4. CAMBIO DE FILTRO MES
         function selectMonth(m) {
             currentMonth = m;
             
-            // Actualizar clases de botones
             const allMonths = ['TODOS', 'ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep'];
             allMonths.forEach(id => {
                 const btn = document.getElementById(`mbtn-${id}`);
@@ -358,62 +389,88 @@
             updateDashboard();
         }
 
-        // RECONSTRUCCIÓN DEL DASHBOARD REACTIVO
+        // 5. ACTUALIZACIÓN REACTIVA DEL DASHBOARD
         function updateDashboard() {
-            // 1. Filtrar registros por mes
-            const filteredProcs = currentMonth === 'TODOS' ? procData : procData.filter(r => r.m === currentMonth);
-            const filteredTipos = currentMonth === 'TODOS' ? tipoData : tipoData.filter(r => r.m === currentMonth);
+            if (rawRecords.length === 0) return;
 
-            // 2. Calcular totales por moneda
-            const totCOP = filteredProcs.reduce((acc, r) => acc + r.cop, 0);
-            const totUSD = filteredProcs.reduce((acc, r) => acc + r.usd, 0);
-            const totEUR = filteredProcs.reduce((acc, r) => acc + r.eur, 0);
+            // Filtrar registros por mes seleccionado
+            const filtered = currentMonth === 'TODOS' 
+                ? rawRecords 
+                : rawRecords.filter(r => r.mes === currentMonth);
+
+            // Calcular Totales por Divisa
+            const totCOP = filtered.filter(r => r.moneda === 'COP').reduce((a, r) => a + r.valor, 0);
+            const totUSD = filtered.filter(r => r.moneda === 'USD').reduce((a, r) => a + r.valor, 0);
+            const totEUR = filtered.filter(r => r.moneda === 'EUR').reduce((a, r) => a + r.valor, 0);
 
             document.getElementById('kpi-cop').innerText = formatMoney(totCOP, 'COP');
             document.getElementById('kpi-usd').innerText = formatMoney(totUSD, 'USD');
             document.getElementById('kpi-eur').innerText = formatMoney(totEUR, 'EUR');
 
-            document.getElementById('kpi-cop-sub').innerText = currentMonth === 'TODOS' ? 'Acumulado Total' : `Ejecución en ${monthNames[currentMonth]}`;
-            document.getElementById('kpi-usd-sub').innerText = currentMonth === 'TODOS' ? 'Acumulado Total' : `Ejecución en ${monthNames[currentMonth]}`;
-            document.getElementById('kpi-eur-sub').innerText = currentMonth === 'TODOS' ? 'Acumulado Total' : `Ejecución en ${monthNames[currentMonth]}`;
+            document.getElementById('kpi-cop-sub').innerText = currentMonth === 'TODOS' ? 'Acumulado Total' : `Ejecución en ${monthNames[currentMonth] || currentMonth}`;
+            document.getElementById('kpi-usd-sub').innerText = currentMonth === 'TODOS' ? 'Acumulado Total' : `Ejecución en ${monthNames[currentMonth] || currentMonth}`;
+            document.getElementById('kpi-eur-sub').innerText = currentMonth === 'TODOS' ? 'Acumulado Total' : `Ejecución en ${monthNames[currentMonth] || currentMonth}`;
 
-            // 3. Evaluar "Mes de Mayor Gasto"
+            // Evaluar Tarjeta de Mes de Mayor Gasto / Líder
             if (currentMonth === 'TODOS') {
+                // Calcular mes con mayor gasto en COP
+                const monthCOPMap = {};
+                rawRecords.filter(r => r.moneda === 'COP').forEach(r => {
+                    monthCOPMap[r.mes] = (monthCOPMap[r.mes] || 0) + r.valor;
+                });
+
+                let peakM = 'abr', maxVal = 0;
+                for (const [m, v] of Object.entries(monthCOPMap)) {
+                    if (v > maxVal) { maxVal = v; peakM = m; }
+                }
+
+                const totalCOPAll = rawRecords.filter(r => r.moneda === 'COP').reduce((a, r) => a + r.valor, 0);
+                const pct = totalCOPAll > 0 ? ((maxVal / totalCOPAll) * 100).toFixed(1) : 0;
+
                 document.getElementById('kpi-peak-title').innerText = "Mes de Mayor Gasto";
-                document.getElementById('kpi-peak-val').innerText = "Abril (COP)";
-                document.getElementById('kpi-peak-sub').innerText = "$ 7.610.042.064 COP (26.4%)";
+                document.getElementById('kpi-peak-val').innerText = `${monthNames[peakM] || peakM} (COP)`;
+                document.getElementById('kpi-peak-sub').innerText = `${formatMoney(maxVal, 'COP')} (${pct}%)`;
             } else {
-                // Si hay mes específico seleccionado, evaluamos el proceso líder de ese mes
-                const topProc = [...filteredProcs].sort((a,b) => b.cop - a.cop)[0];
-                document.getElementById('kpi-peak-title').innerText = `Líder ${monthNames[currentMonth]}`;
-                if (topProc) {
-                    document.getElementById('kpi-peak-val').innerText = topProc.a.length > 20 ? topProc.a.substring(0,18)+'...' : topProc.a;
-                    const pct = totCOP > 0 ? ((topProc.cop / totCOP)*100).toFixed(1) : 0;
-                    document.getElementById('kpi-peak-sub').innerText = `${formatMoney(topProc.cop, 'COP')} (${pct}%)`;
+                // Si hay mes específico, evaluar el proceso líder en COP de ese mes
+                const procCOPMap = {};
+                filtered.filter(r => r.moneda === 'COP').forEach(r => {
+                    procCOPMap[r.area] = (procCOPMap[r.area] || 0) + r.valor;
+                });
+
+                let topArea = '', maxAreaVal = 0;
+                for (const [a, v] of Object.entries(procCOPMap)) {
+                    if (v > maxAreaVal) { maxAreaVal = v; topArea = a; }
+                }
+
+                document.getElementById('kpi-peak-title').innerText = `Proceso Líder (${monthNames[currentMonth] || currentMonth})`;
+                if (topArea) {
+                    document.getElementById('kpi-peak-val').innerText = topArea.length > 20 ? topArea.substring(0, 18) + '...' : topArea;
+                    const pctArea = totCOP > 0 ? ((maxAreaVal / totCOP) * 100).toFixed(1) : 0;
+                    document.getElementById('kpi-peak-sub').innerText = `${formatMoney(maxAreaVal, 'COP')} (${pctArea}%)`;
                 } else {
-                    document.getElementById('kpi-peak-val').innerText = "Sin registros";
+                    document.getElementById('kpi-peak-val').innerText = "Sin registros COP";
                     document.getElementById('kpi-peak-sub').innerText = "-";
                 }
             }
 
-            // 4. Renderizar Gráficas y Tablas
-            renderProcesoSection(filteredProcs);
-            renderTipoSection(filteredTipos);
+            renderProcesoSection(filtered);
+            renderTipoSection(filtered);
         }
 
-        // RENDER SECCIÓN PROCESOS
-        function renderProcesoSection(dataset) {
-            const aggregated = {};
-            dataset.forEach(r => {
-                if (!aggregated[r.a]) aggregated[r.a] = { nombre: r.a, cop: 0, usd: 0, eur: 0 };
-                aggregated[r.a].cop += r.cop;
-                aggregated[r.a].usd += r.usd;
-                aggregated[r.a].eur += r.eur;
+        // 6. RENDER SECCIÓN PROCESOS
+        function renderProcesoSection(filteredRecords) {
+            const map = {};
+            filteredRecords.forEach(r => {
+                if (!map[r.area]) map[r.area] = { nombre: r.area, cop: 0, usd: 0, eur: 0 };
+                const key = r.moneda.toLowerCase();
+                if (key in map[r.area]) map[r.area][key] += r.valor;
             });
 
-            const list = Object.values(aggregated).sort((a,b) => b[currentProcesoCurr.toLowerCase()] - a[currentProcesoCurr.toLowerCase()]);
+            const list = Object.values(map).sort((a, b) => b[currentProcesoCurr.toLowerCase()] - a[currentProcesoCurr.toLowerCase()]);
 
-            // Tabla
+            document.getElementById('proc-count').innerText = list.length;
+
+            // Render Tabla
             const tbody = document.getElementById('tablaProcesosBody');
             tbody.innerHTML = list.map(item => `
                 <tr class="hover:bg-gray-800/30 transition-colors">
@@ -424,12 +481,12 @@
                 </tr>
             `).join('');
 
-            // Gráfica
-            const key = currentProcesoCurr.toLowerCase();
-            const top10 = list.filter(i => i[key] > 0).slice(0, 10);
+            // Render Gráfica
+            const currKey = currentProcesoCurr.toLowerCase();
+            const top10 = list.filter(i => i[currKey] > 0).slice(0, 10);
 
             const labels = top10.map(i => i.nombre.length > 28 ? i.nombre.substring(0, 26) + '...' : i.nombre);
-            const values = top10.map(i => i[key]);
+            const values = top10.map(i => i[currKey]);
 
             let barColor = 'rgba(139, 92, 246, 0.85)', borderColor = '#8B5CF6';
             if (currentProcesoCurr === 'USD') { barColor = 'rgba(16, 185, 129, 0.85)'; borderColor = '#10B981'; }
@@ -466,19 +523,20 @@
             });
         }
 
-        // RENDER SECCIÓN TIPO DE COMPRA
-        function renderTipoSection(dataset) {
-            const aggregated = {};
-            dataset.forEach(r => {
-                if (!aggregated[r.t]) aggregated[r.t] = { nombre: r.t, cop: 0, usd: 0, eur: 0 };
-                aggregated[r.t].cop += r.cop;
-                aggregated[r.t].usd += r.usd;
-                aggregated[r.t].eur += r.eur;
+        // 7. RENDER SECCIÓN TIPO DE COMPRA
+        function renderTipoSection(filteredRecords) {
+            const map = {};
+            filteredRecords.forEach(r => {
+                if (!map[r.tipo]) map[r.tipo] = { nombre: r.tipo, cop: 0, usd: 0, eur: 0 };
+                const key = r.moneda.toLowerCase();
+                if (key in map[r.tipo]) map[r.tipo][key] += r.valor;
             });
 
-            const list = Object.values(aggregated).sort((a,b) => b[currentTipoCurr.toLowerCase()] - a[currentTipoCurr.toLowerCase()]);
+            const list = Object.values(map).sort((a, b) => b[currentTipoCurr.toLowerCase()] - a[currentTipoCurr.toLowerCase()]);
 
-            // Tabla
+            document.getElementById('tipo-count').innerText = list.length;
+
+            // Render Tabla
             const tbody = document.getElementById('tablaTiposBody');
             tbody.innerHTML = list.map(item => `
                 <tr class="hover:bg-gray-800/30 transition-colors">
@@ -489,12 +547,12 @@
                 </tr>
             `).join('');
 
-            // Gráfica
-            const key = currentTipoCurr.toLowerCase();
-            const top10 = list.filter(i => i[key] > 0).slice(0, 10);
+            // Render Gráfica
+            const currKey = currentTipoCurr.toLowerCase();
+            const top10 = list.filter(i => i[currKey] > 0).slice(0, 10);
 
             const labels = top10.map(i => i.nombre.length > 28 ? i.nombre.substring(0, 26) + '...' : i.nombre);
-            const values = top10.map(i => i[key]);
+            const values = top10.map(i => i[currKey]);
 
             let barColor = 'rgba(139, 92, 246, 0.85)', borderColor = '#8B5CF6';
             if (currentTipoCurr === 'USD') { barColor = 'rgba(16, 185, 129, 0.85)'; borderColor = '#10B981'; }
@@ -531,7 +589,7 @@
             });
         }
 
-        // CAMBIO DE DIVISA INTERACTIVO
+        // 8. HANDLERS CAMBIO DE DIVISA
         function changeProcesoCurrency(curr) {
             currentProcesoCurr = curr;
             ['cop', 'usd', 'eur'].forEach(c => {
@@ -554,7 +612,7 @@
 
         // INICIALIZACIÓN
         document.addEventListener('DOMContentLoaded', () => {
-            updateDashboard();
+            loadRepositoryExcel();
         });
     </script>
 </body>
