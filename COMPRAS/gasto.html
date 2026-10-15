@@ -255,7 +255,7 @@
             return formatted;
         };
 
-        // CARGA INTELIGENTE (PROBO 'Fuente.xlsx', LUEGO 'github.xlsx')
+        // CARGA INTELIGENTE (PROBAR 'Fuente.xlsx', LUEGO 'github.xlsx')
         async function cargarExcelRepo() {
             const statusIndicator = document.getElementById('status-indicator');
             const statusText = document.getElementById('status-text');
@@ -362,22 +362,26 @@
 
             const descText = document.getElementById('inputDescripcion').value.toLowerCase().trim();
             const selectedArea = document.getElementById('selectArea').value;
-            const selectedMes = document.getElementById('selectMes').value.toLowerCase();
+            const selectedMesRaw = document.getElementById('selectMes').value;
+            const selectedMesUpper = selectedMesRaw.toUpperCase();
+            const selectedMesLower = selectedMesRaw.toLowerCase();
 
             // Filtrado 1: Triple Filtro + Texto para KPIs, Tabla y Doughnut
-            const filtered = rawExcelData.filter(r => 
-                r.moneda === currentCurrency &&
-                (selectedArea === 'TODAS' || r.area === selectedArea) &&
-                (selectedMes === 'TODOS' || r.mes === selectedMes) &&
-                (descText === '' || r.desc.toLowerCase().includes(descText) || r.tipo.toLowerCase().includes(descText))
-            );
+            const filtered = rawExcelData.filter(r => {
+                const cumpleMoneda = (r.moneda === currentCurrency);
+                const cumpleArea = (selectedArea === 'TODAS' || r.area === selectedArea);
+                const cumpleMes = (selectedMesUpper === 'TODOS' || r.mes === selectedMesLower || r.mes.startsWith(selectedMesLower));
+                const cumpleDesc = (descText === '' || r.desc.toLowerCase().includes(descText) || r.tipo.toLowerCase().includes(descText));
+                return cumpleMoneda && cumpleArea && cumpleMes && cumpleDesc;
+            });
 
             // Filtrado 2: Filtro sin Mes para Gráfico de Tendencia Anual Completa
-            const trendFiltered = rawExcelData.filter(r => 
-                r.moneda === currentCurrency &&
-                (selectedArea === 'TODAS' || r.area === selectedArea) &&
-                (descText === '' || r.desc.toLowerCase().includes(descText) || r.tipo.toLowerCase().includes(descText))
-            );
+            const trendFiltered = rawExcelData.filter(r => {
+                const cumpleMoneda = (r.moneda === currentCurrency);
+                const cumpleArea = (selectedArea === 'TODAS' || r.area === selectedArea);
+                const cumpleDesc = (descText === '' || r.desc.toLowerCase().includes(descText) || r.tipo.toLowerCase().includes(descText));
+                return cumpleMoneda && cumpleArea && cumpleDesc;
+            });
 
             // ACTUALIZACIÓN DE KPIs
             const totalSuma = filtered.reduce((acc, r) => acc + r.valor, 0);
