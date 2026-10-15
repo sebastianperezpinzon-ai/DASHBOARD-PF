@@ -194,7 +194,7 @@
                     <div class="flex items-center gap-2">
                         <span class="text-emerald-400">🧾</span>
                         <h2 class="text-sm font-bold text-white">Detalle de Solicitudes y Pedidos</h2>
-                        <span class="text-[11px] text-gray-500 hidden sm:inline">(<span class="text-red-400 font-bold">🔴</span> Mayor a $5M COP / $1.5k USD)</span>
+                        <span class="text-[11px] text-gray-500 hidden sm:inline">(<span class="text-red-400 font-bold">🔴</span> Mayor a $100M COP / $1.5k USD)</span>
                     </div>
                     <span id="tableCountBadge" class="text-xs bg-gray-800 text-gray-300 px-3 py-1 rounded-full font-mono">0 filas</span>
                 </div>
@@ -401,9 +401,9 @@
             const tbody = document.getElementById('pedidosTableBody');
             document.getElementById('tableCountBadge').innerText = `${data.length} filas`;
 
-            // Ordenar de mayor a menor gasto y limitar a 150 filas para agilidad visual
+            // Ordenar de mayor a menor gasto y limitar a 150 filas para agilidad visual y filtro en rojo por top de valor
             const sorted = [...data].sort((a, b) => b.valor - a.valor).slice(0, 150);
-            const threshold = currentCurrency === 'COP' ? 5000000 : 1500;
+            const threshold = currentCurrency === 'COP' ? 100000000 : 1500;
 
             if (sorted.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-gray-500 italic">No se encontraron solicitudes que coincidan con los filtros aplicados.</td></tr>`;
