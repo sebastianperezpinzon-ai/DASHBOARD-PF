@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
-    <title>Gestión de Pedidos y Servicios - ECO-S</title>
+    <title>Consolidado de Servicios y Total Gastos | ECO-S</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- SheetJS para lectura dinámica desde el repositorio -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
     <style>
@@ -16,331 +18,511 @@
         background-attachment: fixed;
         background-color: #0B0F19;
     }
+    .curr-active-cop { background-color: #8B5CF6 !important; color: white !important; border-color: #A78BFA !important; }
+    .curr-active-usd { background-color: #10B981 !important; color: white !important; border-color: #34D399 !important; }
+    .curr-active-eur { background-color: #F59E0B !important; color: white !important; border-color: #FBBF24 !important; }
+    
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #111827; }
+    ::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #4B5563; }
     </style>
 </head>
 <body class="text-white font-sans min-h-screen flex flex-col justify-between">
 
-    <!-- Navegación -->
-    <nav class="bg-[#111827] border-b border-gray-800 px-6 py-4">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <a href="../index.html?tab=compras" class="flex items-center text-sm font-semibold text-gray-400 hover:text-[#00A859] transition duration-200">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
-                Volver al Dashboard Principal
-            </a>
-            <span class="text-xs bg-[#00A859]/10 text-[#00A859] px-3 py-1 rounded-full border border-[#00A859]/30 font-mono">
-                Módulo Operativo | ECO-S
-            </span>
+    <div>
+        <!-- 1. NAVEGACIÓN SUPERIOR -->
+        <nav class="bg-[#111827] border-b border-gray-800 px-6 py-4 sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto flex justify-between items-center">
+                <a href="../index.html?tab=compras" class="flex items-center text-sm font-semibold text-gray-400 hover:text-emerald-400 transition duration-200">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Volver al Dashboard Principal
+                </a>
+                <span class="text-xs bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/30 font-mono">
+                    Módulo Operativo & Auditoría | ECO-S
+                </span>
+            </div>
+        </nav>
+
+        <!-- BARRA ESTADO DE CARGA AUTOMÁTICA -->
+        <div id="data-status-banner" class="bg-[#111827]/80 border-b border-gray-800 px-6 py-2 text-xs text-gray-400 flex flex-wrap justify-between items-center max-w-7xl mx-auto">
+            <div class="flex items-center gap-2">
+                <span id="status-indicator" class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></span>
+                <span id="status-text">Conectando con archivo de datos en el repositorio...</span>
+            </div>
+            <div class="flex items-center gap-2 mt-1 sm:mt-0">
+                <span class="text-gray-500">¿Cargar Excel local?</span>
+                <input type="file" id="excelFileInput" accept=".xlsx, .xls" class="hidden" onchange="handleManualFile(event)">
+                <button onclick="document.getElementById('excelFileInput').click()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-2.5 py-1 rounded border border-gray-700 transition">
+                    📁 Seleccionar Archivo
+                </button>
+            </div>
         </div>
-    </nav>
 
-    <!-- Encabezado -->
-    <header class="py-10 px-6 text-center max-w-4xl mx-auto">
-        <h1 class="text-3xl font-extrabold tracking-tight md:text-5xl text-white mb-4">
-            Consolidado de Servicios e Insumos
-        </h1>
-        <p class="text-gray-400 text-lg leading-relaxed">
-            Filtrado multidimensional conectado a <code class="text-xs font-mono bg-gray-800 px-2 py-1 rounded text-emerald-400">github.xlsx</code>. Cruza área, mes y descripción para obtener métricas inmediatas.
-        </p>
-    </header>
+        <!-- 2. ENCABEZADO PRINCIPAL -->
+        <header class="py-8 px-6 text-center max-w-4xl mx-auto">
+            <h1 class="text-3xl font-extrabold tracking-tight md:text-5xl text-white mb-3">
+                Consolidado de Servicios e Insumos
+            </h1>
+            <p class="text-gray-400 text-base md:text-lg leading-relaxed">
+                Control multidimensional del gasto, ticket promedio y análisis del volumen operativo de la infraestructura universitaria.
+            </p>
+        </header>
 
-    <!-- Contenido Principal -->
-    <main class="max-w-6xl mx-auto px-6 mb-16 flex-grow w-full">
+        <!-- 3. PANEL DE FILTROS SIMULTÁNEOS -->
+        <section class="max-w-7xl mx-auto px-6 mb-8 w-full">
+            <div class="bg-[#111827] rounded-xl border border-gray-800 p-6 shadow-xl flex flex-col gap-5">
+                <div class="flex justify-between items-center border-b border-gray-800/80 pb-3">
+                    <h2 class="text-xs font-semibold text-gray-400 font-mono flex items-center gap-2 uppercase tracking-wider">
+                        🔍 Filtros Multidimensionales Simultáneos
+                    </h2>
+                    <span class="text-[11px] text-gray-500 font-mono">Sensible a Divisa</span>
+                </div>
 
-        <!-- PANEL DE FILTROS SIMULTÁNEOS Y KPI TOTAL -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-            
-            <!-- Controles de Filtros Múltiples -->
-            <div class="lg:col-span-2 bg-[#111827] rounded-xl border border-gray-800 p-6 shadow-xl flex flex-col justify-center gap-4">
-                <h2 class="text-xs font-semibold text-gray-400 font-mono flex items-center gap-2 uppercase tracking-wider">
-                    🔍 Filtros Simultáneos
-                </h2>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     
-                    <!-- 1. Filtro por Descripción / Búsqueda -->
+                    <!-- 1. Filtro Texto por Descripción -->
                     <div>
-                        <label class="block text-xs text-gray-400 mb-1 font-mono">
-                            Descripción / Insumo
-                        </label>
-                        <input type="text" id="inputDescripcion" oninput="ejecutarFiltros()" placeholder="Ej. Papel, tinta..." 
-                               class="w-full bg-[#0B0F19] border border-gray-700 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#00A859] transition">
+                        <label class="block text-xs text-gray-400 mb-1.5 font-mono">Buscar por Insumo / Servicio</label>
+                        <input type="text" id="inputDescripcion" oninput="ejecutarFiltros()" placeholder="Ej. Papel, limpieza, tóner..." 
+                               class="w-full bg-[#0B0F19] border border-gray-700 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 transition">
                     </div>
 
-                    <!-- 2. Filtro por Área Solicitante (Columna G) -->
+                    <!-- 2. Filtro por Área Solicitante -->
                     <div>
-                        <label class="block text-xs text-gray-400 mb-1 font-mono">
-                            Área Solicitante
-                        </label>
+                        <label class="block text-xs text-gray-400 mb-1.5 font-mono">Área Solicitante</label>
                         <select id="selectArea" onchange="ejecutarFiltros()" 
-                                class="w-full bg-[#0B0F19] border border-gray-700 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#00A859] transition">
-                            <option value="TODAS">Todas las áreas</option>
+                                class="w-full bg-[#0B0F19] border border-gray-700 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 transition">
+                            <option value="TODAS">🌟 Todas las áreas</option>
                         </select>
                     </div>
 
                     <!-- 3. Filtro por Mes -->
                     <div>
-                        <label class="block text-xs text-gray-400 mb-1 font-mono">
-                            Mes de Compra / Pedido
-                        </label>
+                        <label class="block text-xs text-gray-400 mb-1.5 font-mono">Mes de Compra</label>
                         <select id="selectMes" onchange="ejecutarFiltros()" 
-                                class="w-full bg-[#0B0F19] border border-gray-700 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#00A859] transition">
-                            <option value="TODOS">Todos los meses</option>
-                            <option value="Enero">Enero</option>
-                            <option value="Febrero">Febrero</option>
-                            <option value="Marzo">Marzo</option>
-                            <option value="Abril">Abril</option>
-                            <option value="Mayo">Mayo</option>
-                            <option value="Junio">Junio</option>
-                            <option value="Julio">Julio</option>
-                            <option value="Agosto">Agosto</option>
-                            <option value="Septiembre">Septiembre</option>
-                            <option value="Octubre">Octubre</option>
-                            <option value="Noviembre">Noviembre</option>
-                            <option value="Diciembre">Diciembre</option>
+                                class="w-full bg-[#0B0F19] border border-gray-700 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 transition">
+                            <option value="TODOS">🌟 Todos los meses</option>
+                            <option value="ene">Enero</option>
+                            <option value="feb">Febrero</option>
+                            <option value="mar">Marzo</option>
+                            <option value="abr">Abril</option>
+                            <option value="may">Mayo</option>
+                            <option value="jun">Junio</option>
+                            <option value="jul">Julio</option>
+                            <option value="ago">Agosto</option>
+                            <option value="sep">Septiembre</option>
+                            <option value="oct">Octubre</option>
+                            <option value="nov">Noviembre</option>
+                            <option value="dic">Diciembre</option>
                         </select>
+                    </div>
+
+                    <!-- 4. Selector de Divisa -->
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1.5 font-mono">Divisa de Análisis</label>
+                        <div class="flex items-center bg-[#0B0F19] p-1 rounded-lg border border-gray-700 text-sm">
+                            <button onclick="setCurrency('COP')" id="btn-curr-cop" class="curr-active-cop px-3 py-1 rounded-md font-bold transition w-1/3 text-xs">COP</button>
+                            <button onclick="setCurrency('USD')" id="btn-curr-usd" class="px-3 py-1 rounded-md font-bold text-gray-400 hover:text-white transition w-1/3 text-xs">USD</button>
+                            <button onclick="setCurrency('EUR')" id="btn-curr-eur" class="px-3 py-1 rounded-md font-bold text-gray-400 hover:text-white transition w-1/3 text-xs">EUR</button>
+                        </div>
                     </div>
 
                 </div>
             </div>
+        </section>
 
-            <!-- KPI Valor Total Filtrado -->
-            <div class="bg-[#111827] rounded-xl border border-gray-800 p-6 shadow-xl flex items-center justify-between border-l-4 border-l-[#00A859]">
-                <div>
-                    <span class="text-xs font-semibold text-[#00A859] bg-[#00A859]/10 px-2.5 py-1 rounded-full border border-[#00A859]/20 font-mono">
-                        💰 Total Filtrado Simultáneo
-                    </span>
-                    <h3 id="kpiTotal" class="text-3xl font-extrabold text-white mt-3 tracking-tight">
-                        $ 0
-                    </h3>
-                    <p class="text-xs text-gray-400 mt-2">
-                        Registros coincidentes: <span id="kpiCount" class="text-emerald-400 font-bold">0</span>
-                    </p>
+        <!-- 4. TARJETAS KPI DE SALUD PRESUPUESTAL -->
+        <section class="max-w-7xl mx-auto px-6 mb-8 w-full">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- KPI 1: Gasto Total -->
+                <div class="bg-[#111827] p-5 rounded-xl border border-gray-800 shadow-xl border-l-4 border-l-purple-500 relative overflow-hidden">
+                    <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold">Total Gasto Filtrado</p>
+                    <h3 id="kpiTotal" class="text-3xl font-extrabold text-purple-400 mt-2">$ 0</h3>
+                    <p id="kpiTotalSub" class="text-[11px] text-gray-500 mt-1">Suma en la divisa activa</p>
                 </div>
-                <div class="hidden sm:flex w-12 h-12 rounded-xl bg-[#00A859]/10 border border-[#00A859]/20 items-center justify-center text-[#00A859] text-2xl">
-                    📊
+
+                <!-- KPI 2: Volumen de Pedidos -->
+                <div class="bg-[#111827] p-5 rounded-xl border border-gray-800 shadow-xl border-l-4 border-l-blue-500 relative overflow-hidden">
+                    <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold">Volumen Transaccional</p>
+                    <h3 id="kpiCount" class="text-3xl font-extrabold text-blue-400 mt-2">0 <span class="text-sm font-normal text-gray-500">registros</span></h3>
+                    <p class="text-[11px] text-gray-500 mt-1">Carga operativa de la mesa de ayuda</p>
+                </div>
+
+                <!-- KPI 3: Ticket Promedio -->
+                <div class="bg-[#111827] p-5 rounded-xl border border-gray-800 shadow-xl border-l-4 border-l-emerald-500 relative overflow-hidden">
+                    <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold">Ticket Promedio por Pedido</p>
+                    <h3 id="kpiAvg" class="text-3xl font-extrabold text-emerald-400 mt-2">$ 0</h3>
+                    <p class="text-[11px] text-gray-500 mt-1">Eficiencia transaccional (Total / Cantidad)</p>
                 </div>
             </div>
+        </section>
 
-        </div>
+        <!-- 5. GRÁFICAS DE TENDENCIA Y CATEGORÍAS -->
+        <section class="max-w-7xl mx-auto px-6 mb-8 w-full">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Evolución Cronológica (2 Cols) -->
+                <div class="lg:col-span-2 bg-[#111827] rounded-xl border border-gray-800 p-6 shadow-xl">
+                    <h2 class="text-sm font-bold text-white flex items-center gap-2">
+                        <span class="text-blue-400">📈</span> Distribución Cronológica de la Inversión
+                    </h2>
+                    <p class="text-xs text-gray-400 mt-0.5">Evolución mes a mes para el área y filtros seleccionados.</p>
+                    <div class="relative h-64 w-full mt-4">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
 
-        <!-- TABLA CONTENEDORA -->
-        <div class="bg-[#111827] rounded-xl border border-gray-800 shadow-xl overflow-hidden">
-            <div class="overflow-x-auto">
-                <table class="w-full text-left text-sm text-gray-300">
-                    <thead id="tableHeader" class="bg-[#0B0F19] text-xs font-mono text-gray-400 uppercase border-b border-gray-800">
-                        <!-- Se llena dinámicamente -->
-                    </thead>
-                    <tbody id="pedidosTableBody" class="divide-y divide-gray-800/60">
-                        <tr>
-                            <td colspan="12" class="py-8 text-center text-gray-500 font-mono">
-                                Procesando datos desde github.xlsx...
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tfoot class="bg-[#0B0F19] border-t-2 border-gray-800 text-white font-bold">
-                        <tr>
-                            <td id="footerLabel" colspan="1" class="py-4 px-6 text-right uppercase tracking-wider text-xs font-mono text-gray-400">
-                                Valor Total Pedidos Filtrados:
-                            </td>
-                            <td id="tableFooterTotal" class="py-4 px-6 text-right text-lg text-[#00A859] font-mono font-extrabold">
-                                $ 0
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
+                <!-- Macro-Categorías (1 Col) -->
+                <div class="bg-[#111827] rounded-xl border border-gray-800 p-6 shadow-xl">
+                    <h2 class="text-sm font-bold text-white flex items-center gap-2">
+                        <span class="text-emerald-400">🍩</span> Categorías de Compra
+                    </h2>
+                    <p class="text-xs text-gray-400 mt-0.5">Distribución por grupo de compra.</p>
+                    <div class="relative h-60 w-full mt-4">
+                        <canvas id="doughnutChart"></canvas>
+                    </div>
+                </div>
             </div>
-        </div>
+        </section>
 
-    </main>
+        <!-- 6. TABLA DETALLADA (LIBRO MAYOR CON AUDITORÍA) -->
+        <main class="max-w-7xl mx-auto px-6 mb-16 flex-grow w-full">
+            <div class="bg-[#111827] rounded-xl border border-gray-800 shadow-xl overflow-hidden flex flex-col h-[520px]">
+                <div class="p-4 border-b border-gray-800 flex justify-between items-center bg-[#0B0F19]">
+                    <div class="flex items-center gap-2">
+                        <span class="text-emerald-400">🧾</span>
+                        <h2 class="text-sm font-bold text-white">Detalle de Solicitudes y Pedidos</h2>
+                        <span class="text-[11px] text-gray-500 hidden sm:inline">(<span class="text-red-400 font-bold">🔴</span> Mayor a $5M COP / $1.5k USD)</span>
+                    </div>
+                    <span id="tableCountBadge" class="text-xs bg-gray-800 text-gray-300 px-3 py-1 rounded-full font-mono">0 filas</span>
+                </div>
 
+                <div class="w-full overflow-y-auto flex-grow">
+                    <table class="w-full text-left text-xs text-gray-300 relative">
+                        <thead class="bg-[#0B0F19] text-gray-400 uppercase text-[10px] tracking-wider sticky top-0 z-10 border-b border-gray-800 shadow-sm">
+                            <tr>
+                                <th class="p-3 pl-5">Fecha / Mes</th>
+                                <th class="p-3">Área Solicitante</th>
+                                <th class="p-3">Descripción del Servicio / Material</th>
+                                <th class="p-3 hidden md:table-cell">Categoría</th>
+                                <th class="p-3 text-right pr-5">Valor Pedido</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pedidosTableBody" class="divide-y divide-gray-800/60">
+                            <tr>
+                                <td colspan="5" class="py-12 text-center text-gray-500 font-mono text-xs">
+                                    Cargando y procesando datos desde el repositorio...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- PIE DE PÁGINA ECO-S -->
     <footer class="bg-[#0B0F19] text-center py-6 text-xs text-gray-500 border-t border-gray-800">
-        <p>Sistema de Gestión Interna de Planta Física | ECO-S</p>
+        <p>Sistema de Gestión Interna y Control de Planta Física | ECO-S • ODS 12: Producción y Consumo Responsable</p>
     </footer>
 
+    <!-- LÓGICA DE PROCESAMIENTO Y RENDERIZADO -->
     <script>
+        const NOMBRES_MESES = {
+            'ene': 'Enero', 'feb': 'Febrero', 'mar': 'Marzo',
+            'abr': 'Abril', 'may': 'Mayo', 'jun': 'Junio',
+            'jul': 'Julio', 'ago': 'Agosto', 'sep': 'Septiembre',
+            'oct': 'Octubre', 'nov': 'Noviembre', 'dic': 'Diciembre'
+        };
+
+        const MES_ORDER = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+
         let rawExcelData = [];
-        let keys = [];
+        let currentCurrency = 'COP';
 
-        let colDescripcionKey = ""; 
-        let colAreaKey = "";        
-        let colFechaKey = "";       
-        let colTotalKey = "";       
+        let trendChart = null;
+        let doughnutChart = null;
 
-        const currencyFormatter = new Intl.NumberFormat('es-CO', {
-            style: 'currency',
-            currency: 'COP',
-            maximumFractionDigits: 0
-        });
+        // FORMATO DE MONEDA DINÁMICO
+        const formatMoney = (val, currency) => {
+            if (!val || val === 0) return '$ 0';
+            const formatted = new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(val);
+            if (currency === 'COP') return `$ ${formatted}`;
+            if (currency === 'USD') return `$ ${formatted} USD`;
+            if (currency === 'EUR') return `€ ${formatted} EUR`;
+            return formatted;
+        };
 
-        const NOMBRES_MESES = [
-            "enero", "febrero", "marzo", "abril", "mayo", "junio", 
-            "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
-        ];
+        // CARGA INTELIGENTE (PROBO 'Fuente.xlsx', LUEGO 'github.xlsx')
+        async function cargarExcelRepo() {
+            const statusIndicator = document.getElementById('status-indicator');
+            const statusText = document.getElementById('status-text');
 
-        async function cargarExcel() {
-            try {
-                const response = await fetch('./github.xlsx');
-                if (!response.ok) throw new Error('No se pudo cargar github.xlsx');
+            const candidateFiles = ['./Fuente.xlsx', './github.xlsx'];
 
-                const dataBuffer = await response.arrayBuffer();
-                const workbook = XLSX.read(dataBuffer, { type: 'array' });
-                const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-
-                rawExcelData = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
-
-                if (rawExcelData.length > 0) {
-                    keys = Object.keys(rawExcelData[0]);
-
-                    colDescripcionKey = keys.find(k => k.toLowerCase().includes('descrip')) || keys[2] || keys[0];
-                    colAreaKey = keys.find(k => k.toLowerCase().includes('área') || k.toLowerCase().includes('area') || k.toLowerCase().includes('solicitante')) || keys[6] || keys[1];
-                    colFechaKey = keys.find(k => k.toLowerCase().includes('fecha') || k.toLowerCase().includes('mes')) || keys[0];
-                    colTotalKey = keys.find(k => k.toLowerCase().includes('total') || k.toLowerCase().includes('valor') || k.toLowerCase().includes('precio')) || keys[keys.length - 1];
-
-                    renderizarEncabezados();
-                    poblarDesplegableAreas();
-                    poblarDesplegableMeses();
-                    renderizarFilas();
+            for (let fileUrl of candidateFiles) {
+                try {
+                    const response = await fetch(fileUrl);
+                    if (response.ok) {
+                        const buffer = await response.arrayBuffer();
+                        parseExcelBuffer(buffer);
+                        statusIndicator.className = "w-2 h-2 rounded-full bg-emerald-500";
+                        statusText.innerHTML = `Datos conectados desde <code class="text-emerald-400 font-mono">${fileUrl.replace('./','')}</code> (${rawExcelData.length.toLocaleString()} registros).`;
+                        return;
+                    }
+                } catch (e) {
+                    // Sigue intentando
                 }
-            } catch (err) {
-                console.error("Error:", err);
-                document.getElementById('pedidosTableBody').innerHTML = `
-                    <tr><td colspan="12" class="py-6 text-center text-red-400 font-mono text-xs">
-                        ⚠️ Error al conectar con github.xlsx.
-                    </td></tr>`;
             }
+
+            statusIndicator.className = "w-2 h-2 rounded-full bg-amber-500";
+            statusText.innerHTML = `⚠️ No se pudo autocargar. Selecciona el archivo Excel manualmente con el botón a la derecha.`;
         }
 
-        function renderizarEncabezados() {
-            const thead = document.getElementById('tableHeader');
-            thead.innerHTML = `<tr>${keys.map(k => `<th class="py-4 px-6">${k}</th>`).join('')}</tr>`;
-            document.getElementById('footerLabel').colSpan = Math.max(1, keys.length - 1);
+        function handleManualFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                parseExcelBuffer(e.target.result);
+                document.getElementById('status-indicator').className = "w-2 h-2 rounded-full bg-emerald-500";
+                document.getElementById('status-text').innerHTML = `Cargado localmente: <code class="text-emerald-400 font-mono">${file.name}</code> (${rawExcelData.length.toLocaleString()} registros).`;
+            };
+            reader.readAsArrayBuffer(file);
         }
 
-        function poblarDesplegableAreas() {
-            const select = document.getElementById('selectArea');
-            const areasUnicas = [...new Set(rawExcelData.map(item => item[colAreaKey]))].filter(Boolean).sort();
+        function parseExcelBuffer(buffer) {
+            const workbook = XLSX.read(buffer, { type: 'array' });
+            const sheet = workbook.Sheets[workbook.SheetNames[0]];
+            const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
-            areasUnicas.forEach(area => {
+            rawExcelData = [];
+            const areasSet = new Set();
+
+            for (let i = 1; i < rows.length; i++) {
+                const r = rows[i];
+                if (!r || r.length === 0) continue;
+
+                // Mapeo seguro por posición de columna (D a I)
+                const descMat = (r[1] || '').toString().trim();
+                const descServ = (r[2] || '').toString().trim();
+                const desc = descServ || descMat || 'Suministro no especificado';
+
+                const moneda = (r[3] || '').toString().trim().toUpperCase(); // Col D
+                const area = (r[4] || '').toString().trim();                  // Col E
+                const fecha = (r[5] || '').toString().trim();                 // Col F
+                const mes = (r[6] || '').toString().trim().toLowerCase();     // Col G
+                const tipo = (r[7] || '').toString().trim();                  // Col H
+                const valor = parseFloat(r[8]) || 0;                          // Col I
+
+                if (moneda && valor > 0) {
+                    areasSet.add(area || 'SIN ESPECIFICAR');
+                    rawExcelData.push({
+                        desc: desc,
+                        moneda: moneda,
+                        area: area || 'SIN ESPECIFICAR',
+                        fecha: fecha || 'Sin Fecha',
+                        mes: mes || 'sin_mes',
+                        tipo: tipo || 'OTROS',
+                        valor: valor
+                    });
+                }
+            }
+
+            // Poblar dropdown de Áreas
+            const areaSelect = document.getElementById('selectArea');
+            areaSelect.innerHTML = '<option value="TODAS">🌟 Todas las áreas</option>';
+            Array.from(areasSet).sort().forEach(a => {
                 const opt = document.createElement('option');
-                opt.value = area;
-                opt.textContent = area;
-                select.appendChild(opt);
-            });
-        }
-
-        function poblarDesplegableMeses() {
-            const selectMes = document.getElementById('selectMes');
-            const mesesPresentes = new Set();
-
-            rawExcelData.forEach(row => {
-                const mes = extraerMes(row[colFechaKey]);
-                if (mes) mesesPresentes.add(mes.toLowerCase());
-            });
-
-            // Si hay meses detectados en los datos, ajustar el select visualmente
-            if (mesesPresentes.size > 0) {
-                Array.from(selectMes.options).forEach(opt => {
-                    if (opt.value !== 'TODOS' && !mesesPresentes.has(opt.value.toLowerCase())) {
-                        opt.textContent = `${opt.textContent} (Sin registros)`;
-                    }
-                });
-            }
-        }
-
-        function extraerMes(valorFecha) {
-            if (!valorFecha) return "";
-            const strVal = String(valorFecha).toLowerCase().trim();
-
-            for (let m of NOMBRES_MESES) {
-                if (strVal.includes(m)) {
-                    return m.charAt(0).toUpperCase() + m.slice(1);
-                }
-            }
-
-            // Si es una fecha ISO o formato DD/MM/AAAA
-            let fecha = new Date(valorFecha);
-            if (isNaN(fecha.getTime()) && typeof valorFecha === 'number') {
-                fecha = new Date((valorFecha - (25567 + 2)) * 86400 * 1000);
-            }
-
-            if (!isNaN(fecha.getTime())) {
-                const numMes = fecha.getMonth();
-                const nombre = NOMBRES_MESES[numMes];
-                return nombre.charAt(0).toUpperCase() + nombre.slice(1);
-            }
-
-            return "";
-        }
-
-        function renderizarFilas() {
-            const tbody = document.getElementById('pedidosTableBody');
-            tbody.innerHTML = '';
-
-            rawExcelData.forEach((row, index) => {
-                const tr = document.createElement('tr');
-                tr.className = 'pedido-row hover:bg-gray-800/40 transition';
-                tr.setAttribute('data-index', index);
-
-                const valNum = parseFloat(row[colTotalKey]) || 0;
-                tr.setAttribute('data-valor', valNum);
-
-                let cells = '';
-                keys.forEach(k => {
-                    let cellVal = row[k];
-                    const esTotal = (k === colTotalKey);
-
-                    if (esTotal && !isNaN(valNum)) {
-                        cellVal = currencyFormatter.format(valNum);
-                    }
-
-                    cells += `<td class="py-4 px-6 ${esTotal ? 'text-right font-bold text-emerald-400' : ''}">${cellVal}</td>`;
-                });
-
-                tr.innerHTML = cells;
-                tbody.appendChild(tr);
+                opt.value = a;
+                opt.textContent = a;
+                areaSelect.appendChild(opt);
             });
 
             ejecutarFiltros();
         }
 
-        function ejecutarFiltros() {
-            const descVal = document.getElementById('inputDescripcion').value.toLowerCase().trim();
-            const areaVal = document.getElementById('selectArea').value;
-            const mesVal = document.getElementById('selectMes').value.toLowerCase();
-
-            const rows = document.querySelectorAll('.pedido-row');
-            let sumaTotal = 0;
-            let contadorVisibles = 0;
-
-            rows.forEach(row => {
-                const idx = row.getAttribute('data-index');
-                const rowData = rawExcelData[idx];
-
-                const textDesc = String(rowData[colDescripcionKey] || '').toLowerCase();
-                const textArea = String(rowData[colAreaKey] || '');
-                const mesRegistro = extraerMes(rowData[colFechaKey]).toLowerCase();
-
-                const cumpleDesc = (descVal === '' || textDesc.includes(descVal));
-                const cumpleArea = (areaVal === 'TODAS' || textArea === areaVal);
-                const cumpleMes = (mesVal === 'todos' || mesRegistro === mesVal || String(rowData[colFechaKey]).toLowerCase().includes(mesVal));
-
-                if (cumpleDesc && cumpleArea && cumpleMes) {
-                    row.style.display = '';
-                    sumaTotal += parseFloat(row.getAttribute('data-valor')) || 0;
-                    contadorVisibles++;
-                } else {
-                    row.style.display = 'none';
-                }
+        function setCurrency(curr) {
+            currentCurrency = curr;
+            ['cop', 'usd', 'eur'].forEach(c => {
+                const btn = document.getElementById(`btn-curr-${c}`);
+                btn.className = `px-3 py-1 rounded-md font-bold text-gray-400 hover:text-white transition w-1/3 text-xs`;
             });
+            const activeBtn = document.getElementById(`btn-curr-${curr.toLowerCase()}`);
+            activeBtn.className = `curr-active-${curr.toLowerCase()} px-3 py-1 rounded-md font-bold transition w-1/3 text-xs`;
 
-            const totalFormateado = currencyFormatter.format(sumaTotal);
-            document.getElementById('kpiTotal').innerText = totalFormateado;
-            document.getElementById('tableFooterTotal').innerText = totalFormateado;
-            document.getElementById('kpiCount').innerText = contadorVisibles;
+            ejecutarFiltros();
         }
 
-        document.addEventListener('DOMContentLoaded', cargarExcel);
+        window.ejecutarFiltros = function() {
+            if (rawExcelData.length === 0) return;
+
+            const descText = document.getElementById('inputDescripcion').value.toLowerCase().trim();
+            const selectedArea = document.getElementById('selectArea').value;
+            const selectedMes = document.getElementById('selectMes').value.toLowerCase();
+
+            // Filtrado 1: Triple Filtro + Texto para KPIs, Tabla y Doughnut
+            const filtered = rawExcelData.filter(r => 
+                r.moneda === currentCurrency &&
+                (selectedArea === 'TODAS' || r.area === selectedArea) &&
+                (selectedMes === 'TODOS' || r.mes === selectedMes) &&
+                (descText === '' || r.desc.toLowerCase().includes(descText) || r.tipo.toLowerCase().includes(descText))
+            );
+
+            // Filtrado 2: Filtro sin Mes para Gráfico de Tendencia Anual Completa
+            const trendFiltered = rawExcelData.filter(r => 
+                r.moneda === currentCurrency &&
+                (selectedArea === 'TODAS' || r.area === selectedArea) &&
+                (descText === '' || r.desc.toLowerCase().includes(descText) || r.tipo.toLowerCase().includes(descText))
+            );
+
+            // ACTUALIZACIÓN DE KPIs
+            const totalSuma = filtered.reduce((acc, r) => acc + r.valor, 0);
+            const count = filtered.length;
+            const avgTicket = count > 0 ? totalSuma / count : 0;
+
+            document.getElementById('kpiTotal').innerText = formatMoney(totalSuma, currentCurrency);
+            document.getElementById('kpiCount').innerHTML = `${count.toLocaleString()} <span class="text-sm font-normal text-gray-500">registros</span>`;
+            document.getElementById('kpiAvg').innerText = formatMoney(avgTicket, currentCurrency);
+
+            renderTable(filtered);
+            renderTrendChart(trendFiltered);
+            renderDoughnutChart(filtered);
+        };
+
+        function renderTable(data) {
+            const tbody = document.getElementById('pedidosTableBody');
+            document.getElementById('tableCountBadge').innerText = `${data.length} filas`;
+
+            // Ordenar de mayor a menor gasto y limitar a 150 filas para agilidad visual
+            const sorted = [...data].sort((a, b) => b.valor - a.valor).slice(0, 150);
+            const threshold = currentCurrency === 'COP' ? 5000000 : 1500;
+
+            if (sorted.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-gray-500 italic">No se encontraron solicitudes que coincidan con los filtros aplicados.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = sorted.map(r => {
+                const isHighVal = r.valor >= threshold;
+                return `
+                <tr class="hover:bg-gray-800/40 transition-colors border-l-2 ${isHighVal ? 'border-red-500' : 'border-transparent'}">
+                    <td class="p-3 pl-5 text-gray-400 whitespace-nowrap">${r.fecha}</td>
+                    <td class="p-3 font-medium text-white max-w-[180px] truncate" title="${r.area}">${r.area}</td>
+                    <td class="p-3 text-gray-300 max-w-[280px] truncate" title="${r.desc}">${r.desc}</td>
+                    <td class="p-3 hidden md:table-cell text-gray-400 max-w-[150px] truncate">${r.tipo}</td>
+                    <td class="p-3 text-right pr-5 font-mono ${isHighVal ? 'text-red-400 font-bold' : 'text-emerald-400 font-semibold'}">
+                        ${isHighVal ? '<span title="Alto Valor / Inversión Significativa" class="mr-1">🔴</span>' : ''}
+                        ${formatMoney(r.valor, currentCurrency)}
+                    </td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+        function renderTrendChart(data) {
+            const monthlyMap = {};
+            MES_ORDER.forEach(m => monthlyMap[m] = 0);
+
+            data.forEach(r => {
+                if (monthlyMap[r.mes] !== undefined) monthlyMap[r.mes] += r.valor;
+            });
+
+            const labels = MES_ORDER.map(m => NOMBRES_MESES[m].substring(0,3));
+            const values = MES_ORDER.map(m => monthlyMap[m]);
+
+            let strokeColor = '#8B5CF6', fillColor = 'rgba(139, 92, 246, 0.1)';
+            if (currentCurrency === 'USD') { strokeColor = '#10B981'; fillColor = 'rgba(16, 185, 129, 0.1)'; }
+            if (currentCurrency === 'EUR') { strokeColor = '#F59E0B'; fillColor = 'rgba(245, 158, 11, 0.1)'; }
+
+            const ctx = document.getElementById('trendChart').getContext('2d');
+            if (trendChart) trendChart.destroy();
+
+            trendChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: `Evolución (${currentCurrency})`,
+                        data: values,
+                        borderColor: strokeColor,
+                        backgroundColor: fillColor,
+                        borderWidth: 2.5,
+                        fill: true,
+                        tension: 0.35,
+                        pointBackgroundColor: '#0B0F19',
+                        pointBorderColor: strokeColor,
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { callbacks: { label: (c) => ` Gasto: ${formatMoney(c.parsed.y, currentCurrency)}` } }
+                    },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#9ca3af', font: { size: 10 } } },
+                        y: { 
+                            grid: { color: '#1f2937' }, 
+                            ticks: { 
+                                color: '#9ca3af',
+                                callback: (v) => v >= 1000000 ? '$' + (v/1000000).toFixed(1) + 'M' : v
+                            } 
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderDoughnutChart(data) {
+            const catMap = {};
+            data.forEach(r => {
+                catMap[r.tipo] = (catMap[r.tipo] || 0) + r.valor;
+            });
+
+            const sorted = Object.entries(catMap).sort((a,b) => b[1] - a[1]);
+            const top4 = sorted.slice(0, 4);
+            const rest = sorted.slice(4).reduce((sum, item) => sum + item[1], 0);
+
+            if (rest > 0) top4.push(['OTROS GRUPOS', rest]);
+
+            const labels = top4.map(i => i[0].length > 18 ? i[0].substring(0, 16) + '...' : i[0]);
+            const values = top4.map(i => i[1]);
+
+            const colors = ['#8B5CF6', '#3B82F6', '#10B981', '#F59E0B', '#6B7280'];
+
+            const ctx = document.getElementById('doughnutChart').getContext('2d');
+            if (doughnutChart) doughnutChart.destroy();
+
+            doughnutChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: values,
+                        backgroundColor: colors,
+                        borderWidth: 2,
+                        borderColor: '#111827'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '68%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: '#9ca3af', boxWidth: 10, font: { size: 9 } } },
+                        tooltip: { callbacks: { label: (c) => ` ${formatMoney(c.parsed, currentCurrency)}` } }
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', cargarExcelRepo);
     </script>
 </body>
 </html>
