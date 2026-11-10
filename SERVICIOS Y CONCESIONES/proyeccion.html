@@ -265,14 +265,26 @@
                 </div>
             </section>
             
-            <!-- SECCIÓN: GRÁFICO DE PROYECCIÓN (ANCHO COMPLETO PANORÁMICO) -->
+            <!-- SECCIÓN: GRÁFICO DE PROYECCIÓN CON TARJETA DE DIFERENCIA PRESUPUESTAL -->
             <section class="w-full">
                 <div class="w-full min-w-0 bg-[#111827] rounded-xl border border-gray-800 shadow-xl overflow-hidden p-6 flex flex-col justify-between">
                     <div>
-                        <div class="flex justify-between items-center mb-4">
+                        <!-- ENCABEZADO FLEX CON TITULO Y TARJETA COMPACTA DE DIFERENCIA -->
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
                             <h3 class="text-lg font-bold text-white flex items-center gap-2">
                                 <span class="text-blue-400">📊</span> Comparativo Mensual Concesiones (2025 vs 2026 Proyectado)
                             </h3>
+
+                            <!-- TARJETA PEQUEÑA DE DIFERENCIAL PRESUPUESTAL -->
+                            <div class="bg-[#0B0F19] px-3.5 py-1.5 rounded-lg border border-emerald-500/30 flex items-center gap-3 shadow-inner">
+                                <div class="text-right">
+                                    <span class="text-[9px] uppercase font-mono text-gray-400 block tracking-wider">Incremento Proyectado</span>
+                                    <span class="text-sm font-extrabold text-emerald-400 font-mono">+$ 111.796.184</span>
+                                </div>
+                                <span class="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20 font-mono">
+                                    +11,8%
+                                </span>
+                            </div>
                         </div>
                         
                         <div class="relative h-80 w-full mb-4">
@@ -283,7 +295,7 @@
                     <div class="border-t border-gray-800/80 pt-4 mt-2">
                         <p class="text-xs text-gray-400 leading-relaxed">
                             <strong class="text-white">Gráfico Proyectado: Evolución interanual.</strong> 
-                            Compara el comportamiento mensual de concesiones entre 2025 y el cierre estimado 2026, integrando las proyecciones ajustadas para el último trimestre del año.
+                            Compara el comportamiento mensual de concesiones entre 2025 ($947.799.448) y el cierre estimado 2026 ($1.059.595.632), reflejando una expansión neta proyectada de $111.796.184 (+11,8%).
                         </p>
                     </div>
                 </div>
@@ -316,7 +328,7 @@
                         borderRadius: 4
                     },
                     {
-                        label: 'Año 2026',
+                        label: 'Año 2026 (Ejecutado + Proyectado)',
                         data: [51295987, 71696488, 92572527, 103016052, 84887487, 113164274, 63114983, 82291336, 121421194, 123892040, 95464475, 55840773],
                         backgroundColor: 'rgba(0, 168, 89, 0.85)',
                         borderColor: 'rgba(0, 168, 89, 1)',
