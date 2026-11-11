@@ -31,7 +31,7 @@
                     Volver al Dashboard Principal
                 </a>
                 <span class="text-xs bg-[#00A859]/10 text-[#00A859] px-3 py-1 rounded-full border border-[#00A859]/30 font-mono">
-                    Área: Servicios y Concesiones
+                    Área: Servicios y Concesiones | ECO-S
                 </span>
             </div>
         </nav>
@@ -39,20 +39,20 @@
         <!-- 2. CABECERA PRINCIPAL (HERO SECTION) -->
         <header class="text-center py-10 px-6 relative z-10">
             <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-3 tracking-tight drop-shadow-md">
-                Proyección Ingresos
+                Proyección Ingresos y Conseciones
             </h1>
             <p class="text-gray-400 text-base md:text-lg max-w-3xl mx-auto leading-relaxed">
-                Seguimiento y proyección de los ingresos y recobros para el año 2026.
+                Seguimiento, modelo de crecimiento y proyección de ingresos y recobros para el año 2026.
             </p>
         </header>
 
         <!-- 3. CONTENEDOR PRINCIPAL -->
         <main class="w-full max-w-7xl mx-auto px-6 mb-12 space-y-8">
 
-            <!-- SECCIÓN: TARJETAS KPI (3 COLUMNAS REESTRUCTURADAS) -->
+            <!-- SECCIÓN: TARJETAS KPI (3 COLUMNAS PRINCIPALES) -->
             <section class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 
-                <!-- KPI 1: Total Concesiones -->
+                <!-- KPI 1: Total Concesiones 2026 -->
                 <div class="bg-[#111827] border border-gray-800 rounded-xl p-4 shadow-xl flex flex-col justify-between">
                     <div class="flex items-center justify-between mb-2">
                         <span class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Total Concesiones 2026</span>
@@ -285,14 +285,35 @@
                 </div>
             </section>
 
-            <!-- SECCIÓN: GRÁFICO 1 - COMPARATIVO MENSUAL CONCESIONES -->
+            <!-- SECCIÓN: GRÁFICO 1 - COMPARATIVO MENSUAL CONCESIONES (CON FILTROS Y TENDENCIA EXPONENCIAL) -->
             <section class="w-full">
                 <div class="w-full min-w-0 bg-[#111827] rounded-xl border border-gray-800 shadow-xl overflow-hidden p-6 flex flex-col justify-between">
                     <div>
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                                <span class="text-blue-400">📊</span> Comparativo Mensual Concesiones (2025 vs 2026 Proyectado)
-                            </h3>
+                        <!-- ENCABEZADO FLEX CON TITULO Y CONTROLES INTERACTIVOS DE FILTRADO -->
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+                            <div>
+                                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                    <span class="text-blue-400">📊</span> Comparativo Mensual Concesiones (2025 vs 2026 Proyectado)
+                                </h3>
+                                <p class="text-xs text-gray-400 mt-0.5">Filtrado interactivo por periodo con ajuste de tendencia exponencial 2026</p>
+                            </div>
+
+                            <div class="flex items-center gap-2">
+                                <button onclick="toggleComparativoFilter('all')" id="btn-comp-all" class="px-3 py-1 text-xs font-semibold rounded-lg border border-blue-500/40 bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 transition">
+                                    Todos
+                                </button>
+                                <button onclick="toggleComparativoFilter('2025')" id="btn-comp-2025" class="px-3 py-1 text-xs font-semibold rounded-lg border border-gray-700 bg-gray-800 text-gray-400 hover:bg-gray-700 transition">
+                                    Año 2025
+                                </button>
+                                <button onclick="toggleComparativoFilter('2026')" id="btn-comp-2026" class="px-3 py-1 text-xs font-semibold rounded-lg border border-gray-700 bg-gray-800 text-gray-400 hover:bg-gray-700 transition">
+                                    Año 2026
+                                </button>
+                                
+                                <div class="bg-[#0B0F19] px-3 py-1 rounded-lg border border-blue-500/30 text-right ml-2">
+                                    <span class="text-[9px] uppercase font-mono text-gray-400 block">Total Visualizado</span>
+                                    <span id="comparativo-total-badge" class="text-xs font-extrabold text-emerald-400 font-mono">$ 1.059.595.632</span>
+                                </div>
+                            </div>
                         </div>
                         
                         <div class="relative h-80 w-full mb-4">
@@ -302,8 +323,8 @@
 
                     <div class="border-t border-gray-800/80 pt-4 mt-2">
                         <p class="text-xs text-gray-400 leading-relaxed">
-                            <strong class="text-white">Gráfico Proyectado: Evolución interanual.</strong> 
-                            Compara el comportamiento mensual de concesiones entre 2025 ($947.799.448) y el cierre estimado 2026 ($1.059.595.632).
+                            <strong class="text-white">Gráfico Proyectado: Evolución interanual y ajuste exponencial.</strong> 
+                            Compara el comportamiento mensual de concesiones entre 2025 ($947.799.448) y el cierre estimado 2026 ($1.059.595.632). La línea continua representa la curva de crecimiento exponencial para 2026.
                         </p>
                     </div>
                 </div>
@@ -367,15 +388,20 @@
         const formatCOP = (val) => val !== null && !isNaN(val) ? '$ ' + new Intl.NumberFormat('es-CO').format(val) : '-';
 
         // -------------------------------------------------------------
-        // GRÁFICO 1: COMPARATIVO ANUAL CONCESIONES (2025 vs 2026)
+        // GRÁFICO 1: COMPARATIVO ANUAL CONCESIONES CON TENDENCIA EXPONENCIAL
         // -------------------------------------------------------------
         const ctxComparativo = document.getElementById('comparativoChart').getContext('2d');
-        new Chart(ctxComparativo, {
+        
+        // Datos calculados de la modelo de tendencia exponencial (y = a * e^(b*x)) para 2026
+        const expTrend2026Data = [76124931, 77663996, 79234178, 80836104, 82470418, 84137774, 85838839, 87574297, 89344841, 91151181, 92994041, 94874159];
+
+        const comparativoChartObj = new Chart(ctxComparativo, {
             type: 'bar',
             data: {
                 labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov *', 'Dic *'],
                 datasets: [
                     {
+                        type: 'bar',
                         label: 'Año 2025',
                         data: [26785711, 45317902, 56535384, 91879882, 102346885, 73542677, 48844443, 66656922, 97187589, 110616406, 109613940, 102734906],
                         backgroundColor: 'rgba(139, 92, 246, 0.4)',
@@ -384,12 +410,25 @@
                         borderRadius: 4
                     },
                     {
+                        type: 'bar',
                         label: 'Año 2026 (Ejecutado + Proyectado)',
                         data: [51295987, 71696488, 92572527, 103016052, 84887487, 113164274, 63427655, 82604008, 121733866, 123892040, 95464475, 55840773],
                         backgroundColor: 'rgba(0, 168, 89, 0.85)',
                         borderColor: 'rgba(0, 168, 89, 1)',
                         borderWidth: 1,
                         borderRadius: 4
+                    },
+                    {
+                        type: 'line',
+                        label: 'Tendencia Exponencial 2026',
+                        data: expTrend2026Data,
+                        borderColor: '#38BDF8',
+                        backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                        borderWidth: 2.5,
+                        pointRadius: 3,
+                        pointBackgroundColor: '#38BDF8',
+                        tension: 0.4,
+                        fill: false
                     }
                 ]
             },
@@ -427,6 +466,43 @@
                 }
             }
         });
+
+        // FUNCIONALIDAD DE FILTRADO Y ACTUALIZACIÓN DEL TOTAL EN GRÁFICO 1
+        function toggleComparativoFilter(mode) {
+            const btnAll = document.getElementById('btn-comp-all');
+            const btn2025 = document.getElementById('btn-comp-2025');
+            const btn2026 = document.getElementById('btn-comp-2026');
+            const badgeTotal = document.getElementById('comparativo-total-badge');
+
+            const activeStyle = "px-3 py-1 text-xs font-semibold rounded-lg border border-blue-500/40 bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 transition";
+            const inactiveStyle = "px-3 py-1 text-xs font-semibold rounded-lg border border-gray-700 bg-gray-800 text-gray-400 hover:bg-gray-700 transition";
+
+            btnAll.className = mode === 'all' ? activeStyle : inactiveStyle;
+            btn2025.className = mode === '2025' ? activeStyle : inactiveStyle;
+            btn2026.className = mode === '2026' ? activeStyle : inactiveStyle;
+
+            const sum2025 = 947799448;
+            const sum2026 = 1059595632;
+
+            if (mode === 'all') {
+                comparativoChartObj.setDatasetVisibility(0, true);
+                comparativoChartObj.setDatasetVisibility(1, true);
+                comparativoChartObj.setDatasetVisibility(2, true);
+                badgeTotal.innerText = formatCOP(sum2026);
+            } else if (mode === '2025') {
+                comparativoChartObj.setDatasetVisibility(0, true);
+                comparativoChartObj.setDatasetVisibility(1, false);
+                comparativoChartObj.setDatasetVisibility(2, false);
+                badgeTotal.innerText = formatCOP(sum2025);
+            } else if (mode === '2026') {
+                comparativoChartObj.setDatasetVisibility(0, false);
+                comparativoChartObj.setDatasetVisibility(1, true);
+                comparativoChartObj.setDatasetVisibility(2, true);
+                badgeTotal.innerText = formatCOP(sum2026);
+            }
+
+            comparativoChartObj.update();
+        }
 
         // -------------------------------------------------------------
         // GRÁFICO 2: RECOBRO DE SERVICIOS PÚBLICOS (INTERACTIVO)
@@ -490,14 +566,13 @@
             }
         });
 
-        // FUNCIONALIDAD DE FILTRADO Y ACTUALIZACIÓN DEL TOTAL
+        // FUNCIONALIDAD DE FILTRADO Y ACTUALIZACIÓN DEL TOTAL EN GRÁFICO 2
         function toggleRecobroFilter(mode) {
             const btnAll = document.getElementById('btn-filter-all');
             const btnCaf = document.getElementById('btn-filter-cafeterias');
             const btnEve = document.getElementById('btn-filter-eventos');
             const badgeTotal = document.getElementById('recobro-total-badge');
 
-            // Reset de estilos de botones
             const activeStyle = "px-3 py-1 text-xs font-semibold rounded-lg border border-amber-500/40 bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 transition";
             const inactiveStyle = "px-3 py-1 text-xs font-semibold rounded-lg border border-gray-700 bg-gray-800 text-gray-400 hover:bg-gray-700 transition";
 
