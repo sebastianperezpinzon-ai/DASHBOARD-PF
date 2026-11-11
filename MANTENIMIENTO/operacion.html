@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛠️</text></svg>">
+    <title>Flujo de OTs y Desempeño Técnico - Mantenimiento | ECO-S</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+    body {
+        background-image: url('../images/bg-pattern.png');
+        background-repeat: repeat;
+        background-size: 350px;
+        background-attachment: fixed;
+        background-color: #0B0F19;
+    }
+    </style>
+</head>
+<body class="text-white font-sans min-h-screen flex flex-col justify-between">
+
+    <div>
+        <!-- 1. BARRA DE NAVEGACIÓN SUPERIOR -->
+        <nav class="bg-[#111827] border-b border-gray-800 px-6 py-4 sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-3">
+                <a href="../index.html" class="flex items-center text-sm font-semibold text-gray-400 hover:text-[#00A859] transition duration-200">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Volver al Dashboard Principal
+                </a>
+                <div class="flex items-center gap-2">
+                    <span class="text-xs bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/30 font-mono">
+                        Vista 1/2: Flujo Fracttal & Equipo
+                    </span>
+                    <span class="text-xs bg-[#00A859]/10 text-[#00A859] px-3 py-1 rounded-full border border-[#00A859]/30 font-mono">
+                        Área: Mantenimiento | ECO-S
+                    </span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- 2. CABECERA PRINCIPAL (HERO SECTION) -->
+        <header class="text-center py-10 px-6 relative z-10">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-3 tracking-tight drop-shadow-md">
+                Flujo Operativo de Mantenimiento
+            </h1>
+            <p class="text-gray-400 text-base md:text-lg max-w-3xl mx-auto leading-relaxed">
+                Trazabilidad de Órdenes de Trabajo (Fracttal) y desempeño del equipo técnico — Corte Enero a Septiembre 2026.
+            </p>
+        </header>
+
+        <!-- 3. CONTENEDOR PRINCIPAL -->
+        <main class="w-full max-w-7xl mx-auto px-6 mb-12 space-y-8">
+
+            <!-- SECCIÓN: 4 TARJETAS KPI PRINCIPALES -->
+            <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                
+                <!-- KPI 1: Total OTs -->
+                <div class="bg-[#111827] border border-gray-800 rounded-xl p-4 shadow-xl flex flex-col justify-between">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Órdenes de Trabajo</span>
+                        <span class="p-1.5 bg-blue-500/10 text-blue-400 rounded-lg text-base">📋</span>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-extrabold text-white tracking-tight">
+                            2.869
+                        </div>
+                        <p class="text-[10px] text-gray-400 mt-1">Ene – Sep 2026 (81,1% Preventivo/Insp.)</p>
+                    </div>
+                </div>
+
+                <!-- KPI 2: Tasa de Finalización -->
+                <div class="bg-[#111827] border border-gray-800 rounded-xl p-4 shadow-xl flex flex-col justify-between">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Tasa de Cierre</span>
+                        <span class="p-1.5 bg-emerald-500/10 text-emerald-400 rounded-lg text-base">✅</span>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-extrabold text-emerald-400 tracking-tight flex items-center gap-2">
+                            96,8%
+                            <span class="text-[10px] font-normal text-emerald-300 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">2.778 Fin.</span>
+                        </div>
+                        <p class="text-[10px] text-gray-400 mt-1">73 en proceso · 6 en revisión · 12 canc.</p>
+                    </div>
+                </div>
+
+                <!-- KPI 3: Cumplimiento de Cronograma -->
+                <div class="bg-[#111827] border border-purple-500/30 rounded-xl p-4 shadow-xl flex flex-col justify-between">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[11px] font-semibold text-purple-400 uppercase tracking-wider">Cumplimiento Tiempo</span>
+                        <span class="p-1.5 bg-purple-500/10 text-purple-400 rounded-lg text-base">⏱️</span>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-extrabold text-white tracking-tight flex items-center gap-2">
+                            80,4%
+                            <span class="text-[10px] font-normal text-purple-300 bg-purple-500/10 px-1.5 py-0.5 rounded border border-purple-500/20">2.212 a tiempo</span>
+                        </div>
+                        <p class="text-[10px] text-gray-400 mt-1">Sobre 2.750 OTs con cierre evaluado</p>
+                    </div>
+                </div>
+
+                <!-- KPI 4: Calificación de Servicio -->
+                <div class="bg-[#111827] border border-amber-500/30 rounded-xl p-4 shadow-xl flex flex-col justify-between">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[11px] font-semibold text-amber-400 uppercase tracking-wider">Calificación Servicio</span>
+                        <span class="p-1.5 bg-amber-500/10 text-amber-400 rounded-lg text-base">⭐</span>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-extrabold text-amber-400 tracking-tight flex items-center gap-2">
+                            4,66 <span class="text-sm text-gray-400 font-normal">/ 5,0</span>
+                        </div>
+                        <p class="text-[10px] text-gray-400 mt-1">Promedio en 2.546 OTs calificadas</p>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- SECCIÓN: GRÁFICO 1 - FLUJO MENSUAL DE ÓRDENES DE TRABAJO (INTERACTIVO) -->
+            <section class="w-full bg-[#111827] rounded-xl border border-gray-800 shadow-xl overflow-hidden p-6 flex flex-col justify-between">
+                <div>
+                    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                <span class="text-blue-400">📊</span> Flujo Mensual de Órdenes de Trabajo (Enero – Septiembre 2026)
+                            </h3>
+                            <p class="text-xs text-gray-400 mt-0.5">Filtra por naturaleza operativa para analizar la carga preventiva frente a la demanda correctiva</p>
+                        </div>
+
+                        <!-- BOTONES DE FILTRADO DINÁMICO -->
+                        <div class="flex flex-wrap items-center gap-2">
+                            <button onclick="filterOtsFlow('all')" id="btn-ot-all" class="px-3 py-1 text-xs font-semibold rounded-lg border border-emerald-500/40 bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 transition">
+                                Todas (2.869)
+                            </button>
+                            <button onclick="filterOtsFlow('preventivo')" id="btn-ot-preventivo" class="px-3 py-1 text-xs font-semibold rounded-lg border border-gray-700 bg-gray-800 text-gray-400 hover:bg-gray-700 transition">
+                                Prev. + Insp.
+                            </button>
+                            <button onclick="filterOtsFlow('correctivo')" id="btn-ot-correctivo" class="px-3 py-1 text-xs font-semibold rounded-lg border border-gray-700 bg-gray-800 text-gray-400 hover:bg-gray-700 transition">
+                                Correctivo
+                            </button>
+                            <button onclick="filterOtsFlow('proyectos')" id="btn-ot-proyectos" class="px-3 py-1 text-xs font-semibold rounded-lg border border-gray-700 bg-gray-800 text-gray-400 hover:bg-gray-700 transition">
+                                Inst. / Adec.
+                            </button>
+
+                            <div class="bg-[#0B0F19] px-3 py-1 rounded-lg border border-emerald-500/30 text-right ml-1">
+                                <span class="text-[9px] uppercase font-mono text-gray-400 block">OTs Filtradas</span>
+                                <span id="ot-total-badge" class="text-xs font-extrabold text-emerald-400 font-mono">2.869 OTs</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative h-80 w-full mb-4">
+                        <canvas id="flujoOtsChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-800/80 pt-4 mt-2 flex flex-col sm:flex-row justify-between gap-2 text-xs text-gray-400">
+                    <p>
+                        <strong class="text-white">Lectura del Flujo:</strong> Picos operativos en <strong class="text-emerald-400">junio (464 OTs)</strong> por jornada intensiva preventiva intersemestral y <strong class="text-cyan-400">septiembre (465 OTs)</strong> por incremento de inspecciones locativas y adecuaciones de inicio de ciclo.
+                    </p>
+                    <span class="font-mono text-[11px] text-gray-500 shrink-0">Fundadores: 47,2% · Legacy: 47,0%</span>
+                </div>
+            </section>
+
+            <!-- SECCIÓN: DESEMPEÑO DEL EQUIPO TÉCNICO (GRÁFICO + TABLA DETALLADA) -->
+            <section class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+                <!-- COLUMNA IZQUIERDA (5 cols): Gráfico Apilado de Carga por Técnico -->
+                <div class="lg:col-span-5 bg-[#111827] rounded-xl border border-gray-800 shadow-xl p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="mb-4">
+                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                <span class="text-purple-400">👷</span> Distribución de Carga por Técnico
+                            </h3>
+                            <p class="text-xs text-gray-400 mt-0.5">2.246 OTs asignadas al equipo técnico de planta</p>
+                        </div>
+
+                        <div class="relative h-72 w-full mb-4">
+                            <canvas id="tecnicosChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-gray-800/80 pt-3 mt-2">
+                        <p class="text-[11px] text-gray-400 leading-relaxed">
+                            <strong class="text-white">Nota Operativa:</strong> Las <span class="text-purple-300 font-semibold">623 OTs restantes</span> corresponden a mantenimiento especializado con proveedores externos (ascensores, climatización) y asignaciones conjuntas.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- COLUMNA DERECHA (7 cols): Tabla Comparativa de Desempeño Técnico -->
+                <div class="lg:col-span-7 bg-[#111827] rounded-xl border border-gray-800 shadow-xl p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <div>
+                                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                    <span class="text-emerald-400">📈</span> Indicadores de Desempeño Técnico (Ene – Sep)
+                                </h3>
+                                <p class="text-xs text-gray-400 mt-0.5">Efectividad de cierre, cumplimiento de tiempos y calidad percibida</p>
+                            </div>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs text-gray-300">
+                                <thead class="bg-[#0B0F19] text-emerald-400 uppercase text-[10px] tracking-wider">
+                                    <tr>
+                                        <th class="p-3 rounded-l">Técnico de Planta</th>
+                                        <th class="p-3 text-right">OTs Asignadas</th>
+                                        <th class="p-3 text-right">Finalizadas</th>
+                                        <th class="p-3 text-right">Cumplimiento</th>
+                                        <th class="p-3 text-right">Calificación</th>
+                                        <th class="p-3 rounded-r">Foco Principal</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-800/60">
+                                    <tr class="hover:bg-gray-800/30 transition-colors">
+                                        <td class="p-3 font-semibold text-white">
+                                            Yonel López Largo
+                                            <span class="block text-[10px] text-gray-400 font-normal">33,3% de carga interna</span>
+                                        </td>
+                                        <td class="p-3 text-right font-mono font-bold text-white">748</td>
+                                        <td class="p-3 text-right">
+                                            <span class="text-emerald-400 font-semibold">745</span>
+                                            <span class="text-[10px] text-gray-400 block">99,6%</span>
+                                        </td>
+                                        <td class="p-3 text-right">
+                                            <span class="px-2 py-0.5 rounded bg-blue-500/10 text-blue-300 border border-blue-500/20 font-mono">79,4%</span>
+                                        </td>
+                                        <td class="p-3 text-right font-mono font-bold text-amber-400">4,48 ★</td>
+                                        <td class="p-3 text-[11px] text-gray-300">Preventivo (46,8%) e Inspección</td>
+                                    </tr>
+                                    <tr class="hover:bg-gray-800/30 transition-colors">
+                                        <td class="p-3 font-semibold text-white">
+                                            Sebastián Vergara
+                                            <span class="block text-[10px] text-gray-400 font-normal">23,6% de carga interna</span>
+                                        </td>
+                                        <td class="p-3 text-right font-mono font-bold text-white">531</td>
+                                        <td class="p-3 text-right">
+                                            <span class="text-emerald-400 font-semibold">520</span>
+                                            <span class="text-[10px] text-gray-400 block">97,9%</span>
+                                        </td>
+                                        <td class="p-3 text-right">
+                                            <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 font-mono">83,1%</span>
+                                        </td>
+                                        <td class="p-3 text-right font-mono font-bold text-amber-400">4,39 ★</td>
+                                        <td class="p-3 text-[11px] text-gray-300">Inspección (54,8%) y Preventivo</td>
+                                    </tr>
+                                    <tr class="hover:bg-gray-800/30 transition-colors">
+                                        <td class="p-3 font-semibold text-white">
+                                            Marco Fidel Parra A.
+                                            <span class="block text-[10px] text-gray-400 font-normal">21,5% de carga interna</span>
+                                        </td>
+                                        <td class="p-3 text-right font-mono font-bold text-white">484</td>
+                                        <td class="p-3 text-right">
+                                            <span class="text-emerald-400 font-semibold">473</span>
+                                            <span class="text-[10px] text-gray-400 block">97,7%</span>
+                                        </td>
+                                        <td class="p-3 text-right">
+                                            <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 font-mono">86,8%</span>
+                                        </td>
+                                        <td class="p-3 text-right font-mono font-bold text-amber-400">4,79 ★</td>
+                                        <td class="p-3 text-[11px] text-gray-300">Inspección, Correctivo e Inst.</td>
+                                    </tr>
+                                    <tr class="hover:bg-gray-800/30 transition-colors">
+                                        <td class="p-3 font-semibold text-white">
+                                            Rubén Darío Cárdenas P.
+                                            <span class="block text-[10px] text-gray-400 font-normal">21,5% de carga interna</span>
+                                        </td>
+                                        <td class="p-3 text-right font-mono font-bold text-white">483</td>
+                                        <td class="p-3 text-right">
+                                            <span class="text-emerald-400 font-semibold">472</span>
+                                            <span class="text-[10px] text-gray-400 block">97,7%</span>
+                                        </td>
+                                        <td class="p-3 text-right">
+                                            <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 font-mono">83,1%</span>
+                                        </td>
+                                        <td class="p-3 text-right font-mono font-bold text-amber-400">4,75 ★</td>
+                                        <td class="p-3 text-[11px] text-gray-300">Inspección (58,6%) y Correctivo</td>
+                                    </tr>
+                                    <tr class="bg-[#0B0F19]/70 font-bold">
+                                        <td class="p-3 text-white">TOTAL EQUIPO INTERNO</td>
+                                        <td class="p-3 text-right font-mono text-emerald-400">2.246</td>
+                                        <td class="p-3 text-right text-emerald-400">2.210 (98,4%)</td>
+                                        <td class="p-3 text-right font-mono text-purple-300">82,6%</td>
+                                        <td class="p-3 text-right font-mono text-amber-400">4,59 ★</td>
+                                        <td class="p-3 text-[11px] text-gray-400 font-normal">Base de 2.018 OTs calificadas</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-gray-800/80 pt-3 mt-4">
+                        <p class="text-[11px] text-gray-400 leading-relaxed">
+                            <strong class="text-emerald-400">Conexión ECO-S (ODS 3 & ODS 4):</strong> Mantener una tasa de resolución del 98,4% con tiempos de respuesta controlados protege la continuidad académica de aulas y laboratorios en Fundadores y Legacy, evitando que el desgaste locativo afecte el bienestar estudiantil.
+                        </p>
+                    </div>
+                </div>
+
+            </section>
+
+        </main>
+    </div>
+
+    <!-- 4. PIE DE PÁGINA (FOOTER) -->
+    <footer class="bg-[#0B0F19] text-center py-6 text-xs text-gray-500 border-t border-gray-800">
+        <p>Sistema de Gestión Interna de Planta Física | ECO-S — Ecosistema de Conexión y Optimización Sensorial</p>
+    </footer>
+
+    <!-- 5. SCRIPT DE CHART.JS -->
+    <script>
+        const mesesLabels = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep'];
+
+        // Datos reales extraídos de Fracttal (Enero - Septiembre 2026)
+        const dataInspeccion = [0, 136, 96, 164, 185, 95, 140, 190, 304];       // Total: 1.310
+        const dataPreventivo = [157, 66, 48, 58, 89, 351, 130, 67, 51];         // Total: 1.017
+        const dataCorrectivo = [9, 31, 26, 78, 52, 14, 13, 58, 75];             // Total: 356
+        const dataProyectos  = [2, 27, 13, 19, 34, 4, 17, 35, 35];              // Total: 186
+        const dataTotalMensual = [168, 260, 183, 319, 360, 464, 300, 350, 465]; // Total: 2.869
+
+        // -------------------------------------------------------------
+        // GRÁFICO 1: FLUJO MENSUAL DE ÓRDENES DE TRABAJO
+        // -------------------------------------------------------------
+        const ctxFlujo = document.getElementById('flujoOtsChart').getContext('2d');
+        const flujoOtsChartObj = new Chart(ctxFlujo, {
+            type: 'bar',
+            data: {
+                labels: mesesLabels,
+                datasets: [
+                    {
+                        type: 'bar',
+                        label: 'Inspecciones (1.310)',
+                        data: dataInspeccion,
+                        backgroundColor: 'rgba(56, 189, 248, 0.75)',
+                        borderColor: 'rgba(56, 189, 248, 1)',
+                        borderWidth: 1,
+                        borderRadius: 3,
+                        stack: 'ots'
+                    },
+                    {
+                        type: 'bar',
+                        label: 'Preventivo (1.017)',
+                        data: dataPreventivo,
+                        backgroundColor: 'rgba(0, 168, 89, 0.85)',
+                        borderColor: 'rgba(0, 168, 89, 1)',
+                        borderWidth: 1,
+                        borderRadius: 3,
+                        stack: 'ots'
+                    },
+                    {
+                        type: 'bar',
+                        label: 'Correctivo (356)',
+                        data: dataCorrectivo,
+                        backgroundColor: 'rgba(245, 158, 11, 0.85)',
+                        borderColor: 'rgba(245, 158, 11, 1)',
+                        borderWidth: 1,
+                        borderRadius: 3,
+                        stack: 'ots'
+                    },
+                    {
+                        type: 'bar',
+                        label: 'Instalación / Adecuación / Otros (186)',
+                        data: dataProyectos,
+                        backgroundColor: 'rgba(139, 92, 246, 0.8)',
+                        borderColor: 'rgba(139, 92, 246, 1)',
+                        borderWidth: 1,
+                        borderRadius: 3,
+                        stack: 'ots'
+                    },
+                    {
+                        type: 'line',
+                        label: 'Total Mensual OTs',
+                        data: dataTotalMensual,
+                        borderColor: '#F8FAFC',
+                        backgroundColor: 'rgba(248, 250, 252, 0.1)',
+                        borderWidth: 2,
+                        pointRadius: 3.5,
+                        pointBackgroundColor: '#00A859',
+                        tension: 0.35,
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                plugins: {
+                    legend: {
+                        labels: { color: '#9ca3af', boxWidth: 12, font: { size: 11 } }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.dataset.label.split(' (')[0]}: ${context.parsed.y} OTs`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        stacked: true,
+                        grid: { display: false },
+                        ticks: { color: '#9ca3af' }
+                    },
+                    y: {
+                        stacked: true,
+                        grid: { color: '#1f2937' },
+                        ticks: { color: '#9ca3af' }
+                    }
+                }
+            }
+        });
+
+        // FILTRADO DINÁMICO DEL GRÁFICO 1
+        function filterOtsFlow(mode) {
+            const btns = ['all', 'preventivo', 'correctivo', 'proyectos'];
+            const activeClass = "px-3 py-1 text-xs font-semibold rounded-lg border border-emerald-500/40 bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 transition";
+            const inactiveClass = "px-3 py-1 text-xs font-semibold rounded-lg border border-gray-700 bg-gray-800 text-gray-400 hover:bg-gray-700 transition";
+
+            btns.forEach(b => {
+                document.getElementById(`btn-ot-${b}`).className = (b === mode) ? activeClass : inactiveClass;
+            });
+
+            const badge = document.getElementById('ot-total-badge');
+
+            if (mode === 'all') {
+                flujoOtsChartObj.setDatasetVisibility(0, true);
+                flujoOtsChartObj.setDatasetVisibility(1, true);
+                flujoOtsChartObj.setDatasetVisibility(2, true);
+                flujoOtsChartObj.setDatasetVisibility(3, true);
+                flujoOtsChartObj.setDatasetVisibility(4, true);
+                badge.innerText = '2.869 OTs';
+            } else if (mode === 'preventivo') {
+                flujoOtsChartObj.setDatasetVisibility(0, true);
+                flujoOtsChartObj.setDatasetVisibility(1, true);
+                flujoOtsChartObj.setDatasetVisibility(2, false);
+                flujoOtsChartObj.setDatasetVisibility(3, false);
+                flujoOtsChartObj.setDatasetVisibility(4, false);
+                badge.innerText = '2.327 OTs (81,1%)';
+            } else if (mode === 'correctivo') {
+                flujoOtsChartObj.setDatasetVisibility(0, false);
+                flujoOtsChartObj.setDatasetVisibility(1, false);
+                flujoOtsChartObj.setDatasetVisibility(2, true);
+                flujoOtsChartObj.setDatasetVisibility(3, false);
+                flujoOtsChartObj.setDatasetVisibility(4, false);
+                badge.innerText = '356 OTs (12,4%)';
+            } else if (mode === 'proyectos') {
+                flujoOtsChartObj.setDatasetVisibility(0, false);
+                flujoOtsChartObj.setDatasetVisibility(1, false);
+                flujoOtsChartObj.setDatasetVisibility(2, false);
+                flujoOtsChartObj.setDatasetVisibility(3, true);
+                flujoOtsChartObj.setDatasetVisibility(4, false);
+                badge.innerText = '186 OTs (6,5%)';
+            }
+
+            flujoOtsChartObj.update();
+        }
+
+        // -------------------------------------------------------------
+        // GRÁFICO 2: DISTRIBUCIÓN DE CARGA POR TÉCNICO (HORAS / OTs)
+        // -------------------------------------------------------------
+        const ctxTecnicos = document.getElementById('tecnicosChart').getContext('2d');
+        new Chart(ctxTecnicos, {
+            type: 'bar',
+            data: {
+                labels: ['Yonel López', 'Sebastián Vergara', 'Marco F. Parra', 'Rubén D. Cárdenas'],
+                datasets: [
+                    {
+                        label: 'Inspección',
+                        data: [275, 291, 266, 283],
+                        backgroundColor: 'rgba(56, 189, 248, 0.8)',
+                        borderRadius: 3
+                    },
+                    {
+                        label: 'Preventivo',
+                        data: [350, 120, 71, 93],
+                        backgroundColor: 'rgba(0, 168, 89, 0.85)',
+                        borderRadius: 3
+                    },
+                    {
+                        label: 'Correctivo',
+                        data: [85, 73, 86, 86],
+                        backgroundColor: 'rgba(245, 158, 11, 0.85)',
+                        borderRadius: 3
+                    },
+                    {
+                        label: 'Inst. / Adec. / Otros',
+                        data: [38, 47, 61, 21],
+                        backgroundColor: 'rgba(139, 92, 246, 0.85)',
+                        borderRadius: 3
+                    }
+                ]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: { color: '#9ca3af', boxWidth: 10, font: { size: 10 } }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.dataset.label}: ${context.parsed.x} OTs`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        stacked: true,
+                        grid: { color: '#1f2937' },
+                        ticks: { color: '#9ca3af' }
+                    },
+                    y: {
+                        stacked: true,
+                        grid: { display: false },
+                        ticks: { color: '#e5e7eb', font: { weight: 'bold', size: 11 } }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
