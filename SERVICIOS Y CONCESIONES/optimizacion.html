@@ -25,7 +25,7 @@
 
     <div>
         <!-- 1. BARRA DE NAVEGACIÓN SUPERIOR -->
-        <nav class="flex justify-between items-center bg-[#0B0F19]/95 backdrop-blur-sm py-4 px-6 border-b border-gray-800/80 sticky top-0 z-50">
+        <nav class="flex flex-wrap justify-between items-center gap-3 bg-[#0B0F19]/95 backdrop-blur-sm py-4 px-6 border-b border-gray-800/80 sticky top-0 z-50">
             <a href="../index.html" class="flex items-center text-gray-400 hover:text-white transition-colors text-sm font-medium group">
                 <svg class="w-5 h-5 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
@@ -33,8 +33,13 @@
                 Volver al Dashboard Principal
             </a>
             
-            <div class="px-3 py-1.5 rounded-full border border-emerald-500/20 text-emerald-400 text-xs font-medium tracking-wide font-mono">
-                Área: Servicios y Concesiones | ECO-S
+            <div class="flex items-center gap-2">
+                <div class="px-3 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 text-xs font-semibold tracking-wide font-mono">
+                    Ahorro Consolidado: $311.746.769
+                </div>
+                <div class="px-3 py-1.5 rounded-full border border-emerald-500/20 text-emerald-400 text-xs font-medium tracking-wide font-mono hidden sm:block">
+                    Área: Servicios y Concesiones | ECO-S
+                </div>
             </div>
         </nav>
 
@@ -51,62 +56,76 @@
         <!-- 3. CONTENEDOR PRINCIPAL -->
         <main class="max-w-7xl mx-auto px-6 mb-12 space-y-8">
 
-            <!-- SECCIÓN: TARJETAS KPI SUPERIORES (4 COLUMNAS - RESUMEN DE AHORRO) -->
-            <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <!-- SECCIÓN: TARJETAS KPI SUPERIORES (5 PILARES DE AHORRO) -->
+            <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                 
                 <!-- KPI 1: Ahorro Presupuestal Agua -->
-                <div class="bg-[#111827] border border-gray-800 rounded-xl p-5 shadow-xl relative overflow-hidden flex flex-col justify-between">
+                <div class="bg-[#111827] border border-gray-800 rounded-xl p-4 shadow-xl relative overflow-hidden flex flex-col justify-between">
                     <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Ahorro Presupuestal Agua</span>
-                        <span class="p-2 bg-[#00B0FF]/10 text-[#00B0FF] rounded-lg text-lg">💧</span>
+                        <span class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Ahorro Agua Potable</span>
+                        <span class="p-1.5 bg-[#00B0FF]/10 text-[#00B0FF] rounded-lg text-base">💧</span>
                     </div>
                     <div>
-                        <div class="text-2xl font-extrabold text-[#00B0FF] tracking-tight">
-                            $27.508.675
+                        <div class="text-xl xl:text-2xl font-extrabold text-[#00B0FF] tracking-tight">
+                            $27.508.673
                         </div>
-                        <p class="text-[11px] text-gray-400 mt-1">Acumulado Ene – Oct 2026 (ODS 6)</p>
+                        <p class="text-[10px] text-gray-400 mt-1">Acumulado Ene – Oct 2026 (ODS 6)</p>
                     </div>
                 </div>
 
                 <!-- KPI 2: Ahorro Agua Tratada (PTALL) -->
-                <div class="bg-[#111827] border border-teal-500/30 rounded-xl p-5 shadow-xl relative overflow-hidden flex flex-col justify-between">
+                <div class="bg-[#111827] border border-teal-500/30 rounded-xl p-4 shadow-xl relative overflow-hidden flex flex-col justify-between">
                     <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs font-semibold text-teal-400 uppercase tracking-wider">Ahorro Agua Tratada PTALL</span>
-                        <span class="p-2 bg-teal-500/10 text-teal-400 rounded-lg text-lg">♻️</span>
+                        <span class="text-[11px] font-semibold text-teal-400 uppercase tracking-wider">Agua Tratada PTALL</span>
+                        <span class="p-1.5 bg-teal-500/10 text-teal-400 rounded-lg text-base">♻️</span>
                     </div>
                     <div>
-                        <div class="text-2xl font-extrabold text-teal-400 tracking-tight">
+                        <div class="text-xl xl:text-2xl font-extrabold text-teal-400 tracking-tight">
                             $9.769.641
                         </div>
-                        <p class="text-[11px] text-gray-400 mt-1">1.253 m³ tratados Ene – Oct (ODS 6 & 12)</p>
+                        <p class="text-[10px] text-gray-400 mt-1">1.253 m³ reutilizados (ODS 6 & 12)</p>
                     </div>
                 </div>
 
                 <!-- KPI 3: Ahorro Presupuestal Energía -->
-                <div class="bg-[#111827] border border-gray-800 rounded-xl p-5 shadow-xl relative overflow-hidden flex flex-col justify-between">
+                <div class="bg-[#111827] border border-gray-800 rounded-xl p-4 shadow-xl relative overflow-hidden flex flex-col justify-between">
                     <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Ahorro Presupuestal Energía</span>
-                        <span class="p-2 bg-amber-500/10 text-amber-400 rounded-lg text-lg">⚡</span>
+                        <span class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Ahorro Energía Red</span>
+                        <span class="p-1.5 bg-amber-500/10 text-amber-400 rounded-lg text-base">⚡</span>
                     </div>
                     <div>
-                        <div class="text-2xl font-extrabold text-amber-400 tracking-tight">
+                        <div class="text-xl xl:text-2xl font-extrabold text-amber-400 tracking-tight">
                             $173.336.863
                         </div>
-                        <p class="text-[11px] text-gray-400 mt-1">Acumulado Ene – Oct 2026 (ODS 7)</p>
+                        <p class="text-[10px] text-gray-400 mt-1">Acumulado Ene – Oct 2026 (ODS 7)</p>
                     </div>
                 </div>
 
                 <!-- KPI 4: Ahorro Generación Solar -->
-                <div class="bg-[#111827] border border-gray-800 rounded-xl p-5 shadow-xl relative overflow-hidden flex flex-col justify-between">
+                <div class="bg-[#111827] border border-gray-800 rounded-xl p-4 shadow-xl relative overflow-hidden flex flex-col justify-between">
                     <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Generación Solar Fotovoltaica</span>
-                        <span class="p-2 bg-yellow-500/10 text-yellow-400 rounded-lg text-lg">☀️</span>
+                        <span class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Generación Solar</span>
+                        <span class="p-1.5 bg-yellow-500/10 text-yellow-400 rounded-lg text-base">☀️</span>
                     </div>
                     <div>
-                        <div class="text-2xl font-extrabold text-yellow-400 tracking-tight">
+                        <div class="text-xl xl:text-2xl font-extrabold text-yellow-400 tracking-tight">
                             $24.278.888
                         </div>
-                        <p class="text-[11px] text-gray-400 mt-1">Retorno Dic 2025 – Sep 2026 (ODS 7)</p>
+                        <p class="text-[10px] text-gray-400 mt-1">Retorno Dic 25 – Sep 26 (ODS 7)</p>
+                    </div>
+                </div>
+
+                <!-- KPI 5: Ahorro Servicios Auros -->
+                <div class="bg-[#111827] border border-emerald-500/30 rounded-xl p-4 shadow-xl relative overflow-hidden flex flex-col justify-between">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[11px] font-semibold text-emerald-400 uppercase tracking-wider">Ahorro Servicios Auros</span>
+                        <span class="p-1.5 bg-emerald-500/10 text-emerald-400 rounded-lg text-base">📄</span>
+                    </div>
+                    <div>
+                        <div class="text-xl xl:text-2xl font-extrabold text-emerald-400 tracking-tight">
+                            $76.852.704
+                        </div>
+                        <p class="text-[10px] text-gray-400 mt-1">Ahorro Ene – Oct 2026 (ODS 12)</p>
                     </div>
                 </div>
 
@@ -118,11 +137,18 @@
                 <!-- TARJETA 1: Presupuesto Agua 2026 -->
                 <div class="bg-[#111827] rounded-xl border border-gray-800 shadow-xl p-6 flex flex-col justify-between">
                     <div>
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                                <span class="text-[#00B0FF]">💧</span> Presupuesto vs. Gasto: Agua (2026)
-                            </h3>
-                            <span class="text-xs bg-[#00B0FF]/10 text-[#00B0FF] px-2.5 py-1 rounded-full font-semibold">ODS 6</span>
+                        <div class="flex flex-wrap justify-between items-start sm:items-center gap-3 mb-4">
+                            <div>
+                                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                    <span class="text-[#00B0FF]">💧</span> Presupuesto vs. Gasto: Agua (2026)
+                                </h3>
+                                <span class="text-[11px] text-[#00B0FF] font-semibold">Ejecución Hídrica · ODS 6</span>
+                            </div>
+                            <!-- TARJETA DE AHORRO ESQUINA SUPERIOR DERECHA -->
+                            <div class="bg-[#0B0F19] px-3 py-1.5 rounded-lg border border-[#00B0FF]/30 text-right">
+                                <span class="text-[9px] uppercase font-mono text-gray-400 block">Ahorro Acumulado</span>
+                                <span class="text-xs font-extrabold text-[#00B0FF] font-mono">$ 27.508.673</span>
+                            </div>
                         </div>
                         <div class="relative h-64 w-full mb-4">
                             <canvas id="presupuestoAguaChart"></canvas>
@@ -131,7 +157,7 @@
                     <div class="border-t border-gray-800/80 pt-4 mt-2 min-h-[100px]">
                         <p class="text-xs text-gray-400 leading-relaxed">
                             <strong class="text-white">Gráfico 1: Ejecución Presupuestal de Agua Potable.</strong>
-                            Con corte a octubre de 2026, el gasto acumulado ($89.748.825) se mantiene $27.508.675 por debajo del presupuesto ($117.257.500). Pese al incremento puntual de octubre ($17,35M), la recalibración hidromecánica y el respaldo de agua tratada sostienen el ahorro neto del año.
+                            Con corte a octubre de 2026, el gasto acumulado ($89.748.825) se mantiene $27.508.673 por debajo del presupuesto ($117.257.498). Pese al incremento puntual de octubre ($17,35M), la recalibración hidromecánica y el respaldo de agua tratada sostienen el ahorro neto del año.
                         </p>
                     </div>
                 </div>
@@ -139,11 +165,18 @@
                 <!-- TARJETA 2: Presupuesto Energía 2026 -->
                 <div class="bg-[#111827] rounded-xl border border-gray-800 shadow-xl p-6 flex flex-col justify-between">
                     <div>
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                                <span class="text-amber-400">⚡</span> Presupuesto vs. Gasto: Energía (2026)
-                            </h3>
-                            <span class="text-xs bg-amber-500/10 text-amber-400 px-2.5 py-1 rounded-full font-semibold">ODS 7</span>
+                        <div class="flex flex-wrap justify-between items-start sm:items-center gap-3 mb-4">
+                            <div>
+                                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                    <span class="text-amber-400">⚡</span> Presupuesto vs. Gasto: Energía (2026)
+                                </h3>
+                                <span class="text-[11px] text-amber-400 font-semibold">Eficiencia Energética · ODS 7</span>
+                            </div>
+                            <!-- TARJETA DE AHORRO ESQUINA SUPERIOR DERECHA -->
+                            <div class="bg-[#0B0F19] px-3 py-1.5 rounded-lg border border-amber-500/30 text-right">
+                                <span class="text-[9px] uppercase font-mono text-gray-400 block">Ahorro Acumulado</span>
+                                <span class="text-xs font-extrabold text-amber-400 font-mono">$ 173.336.863</span>
+                            </div>
                         </div>
                         <div class="relative h-64 w-full mb-4">
                             <canvas id="presupuestoEnergiaChart"></canvas>
@@ -160,11 +193,18 @@
                 <!-- TARJETA 3: Ahorro Energía Solar -->
                 <div class="bg-[#111827] rounded-xl border border-gray-800 shadow-xl p-6 flex flex-col justify-between">
                     <div>
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                                <span class="text-yellow-400">☀️</span> Generación de Energía Solar Fotovoltaica
-                            </h3>
-                            <span class="text-xs bg-yellow-500/10 text-yellow-400 px-2.5 py-1 rounded-full font-semibold">ODS 7</span>
+                        <div class="flex flex-wrap justify-between items-start sm:items-center gap-3 mb-4">
+                            <div>
+                                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                    <span class="text-yellow-400">☀️</span> Generación de Energía Solar Fotovoltaica
+                                </h3>
+                                <span class="text-[11px] text-yellow-400 font-semibold">Autogeneración Limpia · ODS 7</span>
+                            </div>
+                            <!-- TARJETA DE AHORRO ESQUINA SUPERIOR DERECHA -->
+                            <div class="bg-[#0B0F19] px-3 py-1.5 rounded-lg border border-yellow-500/30 text-right">
+                                <span class="text-[9px] uppercase font-mono text-gray-400 block">Ahorro Acumulado</span>
+                                <span class="text-xs font-extrabold text-yellow-400 font-mono">$ 24.278.888</span>
+                            </div>
                         </div>
                         <div class="relative h-64 w-full mb-4">
                             <canvas id="solarChart"></canvas>
@@ -178,28 +218,49 @@
                     </div>
                 </div>
 
-                <!-- TARJETA 4: Ahorro Servicios Auros -->
-                <div class="bg-[#111827] rounded-xl border border-gray-800 shadow-xl p-6 flex flex-col justify-between">
+                <!-- TARJETA 4: Ahorro Servicios Auros (CON LÍNEA DE TENDENCIA DE AHORRO Y TARJETA SUPERIOR) -->
+                <div class="bg-[#111827] rounded-xl border border-emerald-500/30 shadow-xl p-6 flex flex-col justify-between">
                     <div>
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                                <span class="text-emerald-400">📄</span> Optimización de Servicios Auros (2025 vs. 2026)
-                            </h3>
-                            <span class="text-xs bg-emerald-500/10 text-emerald-400 px-2.5 py-1 rounded-full font-semibold">ODS 12</span>
+                        <div class="flex flex-wrap justify-between items-start sm:items-center gap-3 mb-3">
+                            <div>
+                                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                    <span class="text-emerald-400">📄</span> Optimización de Servicios Auros (2025 vs. 2026)
+                                </h3>
+                                <span class="text-[11px] text-emerald-400 font-semibold">Reducción de Impresión y Ahorro Mensual · ODS 12</span>
+                            </div>
+                            <!-- TARJETA DE AHORRO ESQUINA SUPERIOR DERECHA -->
+                            <div class="bg-[#0B0F19] px-3 py-1.5 rounded-lg border border-emerald-500/30 text-right">
+                                <span class="text-[9px] uppercase font-mono text-gray-400 block">Ahorro Ene – Oct 2026</span>
+                                <span id="auros-badge-value" class="text-xs font-extrabold text-emerald-400 font-mono">$ 76.852.704</span>
+                            </div>
                         </div>
+
+                        <!-- BOTONES DE FILTRADO INTERACTIVO AUROS -->
+                        <div class="flex flex-wrap items-center gap-1.5 mb-3">
+                            <button onclick="toggleAurosView('all')" id="btn-auros-all" class="px-2.5 py-1 text-[11px] font-semibold rounded-lg border border-emerald-500/40 bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 transition">
+                                Volumen + Línea Ahorro
+                            </button>
+                            <button onclick="toggleAurosView('ahorro')" id="btn-auros-ahorro" class="px-2.5 py-1 text-[11px] font-semibold rounded-lg border border-gray-700 bg-gray-800 text-gray-400 hover:bg-gray-700 transition">
+                                Solo Ahorro ($ COP)
+                            </button>
+                            <button onclick="toggleAurosView('volumen')" id="btn-auros-volumen" class="px-2.5 py-1 text-[11px] font-semibold rounded-lg border border-gray-700 bg-gray-800 text-gray-400 hover:bg-gray-700 transition">
+                                Solo Servicios (-55,8%)
+                            </button>
+                        </div>
+
                         <div class="relative h-64 w-full mb-4">
                             <canvas id="aurosChart"></canvas>
                         </div>
                     </div>
                     <div class="border-t border-gray-800/80 pt-4 mt-2 min-h-[100px]">
                         <p class="text-xs text-gray-400 leading-relaxed">
-                            <strong class="text-white">Gráfico 4: Reducción de Consumo Auros (Impresión/Digitalización).</strong>
-                            Entre enero y septiembre de 2026 se registraron 52.467 servicios frente a 118.723 en el mismo período de 2025, logrando una caída sostenida del 55,8% (-66.256 servicios) que reduce la huella de papel y tóner del campus.
+                            <strong class="text-white">Gráfico 4: Reducción de Consumo Auros y Tendencia de Ahorro ($ COP).</strong>
+                            Entre enero y septiembre se ejecutaron 52.467 servicios frente a 118.723 en 2025 (-55,8%), mientras el gasto mensual descendió a un promedio de $888 mil, consolidando un <strong class="text-emerald-300">ahorro acumulado de $76.852.704</strong> representado en la línea continua de ahorro mensual.
                         </p>
                     </div>
                 </div>
 
-                <!-- TARJETA 5 (NUEVA - ANCHO COMPLETO): Ahorro por Agua Tratada PTALL -->
+                <!-- TARJETA 5 (ANCHO COMPLETO): Ahorro por Agua Tratada PTALL -->
                 <div class="xl:col-span-2 bg-[#111827] rounded-xl border border-teal-500/30 shadow-xl p-6 flex flex-col justify-between">
                     <div>
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
@@ -207,22 +268,22 @@
                                 <h3 class="text-lg font-bold text-white flex items-center gap-2">
                                     <span class="text-teal-400">♻️</span> Planta de Tratamiento de Aguas Lluvias (PTALL): Volumen Generado y Ahorro
                                 </h3>
-                                <p class="text-xs text-gray-400 mt-0.5">Comparativo interanual de metros cúbicos tratados (2025 vs. 2026) y ahorro económico acumulado</p>
+                                <p class="text-xs text-gray-400 mt-0.5">Comparativo interanual de metros cúbicos reutilizados (2025 vs. 2026) y retorno económico acumulado</p>
                             </div>
 
-                            <!-- CONTROLES INTERACTIVOS PTALL -->
+                            <!-- CONTROLES INTERACTIVOS PTALL + TARJETA SUPERIOR DERECHA -->
                             <div class="flex flex-wrap items-center gap-2">
                                 <button onclick="togglePtallView('all')" id="btn-ptall-all" class="px-3 py-1 text-xs font-semibold rounded-lg border border-teal-500/40 bg-teal-500/20 text-teal-300 hover:bg-teal-500/30 transition">
                                     Comparativo + Ahorro
                                 </button>
                                 <button onclick="togglePtallView('2026')" id="btn-ptall-2026" class="px-3 py-1 text-xs font-semibold rounded-lg border border-gray-700 bg-gray-800 text-gray-400 hover:bg-gray-700 transition">
-                                    2026 (1.253 m³)
+                                    Solo 2026 (1.253 m³)
                                 </button>
                                 <button onclick="togglePtallView('2025')" id="btn-ptall-2025" class="px-3 py-1 text-xs font-semibold rounded-lg border border-gray-700 bg-gray-800 text-gray-400 hover:bg-gray-700 transition">
-                                    2025 (1.385 m³)
+                                    Solo 2025 (1.385 m³)
                                 </button>
 
-                                <div class="bg-[#0B0F19] px-3 py-1 rounded-lg border border-teal-500/30 text-right ml-1">
+                                <div class="bg-[#0B0F19] px-3 py-1.5 rounded-lg border border-teal-500/30 text-right ml-1">
                                     <span class="text-[9px] uppercase font-mono text-gray-400 block">Ahorro Anual PTALL</span>
                                     <span id="ptall-badge-value" class="text-xs font-extrabold text-teal-400 font-mono">$ 9.769.641</span>
                                 </div>
@@ -237,7 +298,7 @@
                     <div class="border-t border-gray-800/80 pt-4 mt-2 flex flex-col sm:flex-row justify-between gap-2 text-xs text-gray-400">
                         <p>
                             <strong class="text-white">Gráfico 5: Economía Circular Hídrica (ODS 6 & ODS 12).</strong>
-                           La PTALL trató 146 m³ en octubre de 2026, un 9% más que los 134 m³ registrados en octubre de 2025. Esto permitió reducir el consumo de servicios públicos. Se tiene un ahorro directo de <strong class="text-white">$9.769.641</strong> acumulado al mes de octubre.
+                            Cada metro cúbico tratado en la PTALL sustituye suministro comercial de acueducto y alcantarillado ($7.797/m³). En octubre de 2026 la planta alcanzó <strong class="text-teal-300">146 m³</strong> (+9,0% frente a los 134 m³ de octubre de 2025), amortiguando el pico de demanda hídrica del campus y consolidando <strong class="text-white">$9.769.641</strong> de ahorro directo.
                         </p>
                         <span class="font-mono text-[11px] text-teal-400/80 shrink-0">2025: 1.385 m³ · 2026: 1.253 m³</span>
                     </div>
@@ -369,48 +430,125 @@
             }
         });
 
-        // --- 4. OPTIMIZACIÓN AUROS (2025 VS 2026 - ACTUALIZADO A SEPTIEMBRE 2026) ---
-        new Chart(document.getElementById('aurosChart'), {
+        // --- 4. OPTIMIZACIÓN AUROS (2025 VS 2026 + LÍNEA DE TENDENCIA DE AHORRO $ COP) ---
+        const aurosServicios2025 = [6736, 17338, 18796, 10596, 12658, 7548, 12482, 17764, 14805, 14485, 12370, 3581];
+        const aurosServicios2026 = [4525, 9116, 5769, 6421, 6164, 3974, 3153, 10157, 3188, null, null, null];
+        // Ahorro mensual comparado con 2025 (suma Ene-Sep = $76.852.704)
+        const aurosAhorroMensualCOP = [9898698, 8707115, 8626813, 8563955, 8041001, 7516984, 8668362, 8910520, 7919256, null, null, null];
+
+        const aurosChartObj = new Chart(document.getElementById('aurosChart'), {
             type: 'bar',
             data: {
                 labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
                 datasets: [
                     {
+                        type: 'bar',
                         label: 'Servicios 2025',
-                        data: [6736, 17338, 18796, 10596, 12658, 7548, 12482, 17764, 14805, 14485, 12370, 3581],
+                        data: aurosServicios2025,
                         backgroundColor: 'rgba(100, 116, 139, 0.4)',
-                        borderRadius: 3
+                        borderRadius: 3,
+                        yAxisID: 'y'
                     },
                     {
+                        type: 'bar',
                         label: 'Servicios 2026',
-                        data: [4525, 9116, 5769, 6421, 6164, 3974, 3153, 10157, 3188, null, null, null],
-                        backgroundColor: '#10B981',
-                        borderRadius: 3
+                        data: aurosServicios2026,
+                        backgroundColor: 'rgba(16, 185, 129, 0.85)',
+                        borderRadius: 3,
+                        yAxisID: 'y'
+                    },
+                    {
+                        type: 'line',
+                        label: 'Tendencia Ahorro vs. 2025 ($ COP)',
+                        data: aurosAhorroMensualCOP,
+                        borderColor: '#38BDF8',
+                        backgroundColor: 'rgba(56, 189, 248, 0.12)',
+                        borderWidth: 2.5,
+                        pointBackgroundColor: '#38BDF8',
+                        pointRadius: 4,
+                        tension: 0.35,
+                        fill: false,
+                        yAxisID: 'y1'
                     }
                 ]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
                 plugins: {
-                    legend: { labels: { color: '#9ca3af', boxWidth: 12 } },
+                    legend: { labels: { color: '#9ca3af', boxWidth: 11, font: { size: 11 } } },
                     tooltip: { 
                         callbacks: { 
-                            label: (c) => c.dataset.label + ': ' + (c.parsed.y !== null ? new Intl.NumberFormat('es-CO').format(c.parsed.y) + ' servicios' : '-') 
+                            label: function(c) {
+                                if (c.parsed.y === null) return c.dataset.label + ': -';
+                                if (c.dataset.yAxisID === 'y1') {
+                                    return `${c.dataset.label}: ${formatCOP(c.parsed.y)}`;
+                                }
+                                return `${c.dataset.label}: ${new Intl.NumberFormat('es-CO').format(c.parsed.y)} servicios`;
+                            }
                         } 
                     }
                 },
                 scales: {
                     x: { grid: { display: false }, ticks: { color: '#9ca3af' } },
-                    y: { grid: { color: '#1f2937' }, ticks: { color: '#9ca3af' } }
+                    y: { 
+                        type: 'linear',
+                        position: 'left',
+                        grid: { color: '#1f2937' }, 
+                        ticks: { color: '#9ca3af' } 
+                    },
+                    y1: {
+                        type: 'linear',
+                        position: 'right',
+                        min: 0,
+                        max: 12000000,
+                        grid: { drawOnChartArea: false },
+                        ticks: {
+                            color: '#38BDF8',
+                            callback: (v) => '$' + (v / 1000000).toFixed(1) + 'M'
+                        }
+                    }
                 }
             }
         });
 
+        function toggleAurosView(mode) {
+            const btnAll = document.getElementById('btn-auros-all');
+            const btnAhorro = document.getElementById('btn-auros-ahorro');
+            const btnVol = document.getElementById('btn-auros-volumen');
+            const badge = document.getElementById('auros-badge-value');
+
+            const activeStyle = "px-2.5 py-1 text-[11px] font-semibold rounded-lg border border-emerald-500/40 bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 transition";
+            const inactiveStyle = "px-2.5 py-1 text-[11px] font-semibold rounded-lg border border-gray-700 bg-gray-800 text-gray-400 hover:bg-gray-700 transition";
+
+            btnAll.className = mode === 'all' ? activeStyle : inactiveStyle;
+            btnAhorro.className = mode === 'ahorro' ? activeStyle : inactiveStyle;
+            btnVol.className = mode === 'volumen' ? activeStyle : inactiveStyle;
+
+            if (mode === 'all') {
+                aurosChartObj.setDatasetVisibility(0, true);
+                aurosChartObj.setDatasetVisibility(1, true);
+                aurosChartObj.setDatasetVisibility(2, true);
+                badge.innerText = '$ 76.852.704';
+            } else if (mode === 'ahorro') {
+                aurosChartObj.setDatasetVisibility(0, false);
+                aurosChartObj.setDatasetVisibility(1, false);
+                aurosChartObj.setDatasetVisibility(2, true);
+                badge.innerText = '$ 76.852.704';
+            } else if (mode === 'volumen') {
+                aurosChartObj.setDatasetVisibility(0, true);
+                aurosChartObj.setDatasetVisibility(1, true);
+                aurosChartObj.setDatasetVisibility(2, false);
+                badge.innerText = '-66.256 serv. (-55,8%)';
+            }
+
+            aurosChartObj.update();
+        }
+
         // --- 5. GENERACIÓN Y AHORRO AGUA TRATADA (PTALL 2025 VS 2026) ---
         const ptall2025M3 = [57, 161, 237, 215, 223, 88, 102, 109, 59, 134, null, null];
         const ptall2026M3 = [153, 193, 102, 173, 98, 108, 88, 102, 91, 146, null, null];
-        // Valorización económica mensual equivalente ($7.797 / m³ ahorrado en tarifa comercial)
         const tarifaM3 = 9769641 / 1253;
         const ptall2026COP = ptall2026M3.map(v => v !== null ? Math.round(v * tarifaM3) : null);
 
